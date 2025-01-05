@@ -75,7 +75,7 @@ app.post('/oauth/callback', async (req, res) => {
         client_secret: 'SOUH4ZSbsJMLMleztz9ySwlxPI5TvWCQ',
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: process.env.REDIRECT_URI,
+        redirect_uri: 'https://alexg0dev.github.io/quest/',
         scope: 'identify email'
       }),
       {
