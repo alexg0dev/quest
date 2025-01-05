@@ -1534,9 +1534,7 @@
               userProfilePic.src = data.user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'; // Fallback to default avatar
               userProfilePic.alt = `${data.user.username}'s Profile Picture`;
 
-              // Update the link to user's Discord profile if desired
-              // Since Discord doesn't provide a direct link to the user's profile via API,
-              // we can keep it pointing to your Discord server or remove it.
+              // Update the link to your Discord server
               userProfileLink.href = `https://discord.gg/example`; // Set to Discord server link
 
               userInfo.classList.remove('hidden');
@@ -1573,9 +1571,7 @@
           userProfilePic.src = user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'; // Fallback to default avatar
           userProfilePic.alt = `${user.username}'s Profile Picture`;
 
-          // Update the link to user's Discord profile if desired
-          // Since Discord doesn't provide a direct link to the user's profile via API,
-          // we can keep it pointing to your Discord server or remove it.
+          // Update the link to your Discord server
           userProfileLink.href = `https://discord.gg/example`; // Set to Discord server link
 
           userInfo.classList.remove('hidden');
