@@ -78,11 +78,11 @@ app.post('/oauth/callback', async (req, res) => {
     const tokenResponse = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: '1297728075340972073', // Use environment variable
-        client_secret: 'K0cIXhm1ZweOvtoRqMdOsaUk5DFZFV7f', // Use environment variable
+        client_id: '1297728075340972073',
+        client_secret: 'K0cIXhm1ZweOvtoRqMdOsaUk5DFZFV7f',
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: 'https://alexg0dev.github.io/quest/', // Use environment variable
+        redirect_uri: 'https://alexg0dev.github.io/quest/',
         scope: 'identify email'
       }),
       {
