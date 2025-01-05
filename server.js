@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configure CORS to allow requests from your frontend
 app.use(cors({
-  origin: 'https://alexg0dev.github.io', // Replace with your actual frontend URL
+  origin: process.env.FRONTEND_URL, // Use environment variable
   methods: ['POST'],
   allowedHeaders: ['Content-Type']
 }));
@@ -71,11 +71,11 @@ app.post('/oauth/callback', async (req, res) => {
     const tokenResponse = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: '1324622665323118642',
-        client_secret: 'SOUH4ZSbsJMLMleztz9ySwlxPI5TvWCQ',
+        client_id: '1324622665323118642', // Use environment variable
+        client_secret: 'SOUH4ZSbsJMLMleztz9ySwlxPI5TvWCQ', // Use environment variable
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: 'https://alexg0dev.github.io/quest/',
+        redirect_uri: 'https://alexg0dev.github.io/quest/', // Use environment variable
         scope: 'identify email'
       }),
       {
@@ -99,10 +99,10 @@ app.post('/oauth/callback', async (req, res) => {
     // Prepare User Profile Data
     const profile = {
       id: user.id,
-      username: `${user.username}#${user.discriminator}`,
+      username: user.username, // Removed discriminator
       avatar: user.avatar
         ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512` // Default to PNG, Discord handles the format
-        : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png?size=512`, // Default Discord avatar
+        : `https://cdn.discordapp.com/embed/avatars/${user.id % 5}.png?size=512`, // Default Discord avatar based on user ID
       email: user.email || 'No Email Provided'
     };
 
