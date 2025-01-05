@@ -39,6 +39,7 @@ const saveProfile = async (profile) => {
 
   // Write updated profiles back to profiles.json
   await fs.writeFile(filePath, JSON.stringify(profiles, null, 2));
+  console.log(`Profile saved: ${JSON.stringify(profile)}`);
 };
 
 // POST OAuth2 Callback Route
@@ -54,8 +55,8 @@ app.post('/oauth/callback', async (req, res) => {
     const tokenResponse = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: process.env.DISCORD_CLIENT_ID,
-        client_secret: process.env.DISCORD_CLIENT_SECRET,
+        client_id: '1324622665323118642',
+        client_secret: 'SOUH4ZSbsJMLMleztz9ySwlxPI5TvWCQ',
         grant_type: 'authorization_code',
         code: code,
         redirect_uri: process.env.REDIRECT_URI,
