@@ -31,15 +31,31 @@ const saveProfile = async (profile) => {
 
   // Check if profiles.json exists
   if (await fs.pathExists(filePath)) {
-    profiles = JSON.parse(await fs.readFile(filePath, 'utf8'));
+    try {
+      profiles = JSON.parse(await fs.readFile(filePath, 'utf8'));
+    } catch (err) {
+      console.error('Error parsing profiles.json:', err);
+      profiles = [];
+    }
+  }
+
+  // Check if user already exists
+  const userExists = profiles.some(p => p.id === profile.id);
+  if (userExists) {
+    console.log(`User with ID ${profile.id} already exists in profiles.json.`);
+    return;
   }
 
   // Append new profile
   profiles.push(profile);
 
   // Write updated profiles back to profiles.json
-  await fs.writeFile(filePath, JSON.stringify(profiles, null, 2));
-  console.log(`Profile saved: ${JSON.stringify(profile)}`);
+  try {
+    await fs.writeFile(filePath, JSON.stringify(profiles, null, 2));
+    console.log(`Added to profiles.json: ${JSON.stringify(profile)}`);
+  } catch (err) {
+    console.error('Error writing to profiles.json:', err);
+  }
 };
 
 // POST OAuth2 Callback Route
@@ -96,8 +112,13 @@ app.post('/oauth/callback', async (req, res) => {
     // Respond with Success and User Data
     res.json({ success: true, user: profile });
   } catch (error) {
-    console.error('Error during OAuth callback:', error.response ? error.response.data : error.message);
-    res.status(500).json({ success: false, message: 'An error occurred during the OAuth process.' });
+    if (error.response) {
+      console.error('Error during OAuth callback:', error.response.data);
+      res.status(500).json({ success: false, message: error.response.data });
+    } else {
+      console.error('Error during OAuth callback:', error.message);
+      res.status(500).json({ success: false, message: 'An error occurred during the OAuth process.' });
+    }
   }
 });
 
