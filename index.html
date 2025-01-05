@@ -1504,6 +1504,7 @@
       const code = urlParams.get('code');
 
       if (code) {
+        console.log('OAuth2 code detected:', code);
         // Backend URL as deployed (ensure this is correct)
         const backendURL = 'https://quest-production-5c69.up.railway.app'; // Replace with your actual backend URL
 
@@ -1515,6 +1516,7 @@
         })
           .then(response => response.json())
           .then(data => {
+            console.log('Response from backend:', data);
             if (data.success && data.user) {
               // Update UI with user data
               const userInfo = document.getElementById('userInfo');
@@ -1522,7 +1524,7 @@
               const userProfilePic = document.getElementById('userProfilePic');
               const userProfileLink = document.getElementById('userProfileLink');
 
-              userNameSpan.textContent = `${data.user.username}`;
+              userNameSpan.textContent = `${data.user.username}#${data.user.discriminator}`;
               userProfilePic.src = data.user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'; // Fallback to default avatar
               userProfileLink.href = `https://discord.gg/example`; // Set to Discord server link
 
@@ -1554,7 +1556,7 @@
           const userProfilePic = document.getElementById('userProfilePic');
           const userProfileLink = document.getElementById('userProfileLink');
 
-          userNameSpan.textContent = `${user.username}`;
+          userNameSpan.textContent = `${user.username}#${user.discriminator}`;
           userProfilePic.src = user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'; // Fallback to default avatar
           userProfileLink.href = `https://discord.gg/example`; // Set to Discord server link
 
