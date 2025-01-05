@@ -433,7 +433,7 @@
       box-shadow: 0 8px 16px rgba(0,0,0,0.5);
     }
 
-    /* PARTNERS */
+    /* PARTNERS (Centered) */
     .partners-section {
       background: #141414;
       padding: 4rem 2rem;
@@ -1403,7 +1403,7 @@
               const userProfilePic = document.getElementById('userProfilePic');
               const userProfileLink = document.getElementById('userProfileLink');
 
-              userNameSpan.textContent = `${data.user.username}#${data.user.discriminator}`;
+              userNameSpan.textContent = `${data.user.username}`;
               userProfilePic.src = data.user.avatar;
               userProfileLink.href = `https://discord.com/users/${data.user.id}`;
 

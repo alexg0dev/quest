@@ -16,7 +16,13 @@ const PORT = process.env.PORT || 3000;
 // Middleware Setup
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
+
+// Configure CORS to allow requests from your frontend
+app.use(cors({
+  origin: 'https://alexg0dev.github.io', // Replace with your actual frontend URL
+  methods: ['POST'],
+  allowedHeaders: ['Content-Type']
+}));
 
 // Function to Save User Profiles to profiles.json
 const saveProfile = async (profile) => {
@@ -35,12 +41,12 @@ const saveProfile = async (profile) => {
   await fs.writeFile(filePath, JSON.stringify(profiles, null, 2));
 };
 
-// OAuth2 Callback Route
-app.get('/oauth/callback', async (req, res) => {
-  const code = req.query.code;
+// POST OAuth2 Callback Route
+app.post('/oauth/callback', async (req, res) => {
+  const { code } = req.body;
 
   if (!code) {
-    return res.status(400).send('No code provided.');
+    return res.status(400).json({ success: false, message: 'No code provided.' });
   }
 
   try {
@@ -86,22 +92,12 @@ app.get('/oauth/callback', async (req, res) => {
     // Save Profile to profiles.json
     await saveProfile(profile);
 
-    // Redirect to Success Page or Frontend
-    res.redirect('/success');
+    // Respond with Success and User Data
+    res.json({ success: true, user: profile });
   } catch (error) {
     console.error('Error during OAuth callback:', error.response ? error.response.data : error.message);
-    res.status(500).send('An error occurred during the OAuth process.');
+    res.status(500).json({ success: false, message: 'An error occurred during the OAuth process.' });
   }
-});
-
-// Success Route
-app.get('/success', (req, res) => {
-  res.send('OAuth Success! Your profile has been saved.');
-});
-
-// Health Check Route (Optional)
-app.get('/health', (req, res) => {
-  res.json({ status: 'Server is running.' });
 });
 
 // Start Server
