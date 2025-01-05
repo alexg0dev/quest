@@ -1,103 +1,45 @@
 // server.js
-
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
 
 const app = express();
+app.use(bodyParser.json());
 
-// ===========================
-// Middleware Configuration
-// ===========================
-
-// Configure CORS to allow requests from your GitHub Pages frontend
+// Enable CORS for your frontend domain
 app.use(cors({
-  origin: 'https://alexg0dev.github.io', // Replace with your actual GitHub Pages URL if different
+  origin: 'https://alexg0dev.github.io',
+  methods: ['POST'],
   credentials: true,
 }));
 
-// Parse incoming JSON requests
-app.use(bodyParser.json());
+// Discord OAuth2 Credentials
+const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
 
-// ===========================
-// Environment Variables
-// ===========================
-
-// Replace with your actual Discord application credentials
-const CLIENT_ID = '1324622665323118642'; // Your Discord Client ID
-const CLIENT_SECRET = 'SOUH4ZSbsJMLMleztz9ySwlxPI5TvWCQ'; // Set this in Railway environment variables
-const REDIRECT_URI = 'https://alexg0dev.github.io/qg/'; // Must match the Redirect URI in Discord Developer Portal
-
-// ===========================
-// Profiles Management
-// ===========================
-
-// Path to profiles.json
-const profilesPath = path.join(__dirname, 'profiles.json');
-
-// Ensure profiles.json exists; if not, create it as an empty object
-if (!fs.existsSync(profilesPath)) {
-  fs.writeFileSync(profilesPath, JSON.stringify({}));
-}
-
-// Helper function to read profiles.json
-const readProfiles = () => {
-  try {
-    const data = fs.readFileSync(profilesPath, 'utf-8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.error('Error reading profiles.json:', err);
-    return {};
-  }
-};
-
-// Helper function to write to profiles.json
-const writeProfiles = (profiles) => {
-  try {
-    fs.writeFileSync(profilesPath, JSON.stringify(profiles, null, 2));
-  } catch (err) {
-    console.error('Error writing to profiles.json:', err);
-  }
-};
-
-// ===========================
-// Routes
-// ===========================
-
-/**
- * @route   GET /login
- * @desc    Redirects user to Discord's OAuth2 authorization URL
- */
-app.get('/login', (req, res) => {
-  const discordAuthUrl = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=identify%20email`;
-  res.redirect(discordAuthUrl);
-});
-
-/**
- * @route   POST /oauth/callback
- * @desc    Handles OAuth2 callback by exchanging code for tokens and fetching user data
- */
+// Route to handle OAuth callback
 app.post('/oauth/callback', async (req, res) => {
   const { code } = req.body;
 
-  // Validate the presence of the authorization code
   if (!code) {
-    return res.status(400).json({ success: false, message: 'No code provided' });
+    return res.status(400).json({ success: false, message: 'Code is required' });
   }
 
   try {
-    // Exchange authorization code for access token
+    // Exchange code for access token
     const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', new URLSearchParams({
-      client_id: CLIENT_ID,
-      client_secret: CLIENT_SECRET,
+      client_id: DISCORD_CLIENT_ID,
+      client_secret: DISCORD_CLIENT_SECRET,
       grant_type: 'authorization_code',
-      code,
+      code: code,
       redirect_uri: REDIRECT_URI,
-      scope: 'identify email',
-    }).toString(), {
+      scope: 'identify email guilds connections',
+    }), {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -105,7 +47,7 @@ app.post('/oauth/callback', async (req, res) => {
 
     const accessToken = tokenResponse.data.access_token;
 
-    // Fetch user data from Discord
+    // Use access token to get user data
     const userResponse = await axios.get('https://discord.com/api/users/@me', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -113,38 +55,48 @@ app.post('/oauth/callback', async (req, res) => {
     });
 
     const user = userResponse.data;
+    const avatarURL = user.avatar
+      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+      : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`;
 
-    // Read existing profiles
-    let profiles = readProfiles();
+    // Save user data to profiles.json
+    const profilesPath = path.join(__dirname, 'profiles.json');
+    let profiles = {};
 
-    // Update profiles with the new user data
-    profiles[user.id] = {
+    if (fs.existsSync(profilesPath)) {
+      const data = fs.readFileSync(profilesPath);
+      profiles = JSON.parse(data);
+    }
+
+    profiles[`${user.username}#${user.discriminator}`] = {
+      id: user.id,
       username: user.username,
       discriminator: user.discriminator,
-      avatar: user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : null,
-      email: user.email,
-      // Add any additional fields if necessary
+      avatar: avatarURL,
+      email: user.email || null,
+      guilds: user.guilds || [],
+      connections: user.connections || [],
     };
 
-    // Write updated profiles back to profiles.json
-    writeProfiles(profiles);
+    fs.writeFileSync(profilesPath, JSON.stringify(profiles, null, 2));
 
     // Respond with user data
     res.json({
       success: true,
-      user: profiles[user.id],
+      user: {
+        id: user.id,
+        username: user.username,
+        discriminator: user.discriminator,
+        avatar: avatarURL,
+      },
     });
-
   } catch (error) {
-    console.error('OAuth2 Error:', error.response ? error.response.data : error.message);
-    res.status(500).json({ success: false, message: 'Authentication failed' });
+    console.error('Error during OAuth callback:', error.response ? error.response.data : error.message);
+    res.status(500).json({ success: false, message: 'OAuth callback failed' });
   }
 });
 
-// ===========================
-// Start the Server
-// ===========================
-
+// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

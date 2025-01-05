@@ -283,6 +283,7 @@
       top: 1rem;
       right: 2rem;
       transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+      z-index: 1001; /* Ensure it stays above the header */
     }
     .user-info img {
       width: 40px; height: 40px;
@@ -1048,7 +1049,7 @@
       <div class="auth-buttons">
         <!-- OAuth Login Button -->
         <a
-          href="https://discord.com/oauth2/authorize?client_id=1324622665323118642&response_type=code&redirect_uri=https%3A%2F%2Falexg0dev.github.io%2Fqg%2F&scope=identify+email+guilds+connections"
+          href="https://discord.com/oauth2/authorize?client_id=1324622665323118642&response_type=code&redirect_uri=https%3A%2F%2Falexg0dev.github.io%2Fquest%2F&scope=identify+email+guilds+connections"
           aria-label="Login with Discord"
           class="login-btn"
           id="loginButton"
@@ -1082,7 +1083,7 @@
       <div class="auth-buttons">
         <!-- OAuth Login Button for Mobile -->
         <a
-          href="https://discord.com/oauth2/authorize?client_id=1324622665323118642&response_type=code&redirect_uri=https%3A%2F%2Falexg0dev.github.io%2Fqg%2F&scope=identify+email+guilds+connections"
+          href="https://discord.com/oauth2/authorize?client_id=1324622665323118642&response_type=code&redirect_uri=https%3A%2F%2Falexg0dev.github.io%2Fquest%2F&scope=identify+email+guilds+connections"
           aria-label="Login with Discord"
           class="login-btn"
           id="mobileLoginButton"
