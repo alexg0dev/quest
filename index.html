@@ -34,7 +34,7 @@
 
   <!-- Main Styles -->
   <style>
-    /* [Your existing CSS styles here] */
+    /* Root Variables */
     :root {
       --q4g-orange: #FF6700;
       --q4g-red: #FF0000;
@@ -1214,6 +1214,8 @@
           <div class="swiper-slide">
             <video autoplay muted loop playsinline>
               <source src="clip1.mp4" type="video/mp4" />
+              <!-- Fallback content for browsers that don't support the video tag -->
+              Your browser does not support the video tag.
             </video>
           </div>
           <!-- Add more slides as needed -->
@@ -1289,7 +1291,7 @@
       <!-- Discord Button -->
       <a
         class="discord-btn"
-        href="https://discord.gg/example"
+        href="https://discord.gg/example" <!-- Replace with your actual Discord server invite link -->
         target="_blank"
         aria-label="Join Quest for Glory Discord Server"
         data-aos="zoom-in"
@@ -1311,8 +1313,8 @@
         </p>
         <!-- Images for "Our Mission" and "Global Expansion" -->
         <div class="about-images">
-          <img src="our-mission.jpg" alt="Our Mission">
-          <img src="global-expansion.jpg" alt="Global Expansion">
+          <img src="our-mission.jpg" alt="Our Mission"> <!-- Replace with actual image paths -->
+          <img src="global-expansion.jpg" alt="Global Expansion"> <!-- Replace with actual image paths -->
         </div>
       </div>
     </section>
@@ -1323,7 +1325,7 @@
       <div class="divisions-container">
         <!-- Division 1 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="100">
-          <img src="qg.png" alt="Division 1 Icon" />
+          <img src="qg.png" alt="Division 1 Icon" /> <!-- Replace with actual image paths -->
           <h3>Division 1</h3>
           <p><strong>Prize:</strong> $2000</p>
           <p>Compete at the highest level with the best players. Exclusive rewards and recognition await.</p>
@@ -1337,7 +1339,7 @@
         </div>
         <!-- Division 2 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="200">
-          <img src="qg.png" alt="Division 2 Icon" />
+          <img src="qg.png" alt="Division 2 Icon" /> <!-- Replace with actual image paths -->
           <h3>Division 2</h3>
           <p><strong>Prize:</strong> $1500</p>
           <p>Join a competitive yet accessible tier. Improve your skills and climb the ranks.</p>
@@ -1351,7 +1353,7 @@
         </div>
         <!-- Division 3 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="300">
-          <img src="qg.png" alt="Division 3 Icon" />
+          <img src="qg.png" alt="Division 3 Icon" /> <!-- Replace with actual image paths -->
           <h3>Division 3</h3>
           <p><strong>Prize:</strong> Discord Privileges</p>
           <p>Perfect for newcomers and casual players. Get in the game with zero entry fees!</p>
@@ -1371,7 +1373,7 @@
       <h2>Watch the Finals of the BYOT</h2>
       <div class="live-byot-content">
         <iframe
-          src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID"
+          src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID" <!-- Replace YOUR_CHANNEL_ID with your actual YouTube channel ID -->
           title="Live BYOT"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
@@ -1535,7 +1537,7 @@
               userProfilePic.alt = `${data.user.username}'s Profile Picture`;
 
               // Update the link to your Discord server
-              userProfileLink.href = `https://discord.gg/example`; // Set to Discord server link
+              userProfileLink.href = `https://discord.gg/example`; // Set to your actual Discord server invite link
 
               userInfo.classList.remove('hidden');
 
@@ -1550,7 +1552,7 @@
               window.history.replaceState({}, document.title, "/quest/");
             } else {
               console.error('Authentication failed:', data.message);
-              alert('Login failed. Please try again.');
+              alert('An error occurred during the login process. Please try again.');
             }
           })
           .catch(error => {
@@ -1572,7 +1574,7 @@
           userProfilePic.alt = `${user.username}'s Profile Picture`;
 
           // Update the link to your Discord server
-          userProfileLink.href = `https://discord.gg/example`; // Set to Discord server link
+          userProfileLink.href = `https://discord.gg/example`; // Set to your actual Discord server invite link
 
           userInfo.classList.remove('hidden');
 
