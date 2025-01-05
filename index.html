@@ -284,6 +284,13 @@
       /* Removed absolute positioning */
       z-index: 1001; /* Ensure it stays above the header */
     }
+    .user-info a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: inherit;
+    }
     .user-info img {
       width: 40px; height: 40px;
       border-radius: 50%;
@@ -1160,8 +1167,10 @@
     </nav>
     <!-- USER INFO (hidden by default) -->
     <div class="user-info hidden" id="userInfo">
-      <img src="" alt="User Profile Picture" id="userProfilePic" />
-      <span id="userName"></span>
+      <a href="https://discord.gg/example" id="userProfileLink" target="_blank">
+        <img src="" alt="User Profile Picture" id="userProfilePic" />
+        <span id="userName"></span>
+      </a>
       <!-- Dropdown Menu -->
       <div class="profile-dropdown hidden" id="profileDropdown">
         <a href="#profile">Profile</a>
@@ -1515,7 +1524,7 @@
 
               userNameSpan.textContent = `${data.user.username}`;
               userProfilePic.src = data.user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'; // Fallback to default avatar
-              userProfileLink.href = `https://discord.com/users/${data.user.id}`;
+              userProfileLink.href = `https://discord.gg/example`; // Set to Discord server link
 
               userInfo.classList.remove('hidden');
 
@@ -1547,7 +1556,7 @@
 
           userNameSpan.textContent = `${user.username}`;
           userProfilePic.src = user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'; // Fallback to default avatar
-          userProfileLink.href = `https://discord.com/users/${user.id}`;
+          userProfileLink.href = `https://discord.gg/example`; // Set to Discord server link
 
           userInfo.classList.remove('hidden');
 
