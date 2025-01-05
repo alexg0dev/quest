@@ -6,7 +6,8 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const mongoose = require('mongoose'); // Ensure mongoose is required
+const fs = require('fs-extra');
+const path = require('path');
 const cors = require('cors');
 
 const app = express();
@@ -23,47 +24,42 @@ app.use(cors({
   allowedHeaders: ['Content-Type']
 }));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => {
-  console.error('MongoDB connection error:', err);
-  process.exit(1); // Exit process with failure
-});
-
-// Define User Schema
-const userSchema = new mongoose.Schema({
-  id: { type: String, unique: true },
-  username: String,
-  discriminator: String,
-  avatar: String,
-  email: String
-});
-
-const User = mongoose.model('User', userSchema);
-
-// Function to Save User Profiles to MongoDB
+// Function to Save User Profiles to profiles.json
 const saveProfile = async (profile) => {
-  try {
-    // Check if user already exists
-    const existingUser = await User.findOne({ id: profile.id });
-    if (existingUser) {
-      console.log(`User with ID ${profile.id} already exists.`);
-      return existingUser;
-    }
+  const filePath = path.join(__dirname, 'profiles.json');
+  let profiles = [];
 
-    // Create new user
-    const newUser = new User(profile);
-    await newUser.save();
-    console.log(`Added to MongoDB: ${JSON.stringify(profile)}`);
-    return newUser;
+  try {
+    // Ensure profiles.json exists; if not, create it with an empty array
+    await fs.ensureFile(filePath);
+    const data = await fs.readFile(filePath, 'utf8');
+    profiles = data ? JSON.parse(data) : [];
+    console.log('Current profiles loaded:', profiles);
   } catch (err) {
-    console.error('Error saving profile to MongoDB:', err);
-    throw err;
+    console.error('Error reading profiles.json:', err);
+    profiles = [];
   }
+
+  // Check if user already exists
+  const userExists = profiles.some(p => p.id === profile.id);
+  if (userExists) {
+    console.log(`User with ID ${profile.id} already exists in profiles.json.`);
+    return profiles.find(p => p.id === profile.id);
+  }
+
+  // Append new profile
+  profiles.push(profile);
+  console.log('New profile to add:', profile);
+
+  // Write updated profiles back to profiles.json
+  try {
+    await fs.writeFile(filePath, JSON.stringify(profiles, null, 2));
+    console.log(`Added to profiles.json: ${JSON.stringify(profile)}`);
+  } catch (err) {
+    console.error('Error writing to profiles.json:', err);
+  }
+
+  return profile;
 };
 
 // POST OAuth2 Callback Route
@@ -123,7 +119,7 @@ app.post('/oauth/callback', async (req, res) => {
 
     console.log('Prepared user profile:', profile);
 
-    // Save Profile to MongoDB
+    // Save Profile to profiles.json
     const savedUser = await saveProfile(profile);
 
     // Respond with Success and User Data
