@@ -19,12 +19,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configure CORS to allow requests from your frontend
 app.use(cors({
-  origin: process.env.FRONTEND_URL, // Ensure this matches your frontend URL
+  origin: 'https://alexg0dev.github.io/quest/', // Ensure this matches your frontend URL
   methods: ['POST'],
   allowedHeaders: ['Content-Type']
 }));
 
-// Function to Save User Profiles to profiles.json
+/**
+ * Function to Save User Profiles to profiles.json
+ * Ensures no duplicate entries and maintains a persistent user profile list.
+ */
 const saveProfile = async (profile) => {
   const filePath = path.join(__dirname, 'profiles.json');
   let profiles = [];
@@ -62,7 +65,10 @@ const saveProfile = async (profile) => {
   return profile;
 };
 
-// POST OAuth2 Callback Route
+/**
+ * POST OAuth2 Callback Route
+ * Handles the OAuth2 code exchange and fetches user data from Discord.
+ */
 app.post('/oauth/callback', async (req, res) => {
   const { code } = req.body;
   console.log('Received OAuth2 code:', code);
@@ -78,11 +84,11 @@ app.post('/oauth/callback', async (req, res) => {
     const tokenResponse = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: '1297728075340972073',
-        client_secret: 'K0cIXhm1ZweOvtoRqMdOsaUk5DFZFV7f',
+        client_id: process.env.DISCORD_CLIENT_ID, // Use environment variable
+        client_secret: process.env.DISCORD_CLIENT_SECRET, // Use environment variable
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: 'https://alexg0dev.github.io/quest/',
+        redirect_uri: 'https://alexg0dev.github.io/quest/', // Use environment variable
         scope: 'identify email'
       }),
       {
