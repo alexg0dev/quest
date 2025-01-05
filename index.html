@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quest for Glory - Homepage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+
+  <!-- Swiper.js CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/swiper/swiper-bundle.min.css"
+  />
+
+  <!-- AOS CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+  />
+
+  <!-- Main Styles -->
+  <style>
+    :root {
+      --q4g-orange: #FF6700;
+      --q4g-red: #FF0000;
+      --q4g-black: #1A1A1A;
+      --q4g-white: #FFFFFF;
+      --q4g-gray: #2B2B2B;
+      --q4g-light-gray: #D4D4D4;
+      --q4g-font-heading: 'Montserrat', sans-serif;
+      --q4g-font-body: 'Poppins', sans-serif;
+      --transition-speed: 0.3s; /* Faster for snappier animations */
+      --button-height: 50px;
+      --card-shadow: rgba(255, 103, 0, 0.5);
+    }
+
+    /* RESET */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: var(--q4g-font-body);
+      background: var(--q4g-black);
+      color: var(--q4g-white);
+      line-height: 1.6;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: color var(--transition-speed) ease;
+    }
+    a:hover {
+      color: var(--q4g-orange);
+    }
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--q4g-black); /* Fully opaque */
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5); /* Enhanced shadow */
+      transition: background var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+    }
+    .brand-logo img {
+      width: 60px;
+      margin-right: 0.5rem;
+      border-radius: 8px;
+      transition: transform var(--transition-speed) ease;
+    }
+    .brand-logo img:hover {
+      transform: scale(1.05);
+    }
+    .brand-text {
+      color: var(--q4g-orange);
+      font-size: 1.8rem;
+      font-family: var(--q4g-font-heading);
+      font-weight: 700;
+      letter-spacing: 1px;
+      pointer-events: none; /* No hover effect */
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    .nav-links li a {
+      font-size: 1rem;
+      font-weight: 600;
+      position: relative;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: transform var(--transition-speed) ease;
+    }
+    .nav-links li a::after {
+      content: '';
+      width: 0%;
+      height: 2px;
+      background: var(--q4g-orange);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transition: width var(--transition-speed) ease;
+    }
+    .nav-links li a:hover::after {
+      width: 100%;
+    }
+    .nav-links li a:hover {
+      transform: translateY(-3px);
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1100;
+    }
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: var(--q4g-white);
+      transition: all var(--transition-speed) ease;
+    }
+    .hamburger.active div:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active div:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active div:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* MOBILE MENU */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 80%;
+      height: 100vh;
+      background: var(--q4g-black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      transition: right var(--transition-speed) ease, opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+    }
+    .mobile-menu.open {
+      right: 0;
+      visibility: visible;
+      opacity: 1;
+      animation: slideInRight 0.3s forwards;
+    }
+    @keyframes slideInRight {
+      from { right: -100%; }
+      to   { right: 0; }
+    }
+    .mobile-menu ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      text-align: center;
+    }
+    .mobile-menu a {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--q4g-white);
+      position: relative;
+      transition: transform var(--transition-speed) ease;
+    }
+    .mobile-menu a::after {
+      content: '';
+      width: 0%;
+      height: 2px;
+      background: var(--q4g-orange);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transition: width var(--transition-speed) ease;
+    }
+    .mobile-menu a:hover::after {
+      width: 100%;
+    }
+    .mobile-menu a:hover {
+      transform: translateY(-3px);
+    }
+
+    /* LOGIN BUTTON (with animation) */
+    .login-btn {
+      padding: 0.5rem 1.5rem;
+      border: 2px solid var(--q4g-orange);
+      border-radius: 25px;
+      color: var(--q4g-orange);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      height: var(--button-height);
+      position: relative;
+      overflow: hidden;
+      background: none;
+      cursor: pointer;
+      font-family: var(--q4g-font-heading);
+      font-size: 1rem;
+      text-decoration: none;
+      transition: transform var(--transition-speed) ease;
+      z-index: 0; /* Ensure stacking context */
+    }
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--q4g-orange);
+      transform: skewX(-45deg);
+      transition: all var(--transition-speed) ease;
+      z-index: -1; /* Place behind text */
+    }
+    .login-btn:hover::before {
+      left: 0;
+    }
+    .login-btn:hover {
+      color: var(--q4g-white);
+      transform: translateY(-3px);
+    }
+    .auth-buttons.hidden {
+      display: none;
+    }
+
+    /* USER INFO */
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: absolute;
+      top: 1rem;
+      right: 2rem;
+      transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+    }
+    .user-info img {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--q4g-orange);
+      cursor: pointer;
+      transition: transform var(--transition-speed) ease;
+    }
+    .user-info img:hover {
+      transform: scale(1.1);
+    }
+    .user-info span {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .user-info.hidden {
+      opacity: 0;
+      transform: scale(0.95);
+      pointer-events: none;
+    }
+    #signOutButton {
+      margin-left: 1rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 25px;
+      background: var(--q4g-red);
+      color: var(--q4g-white);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition-speed) ease, transform var(--transition-speed) ease;
+    }
+    #signOutButton:hover {
+      background: #cc0000;
+      transform: translateY(-3px);
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 80px);
+      overflow: hidden;
+      display: flex;
+      align-items: center;       /* Vertically center */
+      justify-content: center;   /* Horizontally center */
+      text-align: center;
+      margin-top: 80px;
+      background: #000;
+      box-shadow: inset 0 0 50px rgba(255,103,0,0.3);
+    }
+    .hero .swiper-container {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 1;                /* Behind hero-content */
+    }
+    .decorative-shape {
+      position: absolute;
+      top: 50%; 
+      left: 50%;
+      transform: translate(-50%, -50%); /* Center the SVG */
+      width: 200px;                      /* Adjust size as needed */
+      height: 200px;                     /* Adjust size as needed */
+      z-index: 2;                        /* Above video */
+    }
+    .hero .swiper-slide video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      box-shadow: inset 0 0 0 1000px rgba(0,0,0,0.5);
+      transition: transform var(--transition-speed) ease;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .hero .swiper-slide video:hover {
+      transform: scale(1.05);
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 1;
+    }
+    .hero-content {
+      z-index: 3;
+      width: 100%;              /* Ensure full width */
+      max-width: 800px;
+      padding: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform var(--transition-speed) ease;
+    }
+    .hero-content:hover {
+      transform: scale(1.02);
+    }
+    .hero-content h1 {
+      font-family: var(--q4g-font-heading);
+      font-size: 3rem;
+      margin: 0 0 1rem 0;            /* Remove default margins */
+      padding: 0;                     /* Remove default padding */
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+    }
+    .hero-content p {
+      font-size: 1.3rem;
+      margin: 0 0 2rem 0;            /* Remove default margins */
+      padding: 0;                     /* Remove default padding */
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+    }
+    .cta-btn {
+      padding: 0.75rem 2rem;
+      color: var(--q4g-white);
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+      background: linear-gradient(45deg, var(--q4g-orange), #ff8f00);
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      z-index: 0; /* Ensure stacking context */
+      opacity: 1; /* Removed animation opacity */
+    }
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--q4g-orange);
+      transform: skewX(-45deg);
+      transition: all var(--transition-speed) ease;
+      z-index: -1; /* Place behind text */
+    }
+    .cta-btn:hover::before {
+      left: 0;
+    }
+    .cta-btn:hover {
+      color: var(--q4g-white);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    }
+
+    /* PARTNERS */
+    .partners-section {
+      background: #141414;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .partners-section h2 {
+      font-family: var(--q4g-font-heading);
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: var(--q4g-orange);
+      position: relative;
+      display: inline-block;
+    }
+    .partners-section h2::after {
+      content: '';
+      width: 60px;
+      height: 4px;
+      background: var(--q4g-orange);
+      position: absolute;
+      left: 50%;
+      bottom: -15px;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+    .partner-carousel {
+      max-width: 1200px;
+      margin: 0 auto;
+      opacity: 1; /* Removed animation opacity */
+    }
+    .partner-carousel .swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .partner-carousel img {
+      height: 80px;
+      width: auto;
+      filter: grayscale(70%);
+      transition: transform var(--transition-speed) ease, filter var(--transition-speed) ease;
+      border-radius: 8px;
+    }
+    .partner-carousel img:hover {
+      filter: grayscale(0%);
+      transform: scale(1.1);
+    }
+
+    /* BECOME A PLAYER (Enhanced Design) */
+    .player-section {
+      background: radial-gradient(circle, rgba(255,103,0,0.1) 0%, #111111 60%);
+      padding: 5rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+    .player-section h2 {
+      font-family: var(--q4g-font-heading);
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      color: var(--q4g-orange);
+      position: relative;
+      display: inline-block;
+    }
+    .player-section h2::after {
+      content: '';
+      width: 80px;
+      height: 4px;
+      background: var(--q4g-orange);
+      position: absolute;
+      left: 50%;
+      bottom: -20px;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+    .steps-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      justify-items: center;
+      text-align: left;
+      /* Added AOS animation */
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .steps-container[data-aos="fade-up"] {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .step {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,103,0,0.15));
+      border: 1px solid rgba(255,255,255,0.1);
+      width: 100%;
+      max-width: 350px;
+      padding: 1.5rem;
+      border-radius: 20px;
+      transition: transform var(--transition-speed) ease, background 0.3s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      /* Removed box-shadow */
+    }
+    .step:hover {
+      transform: translateY(-5px) scale(1.02);
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,103,0,0.2));
+      /* Removed box-shadow */
+    }
+    .step-number {
+      background: var(--q4g-orange);
+      color: var(--q4g-black);
+      min-width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: background var(--transition-speed) ease;
+    }
+    .step-number:hover {
+      background: var(--q4g-red);
+      color: var(--q4g-white);
+    }
+    .step-content h4 {
+      color: var(--q4g-orange);
+      margin-bottom: 0.5rem;
+      font-size: 1.3rem;
+      font-family: var(--q4g-font-heading);
+    }
+    .step-content p {
+      color: var(--q4g-light-gray);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    /* JOIN DISCORD BUTTON */
+    .discord-btn {
+      margin-top: 3rem;
+      padding: 0.75rem 1.5rem;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      background: linear-gradient(45deg, #7289DA, #5b6eae);
+      transition: all var(--transition-speed) ease;
+      z-index: 2; /* Above steps */
+      opacity: 1; /* Removed animation opacity */
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .discord-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0.1);
+      transform: skewX(-45deg);
+      transition: transform var(--transition-speed) ease;
+      z-index: -1; /* Place behind text */
+    }
+    .discord-btn:hover::before {
+      transform: translateX(100%) skewX(-45deg);
+    }
+    .discord-btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 10px rgba(0,0,0,0.4);
+    }
+
+    /* OUR DIVISIONS */
+    .divisions-section {
+      background: #1A1A1A;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .divisions-section h2 {
+      font-family: var(--q4g-font-heading);
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      color: var(--q4g-orange);
+      position: relative;
+      display: inline-block;
+    }
+    .divisions-section h2::after {
+      content: '';
+      width: 80px;
+      height: 4px;
+      background: var(--q4g-orange);
+      position: absolute;
+      left: 50%;
+      bottom: -20px;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    .divisions-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      justify-items: center;
+    }
+    .division-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,103,0,0.1));
+      width: 100%;
+      max-width: 350px;
+      padding: 2rem 1.5rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    .division-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 15px 30px var(--card-shadow);
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,103,0,0.2));
+    }
+    .division-card img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      transition: transform var(--transition-speed) ease;
+    }
+    /* Rotate the logo when hovering over the entire card */
+    .division-card:hover img {
+      transform: rotate(360deg);
+    }
+    .division-card h3 {
+      color: var(--q4g-orange);
+      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+      font-family: var(--q4g-font-heading);
+      /* Removed the ::after pseudo-element to eliminate the line */
+    }
+    .division-card p {
+      color: var(--q4g-light-gray);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .apply-btn {
+      padding: 0.5rem 1.5rem;
+      border-radius: 25px;
+      color: var(--q4g-white);
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      text-decoration: none;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      background: linear-gradient(45deg, var(--q4g-orange), #ff8f00);
+      position: relative;
+      overflow: hidden;
+      z-index: 0; /* Ensure stacking context */
+    }
+    .apply-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--q4g-orange);
+      transform: skewX(-45deg);
+      transition: all var(--transition-speed) ease;
+      z-index: -1; /* Place behind text */
+    }
+    .apply-btn:hover::before {
+      left: 0;
+    }
+    .apply-btn:hover {
+      background: linear-gradient(45deg, #e65a00, #ff7f50);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 10px rgba(0,0,0,0.4);
+    }
+    .team-count {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--q4g-light-gray);
+    }
+    .team-count span:first-child {
+      font-weight: 600;
+    }
+
+    /* LIVE BYOT */
+    .live-byot-section {
+      background: #141414;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .live-byot-section h2 {
+      font-family: var(--q4g-font-heading);
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: var(--q4g-orange);
+      position: relative;
+      display: inline-block;
+    }
+    .live-byot-section h2::after {
+      content: '';
+      width: 80px;
+      height: 4px;
+      background: var(--q4g-orange);
+      position: absolute;
+      left: 50%;
+      bottom: -20px;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+    .live-byot-content {
+      max-width: 800px;
+      margin: 0 auto;
+      opacity: 1; /* Removed animation opacity */
+    }
+    .live-byot-content iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      transition: transform var(--transition-speed) ease;
+      z-index: 1; /* Ensure iframe stays above pseudo-elements */
+    }
+    .live-byot-content iframe:hover {
+      transform: scale(1.02);
+    }
+
+    /* ABOUT OUR QUEST */
+    .about-section {
+      background: #1A1A1A;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-section h2 {
+      font-family: var(--q4g-font-heading);
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      color: var(--q4g-orange);
+      position: relative;
+      display: inline-block;
+    }
+    .about-section h2::after {
+      content: '';
+      width: 80px;
+      height: 4px;
+      background: var(--q4g-orange);
+      position: absolute;
+      left: 50%;
+      bottom: -20px;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+    .about-content {
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 1.1rem;
+      color: var(--q4g-light-gray);
+      line-height: 1.8;
+    }
+    .about-images {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .about-images img {
+      width: 200px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: transform var(--transition-speed) ease;
+    }
+    .about-images img:hover {
+      transform: scale(1.05);
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--q4g-black);
+      color: #ccc;
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: auto;
+      border-top: 2px solid var(--q4g-gray);
+    }
+    .footer-nav, .social-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .footer-nav a, .social-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #ccc;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      position: relative;
+      transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    }
+    .footer-nav a::after, .social-links a::after {
+      content: '';
+      width: 0%;
+      height: 2px;
+      background: var(--q4g-orange);
+      position: absolute;
+      bottom: 0; left: 0;
+      transition: width var(--transition-speed) ease;
+    }
+    .footer-nav a:hover::after, .social-links a:hover::after {
+      width: 100%;
+    }
+    .footer-nav a:hover, .social-links a:hover {
+      color: var(--q4g-orange);
+      transform: translateY(-3px);
+    }
+    .rules-button {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 2px solid var(--q4g-orange);
+      border-radius: 25px;
+      color: var(--q4g-orange);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--transition-speed) ease;
+    }
+    .rules-button::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--q4g-orange);
+      transform: skewX(-45deg);
+      transition: all var(--transition-speed) ease;
+      z-index: -1; /* Place behind text */
+    }
+    .rules-button:hover::after {
+      left: 0;
+    }
+    .rules-button:hover {
+      color: var(--q4g-white);
+      transform: translateY(-3px);
+    }
+    .footer-support {
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    .footer-support a {
+      color: #5865F2;
+      text-decoration: underline;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      position: relative;
+      transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    }
+    .footer-support a::after {
+      content: '';
+      width: 0%;
+      height: 2px;
+      background: #5865F2;
+      position: absolute;
+      bottom: 0; left: 0;
+      transition: width var(--transition-speed) ease;
+    }
+    .footer-support a:hover::after {
+      width: 100%;
+    }
+    .footer-support a:hover {
+      color: #4653c9;
+      transform: translateY(-2px);
+    }
+    .footer-support a:hover::after {
+      background: #4653c9;
+    }
+
+    .footer-copy {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #999;
+    }
+
+    /* RESPONSIVE UPDATES */
+    @media (max-width: 1024px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .partner-carousel {
+        max-width: 90%;
+        margin: 0 auto;
+      }
+    }
+    @media (max-width: 768px) {
+      .hero {
+        margin-top: 60px;
+        height: calc(100vh - 60px);
+      }
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+      .hero-content p {
+        font-size: 1rem;
+      }
+      .cta-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+      }
+      .partner-carousel img {
+        height: 60px;
+      }
+      .player-section h2,
+      .divisions-section h2,
+      .live-byot-section h2,
+      .about-section h2 {
+        font-size: 1.5rem;
+      }
+      .steps-container {
+        grid-template-columns: 1fr;
+      }
+      .step {
+        width: 100%;
+        flex-direction: row;
+      }
+      .step-number {
+        margin-bottom: 0;
+      }
+      .step-content {
+        align-items: flex-start;
+      }
+      .user-info {
+        display: none;
+      }
+      .division-card {
+        max-width: 100%;
+      }
+      /* Adjust Discord button position on smaller screens */
+      .discord-btn {
+        margin-top: 2rem;
+      }
+    }
+
+    /* KEYFRAMES */
+    @keyframes slideInRight {
+      from { right: -100%; }
+      to   { right: 0; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header id="header">
+    <div class="brand">
+      <div class="brand-logo">
+        <img src="qg.png" alt="Quest for Glory Logo" />
+      </div>
+      <div class="brand-text">Quest for Glory</div>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#"><i class="fas fa-newspaper"></i> News</a></li>
+        <li><a href="#"><i class="fas fa-trophy"></i> Competitions</a></li>
+        <li><a href="#"><i class="fas fa-lightbulb"></i> Vision</a></li>
+        <li><a href="#"><i class="fas fa-comments"></i> Contact & Support</a></li>
+        <li><a href="#"><i class="fas fa-star"></i> Power Rankings</a></li>
+      </ul>
+      <div class="auth-buttons">
+        <!-- Updated to use Railway Backend OAuth2 Login URL -->
+        <a
+          href="https://your-railway-backend-url.com/login"
+          aria-label="Login with Discord"
+          class="login-btn"
+          id="loginButton"
+        >
+          <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+      </div>
+      <div class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </nav>
+    <!-- USER INFO (hidden by default) -->
+    <div class="user-info hidden" id="userInfo">
+      <a href="https://discord.com/users/" id="userProfileLink" target="_blank">
+        <img src="" alt="User Profile Picture" id="userProfilePic" />
+      </a>
+      <span id="userName"></span>
+      <button id="signOutButton">Sign Out</button>
+    </div>
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobile-menu">
+      <ul>
+        <li><a href="#"><i class="fas fa-newspaper"></i> News</a></li>
+        <li><a href="#"><i class="fas fa-trophy"></i> Competitions</a></li>
+        <li><a href="#"><i class="fas fa-lightbulb"></i> Vision</a></li>
+        <li><a href="#"><i class="fas fa-comments"></i> Contact & Support</a></li>
+        <li><a href="#"><i class="fas fa-star"></i> Power Rankings</a></li>
+      </ul>
+      <div class="auth-buttons">
+        <!-- Updated to use Railway Backend OAuth2 Login URL -->
+        <a
+          href="https://your-railway-backend-url.com/login"
+          aria-label="Login with Discord"
+          class="login-btn"
+          id="mobileLoginButton"
+        >
+          <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <!-- Slide 1 -->
+          <div class="swiper-slide">
+            <video autoplay muted loop playsinline>
+              <source src="clip1.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <!-- Add more slides as needed -->
+        </div>
+        <!-- Pagination (dots) -->
+        <div class="swiper-pagination"></div>
+      </div>
+      <!-- Decorative Shape -->
+      <svg class="decorative-shape" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="50" fill="#FF6700" opacity="0.3" />
+      </svg>
+      <div class="hero-content" data-aos="fade-up">
+        <h1>Welcome to Quest for Glory</h1>
+        <p>Revolutionizing Pro Clubs to Make It the Best in North America.</p>
+        <a class="cta-btn" href="#becomePlayer">
+          <i class="fas fa-play"></i> Get to Playing
+        </a>
+      </div>
+    </section>
+
+    <!-- PARTNERS (Centered) -->
+    <section class="partners-section" data-aos="fade-up">
+      <h2>Our Partners</h2>
+      <div class="swiper-container partner-carousel">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide"><img src="psv.png" alt="PSV Partner" /></div>
+          <div class="swiper-slide"><img src="psf.png" alt="PSF Partner" /></div>
+          <div class="swiper-slide"><img src="dortmund.png" alt="Dortmund Partner" /></div>
+          <div class="swiper-slide"><img src="intermiami.png" alt="Inter Miami Partner" /></div>
+          <!-- Add more partner logos as needed -->
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </section>
+
+    <!-- BECOME A PLAYER (Enhanced Design) -->
+    <section class="player-section" id="becomePlayer" data-aos="fade-up">
+      <h2>Become a Player</h2>
+      <div class="steps-container" data-aos="fade-up">
+        <!-- Step 1 -->
+        <div class="step" data-aos="flip-left" data-aos-delay="100">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h4>Join Our Discord Server</h4>
+            <p>Connect with players and teams, and get official updates in real time.</p>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="step" data-aos="flip-right" data-aos-delay="200">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h4>Pick Your Console</h4>
+            <p>Available for both PlayStation and Xbox. More platforms coming soon!</p>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="step" data-aos="flip-left" data-aos-delay="300">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h4>Choose Your Role</h4>
+            <p>Whether you’re a free agent or a returning champion, there’s a place for you.</p>
+          </div>
+        </div>
+        <!-- Step 4 -->
+        <div class="step" data-aos="flip-right" data-aos-delay="400">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h4>Announce Your Skills</h4>
+            <p>Post in the Free Agent chat with your experience, gamertag, and position. Get scouted!</p>
+          </div>
+        </div>
+      </div>
+      <!-- Discord Button -->
+      <a
+        class="discord-btn"
+        href="https://discord.gg/example"
+        target="_blank"
+        aria-label="Join Quest for Glory Discord Server"
+        data-aos="zoom-in"
+        data-aos-delay="500"
+      >
+        <i class="fab fa-discord"></i> Join Discord
+      </a>
+    </section>
+
+    <!-- ABOUT OUR QUEST -->
+    <section class="about-section" data-aos="fade-up">
+      <h2>About Our Quest</h2>
+      <div class="about-content">
+        <p>
+          At Quest for Glory, we're revolutionizing the Pro Clubs community by creating the best gamemode in EA FC25. Our mission is to expand our reach across North America and eventually Europe and the rest of the world. We host high-stakes tournaments with substantial prizes and continuously invest in our community to ensure a top-tier competitive environment.
+        </p>
+        <p>
+          Join us on this epic journey as we elevate Pro Clubs to new heights, fostering a vibrant and competitive community where every player can shine.
+        </p>
+        <!-- Images for "Our Mission" and "Global Expansion" -->
+        <div class="about-images">
+          <img src="our-mission.jpg" alt="Our Mission">
+          <img src="global-expansion.jpg" alt="Global Expansion">
+        </div>
+      </div>
+    </section>
+
+    <!-- OUR DIVISIONS (Redesigned) -->
+    <section class="divisions-section" data-aos="fade-up">
+      <h2>Our Divisions</h2>
+      <div class="divisions-container">
+        <!-- Division 1 -->
+        <div class="division-card" data-aos="zoom-in" data-aos-delay="100">
+          <img src="qg.png" alt="Division 1 Icon" />
+          <h3>Division 1</h3>
+          <p><strong>Prize:</strong> $2000</p>
+          <p>Compete at the highest level with the best players. Exclusive rewards and recognition await.</p>
+          <a href="#applyDiv1" class="apply-btn">
+            <i class="fas fa-arrow-right"></i> Apply
+          </a>
+          <div class="team-count">
+            <span>Teams:</span>
+            <span>50</span>
+          </div>
+        </div>
+        <!-- Division 2 -->
+        <div class="division-card" data-aos="zoom-in" data-aos-delay="200">
+          <img src="qg.png" alt="Division 2 Icon" />
+          <h3>Division 2</h3>
+          <p><strong>Prize:</strong> $1500</p>
+          <p>Join a competitive yet accessible tier. Improve your skills and climb the ranks.</p>
+          <a href="#applyDiv2" class="apply-btn">
+            <i class="fas fa-arrow-right"></i> Apply
+          </a>
+          <div class="team-count">
+            <span>Teams:</span>
+            <span>30</span>
+          </div>
+        </div>
+        <!-- Division 3 -->
+        <div class="division-card" data-aos="zoom-in" data-aos-delay="300">
+          <img src="qg.png" alt="Division 3 Icon" />
+          <h3>Division 3</h3>
+          <p><strong>Prize:</strong> Discord Privileges</p>
+          <p>Perfect for newcomers and casual players. Get in the game with zero entry fees!</p>
+          <a href="#applyDiv3" class="apply-btn">
+            <i class="fas fa-arrow-right"></i> Apply
+          </a>
+          <div class="team-count">
+            <span>Teams:</span>
+            <span>20</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE BYOT -->
+    <section class="live-byot-section" data-aos="fade-up">
+      <h2>Watch the Finals of the BYOT</h2>
+      <div class="live-byot-content">
+        <iframe
+          src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID"
+          title="Live BYOT"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <ul class="footer-nav">
+      <li><a href="#privacyPolicy"><i class="fas fa-shield-alt"></i> How We Protect Your Data</a></li>
+      <li><a href="#cookiesPolicy"><i class="fas fa-cookie-bite"></i> Our Cookie Practices</a></li>
+      <li><a href="#termsService"><i class="fas fa-file-contract"></i> Terms You Should Know</a></li>
+      <li><a href="#ourStory"><i class="fas fa-book-open"></i> Our Story</a></li>
+    </ul>
+    
+    <ul class="social-links">
+      <li><a href="https://twitter.com/questforglory" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
+      <li><a href="https://facebook.com/questforglory" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+      <li><a href="https://instagram.com/questforglory" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+      <li><a href="https://discord.gg/example" target="_blank"><i class="fab fa-discord"></i> Discord</a></li>
+    </ul>
+    
+    <a href="#rulesGuidelines" class="rules-button">
+      <i class="fas fa-book"></i> Rules and Guidelines
+    </a>
+
+    <div class="footer-support">
+      <p>Need help?
+        <a href="https://discord.gg/example">
+          <i class="fab fa-discord"></i> Join our Discord Help Desk
+        </a>
+      </p>
+    </div>
+    
+    <div class="footer-copy">
+      © 2024 Quest for Glory. All Rights Reserved. Not affiliated with EA Sports or its licensors.
+    </div>
+  </footer>
+
+  <!-- Swiper.js JS -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- Main JS -->
+  <script>
+    // Initialize Swiper (Hero)
+    var heroSwiper = new Swiper('.hero .swiper-container', {
+      loop: true,
+      autoplay: { delay: 5000, disableOnInteraction: false },
+      pagination: { el: '.hero .swiper-pagination', clickable: true },
+      effect: 'fade',
+      fadeEffect: { crossFade: true },
+    });
+
+    // Initialize Swiper (Partners)
+    var partnersSwiper = new Swiper('.partner-carousel', {
+      loop: true,
+      autoplay: { delay: 3000, disableOnInteraction: false },
+      slidesPerView: 4,
+      spaceBetween: 30,
+      breakpoints: {
+        1024: { slidesPerView: 4, spaceBetween: 30 },
+        768:  { slidesPerView: 3, spaceBetween: 20 },
+        640:  { slidesPerView: 2, spaceBetween: 10 },
+        480:  { slidesPerView: 1, spaceBetween: 5 },
+      },
+      pagination: { el: '.partner-carousel .swiper-pagination', clickable: true },
+    });
+
+    // Initialize AOS
+    AOS.init({ duration: 800, once: true, easing: 'ease-in-out' });
+
+    // Hamburger Menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', isOpen);
+    });
+    // Close mobile menu on link click
+    const mobileLinks = mobileMenu.querySelectorAll('a, button');
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Header Scroll Effect (Optional: Add styles for .scrolled if desired)
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Smooth Scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (!href.startsWith('#')) return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    /* ===========================
+       Handle OAuth2 Callback and Display User Profile
+    ============================ */
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+
+      if (code) {
+        // Replace 'https://your-railway-backend-url.com' with your actual Railway backend URL
+        const backendURL = 'https://your-railway-backend-url.com';
+
+        fetch(`${backendURL}/oauth/callback`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success && data.user) {
+              // Update UI with user data
+              const userInfo = document.getElementById('userInfo');
+              const userNameSpan = document.getElementById('userName');
+              const userProfilePic = document.getElementById('userProfilePic');
+              const userProfileLink = document.getElementById('userProfileLink');
+
+              userNameSpan.textContent = `${data.user.username}#${data.user.discriminator}`;
+              userProfilePic.src = data.user.avatar;
+              userProfileLink.href = `https://discord.com/users/${data.user.id}`;
+
+              userInfo.classList.remove('hidden');
+
+              // Hide auth buttons
+              const authButtons = document.querySelectorAll('.auth-buttons');
+              authButtons.forEach(btn => btn.classList.add('hidden'));
+
+              // Remove query params from URL without reloading
+              window.history.replaceState({}, document.title, "/");
+            } else {
+              console.error('Authentication failed:', data.message);
+            }
+          })
+          .catch(error => {
+            console.error('OAuth callback error:', error);
+          });
+      }
+    });
+
+    /* ===========================
+       Sign Out Functionality
+    ============================ */
+    const signOutButton = document.getElementById('signOutButton');
+    if (signOutButton) {
+      signOutButton.addEventListener('click', () => {
+        // Clear user info
+        const userInfo = document.getElementById('userInfo');
+        const userNameSpan = document.getElementById('userName');
+        const userProfilePic = document.getElementById('userProfilePic');
+        const userProfileLink = document.getElementById('userProfileLink');
+
+        userNameSpan.textContent = "";
+        userProfilePic.src = "";
+        userProfileLink.href = "#";
+        userInfo.classList.add('hidden');
+
+        // Show auth buttons
+        const authButtons = document.querySelectorAll('.auth-buttons');
+        authButtons.forEach(btn => btn.classList.remove('hidden'));
+      });
+    }
+
+    /* ===========================
+       Countdown Timer (Optional)
+    ============================ */
+    document.addEventListener('DOMContentLoaded', () => {
+      const countdownElement = document.getElementById("countdown");
+      if (countdownElement) {
+        const tournamentDate = new Date("Dec 31, 2024 23:59:59").getTime();
+        const countdownFunction = setInterval(function() {
+          const now = new Date().getTime();
+          const distance = tournamentDate - now;
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          if (document.getElementById("days")) {
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+          }
+
+          if (distance < 0) {
+            clearInterval(countdownFunction);
+            if (countdownElement) {
+              countdownElement.innerHTML = "Tournament Started!";
+            }
+          }
+        }, 1000);
+      }
+    });
+  </script>
+</body>
+</html>
