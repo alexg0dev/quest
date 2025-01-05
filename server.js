@@ -6,7 +6,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // Ensure mongoose is required
 const cors = require('cors');
 
 const app = express();
@@ -44,6 +44,27 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('User', userSchema);
+
+// Function to Save User Profiles to MongoDB
+const saveProfile = async (profile) => {
+  try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ id: profile.id });
+    if (existingUser) {
+      console.log(`User with ID ${profile.id} already exists.`);
+      return existingUser;
+    }
+
+    // Create new user
+    const newUser = new User(profile);
+    await newUser.save();
+    console.log(`Added to MongoDB: ${JSON.stringify(profile)}`);
+    return newUser;
+  } catch (err) {
+    console.error('Error saving profile to MongoDB:', err);
+    throw err;
+  }
+};
 
 // POST OAuth2 Callback Route
 app.post('/oauth/callback', async (req, res) => {
@@ -103,23 +124,10 @@ app.post('/oauth/callback', async (req, res) => {
     console.log('Prepared user profile:', profile);
 
     // Save Profile to MongoDB
-    try {
-      const existingUser = await User.findOne({ id: profile.id });
-      if (existingUser) {
-        console.log(`User with ID ${profile.id} already exists.`);
-        return res.json({ success: true, user: existingUser });
-      }
+    const savedUser = await saveProfile(profile);
 
-      const newUser = new User(profile);
-      await newUser.save();
-      console.log(`User ${profile.username}#${profile.discriminator} saved to MongoDB.`);
-
-      // Respond with Success and User Data
-      res.json({ success: true, user: newUser });
-    } catch (dbError) {
-      console.error('Error saving user to MongoDB:', dbError);
-      res.status(500).json({ success: false, message: 'Error saving user data.' });
-    }
+    // Respond with Success and User Data
+    res.json({ success: true, user: savedUser });
   } catch (error) {
     if (error.response) {
       console.error('Error during OAuth callback (response):', error.response.data);
