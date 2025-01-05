@@ -71,11 +71,11 @@ app.post('/oauth/callback', async (req, res) => {
     const tokenResponse = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: '1324622665323118642',
-        client_secret: 'SOUH4ZSbsJMLMleztz9ySwlxPI5TvWCQ',
+        client_id: process.env.DISCORD_CLIENT_ID,
+        client_secret: process.env.DISCORD_CLIENT_SECRET,
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: 'https://alexg0dev.github.io/quest/',
+        redirect_uri: process.env.REDIRECT_URI,
         scope: 'identify email'
       }),
       {
@@ -101,8 +101,8 @@ app.post('/oauth/callback', async (req, res) => {
       id: user.id,
       username: `${user.username}#${user.discriminator}`,
       avatar: user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-        : null,
+        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512` // Default to PNG, Discord handles the format
+        : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png?size=512`, // Default Discord avatar
       email: user.email || 'No Email Provided'
     };
 
