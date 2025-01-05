@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configure CORS to allow requests from your frontend
 app.use(cors({
-  origin: process.env.FRONTEND_URL, // Use environment variable
+  origin: process.env.FRONTEND_URL, // Ensure this matches your frontend URL
   methods: ['POST'],
   allowedHeaders: ['Content-Type']
 }));
