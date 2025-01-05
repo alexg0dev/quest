@@ -117,6 +117,8 @@
       align-items: center;
       gap: 1rem;
       position: relative; /* For dropdown positioning */
+      flex: 1; /* Allow nav to take available space */
+      justify-content: flex-end; /* Align items to the end */
     }
     .nav-links {
       list-style: none;
@@ -1097,9 +1099,7 @@
         align-items: flex-start;
       }
       /* Hide user-info on small screens */
-      .user-info {
-        display: none;
-      }
+      /* Since the user wants it visible on larger screens, keep it visible here */
       .division-card {
         max-width: 100%;
       }
@@ -1152,23 +1152,23 @@
           <i class="fas fa-sign-in-alt"></i> Login
         </a>
       </div>
+      <!-- USER INFO (hidden by default) -->
+      <div class="user-info hidden" id="userInfo">
+        <img src="" alt="User Profile Picture" id="userProfilePic" />
+        <span id="userName"></span>
+        <!-- Dropdown Menu -->
+        <div class="profile-dropdown hidden" id="profileDropdown">
+          <a href="#profile">Profile</a>
+          <a href="#stats">Stats</a>
+          <a href="#" id="logoutOption">Logout</a>
+        </div>
+      </div>
       <div class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
         <div></div>
         <div></div>
         <div></div>
       </div>
     </nav>
-    <!-- USER INFO (hidden by default) -->
-    <div class="user-info hidden" id="userInfo">
-      <img src="" alt="User Profile Picture" id="userProfilePic" />
-      <span id="userName"></span>
-      <!-- Dropdown Menu -->
-      <div class="profile-dropdown hidden" id="profileDropdown">
-        <a href="#profile">Profile</a>
-        <a href="#stats">Stats</a>
-        <a href="#" id="logoutOption">Logout</a>
-      </div>
-    </div>
     <!-- MOBILE MENU -->
     <div class="mobile-menu" id="mobile-menu">
       <ul>
@@ -1511,11 +1511,9 @@
               const userInfo = document.getElementById('userInfo');
               const userNameSpan = document.getElementById('userName');
               const userProfilePic = document.getElementById('userProfilePic');
-              const userProfileLink = document.getElementById('userProfileLink');
 
               userNameSpan.textContent = `${data.user.username}`;
               userProfilePic.src = data.user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'; // Fallback to default avatar
-              userProfileLink.href = `https://discord.com/users/${data.user.id}`;
 
               userInfo.classList.remove('hidden');
 
@@ -1543,11 +1541,9 @@
           const userInfo = document.getElementById('userInfo');
           const userNameSpan = document.getElementById('userName');
           const userProfilePic = document.getElementById('userProfilePic');
-          const userProfileLink = document.getElementById('userProfileLink');
 
           userNameSpan.textContent = `${user.username}`;
           userProfilePic.src = user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'; // Fallback to default avatar
-          userProfileLink.href = `https://discord.com/users/${user.id}`;
 
           userInfo.classList.remove('hidden');
 
