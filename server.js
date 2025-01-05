@@ -18,9 +18,9 @@ app.use(cors({
 }));
 
 // Discord OAuth2 Credentials
-const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
-const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
-const REDIRECT_URI = process.env.REDIRECT_URI;
+const DISCORD_CLIENT_ID = '1324622665323118642';
+const DISCORD_CLIENT_SECRET = 'SOUH4ZSbsJMLMleztz9ySwlxPI5TvWCQ';
+const REDIRECT_URI = 'https://alexg0dev.github.io/quest/';
 
 // Route to handle OAuth callback
 app.post('/oauth/callback', async (req, res) => {
