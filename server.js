@@ -101,7 +101,7 @@ app.post('/oauth/callback', async (req, res) => {
       id: user.id,
       username: user.username, // Removed discriminator
       avatar: user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512` // Default to PNG, Discord handles the format
+        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512` // Discord handles the format
         : `https://cdn.discordapp.com/embed/avatars/${user.id % 5}.png?size=512`, // Default Discord avatar based on user ID
       email: user.email || 'No Email Provided'
     };
