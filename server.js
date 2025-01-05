@@ -29,14 +29,14 @@ const saveProfile = async (profile) => {
   const filePath = path.join(__dirname, 'profiles.json');
   let profiles = [];
 
-  // Check if profiles.json exists
-  if (await fs.pathExists(filePath)) {
-    try {
-      profiles = JSON.parse(await fs.readFile(filePath, 'utf8'));
-    } catch (err) {
-      console.error('Error parsing profiles.json:', err);
-      profiles = [];
-    }
+  try {
+    // Ensure profiles.json exists; if not, create it with an empty array
+    await fs.ensureFile(filePath);
+    const data = await fs.readFile(filePath, 'utf8');
+    profiles = data ? JSON.parse(data) : [];
+  } catch (err) {
+    console.error('Error reading profiles.json:', err);
+    profiles = [];
   }
 
   // Check if user already exists
@@ -71,11 +71,11 @@ app.post('/oauth/callback', async (req, res) => {
     const tokenResponse = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: '1324622665323118642', // Use environment variable
-        client_secret: 'SOUH4ZSbsJMLMleztz9ySwlxPI5TvWCQ', // Use environment variable
+        client_id: process.env.CLIENT_ID, // Use environment variable
+        client_secret: process.env.CLIENT_SECRET, // Use environment variable
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: 'https://alexg0dev.github.io/quest/', // Use environment variable
+        redirect_uri: process.env.REDIRECT_URI, // Use environment variable
         scope: 'identify email'
       }),
       {
@@ -99,7 +99,7 @@ app.post('/oauth/callback', async (req, res) => {
     // Prepare User Profile Data
     const profile = {
       id: user.id,
-      username: user.username, // Removed discriminator
+      username: user.username, // Removed discriminator for simplicity
       avatar: user.avatar
         ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512` // Discord handles the format
         : `https://cdn.discordapp.com/embed/avatars/${user.id % 5}.png?size=512`, // Default Discord avatar based on user ID
