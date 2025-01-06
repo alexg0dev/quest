@@ -1164,7 +1164,7 @@
     </nav>
     <!-- USER INFO (hidden by default) -->
     <div class="user-info hidden" id="userInfo">
-      <a href="https://discord.gg/example" id="userProfileLink" target="_blank">
+      <a href="https://discord.gg/YOUR_DISCORD_INVITE" id="userProfileLink" target="_blank">
         <img src="" alt="User Profile Picture" id="userProfilePic" />
         <span id="userName"></span>
       </a>
@@ -1527,11 +1527,12 @@
               const userProfilePic = document.getElementById('userProfilePic');
               const userProfileLink = document.getElementById('userProfileLink');
 
-              userNameSpan.textContent = `${data.user.username}#${data.user.discriminator}`;
+              // Since discriminators are removed, display only username
+              userNameSpan.textContent = `${data.user.username}`;
               userProfilePic.src = data.user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
               userProfilePic.alt = `${data.user.username}'s Profile Picture`;
 
-              // Set user profile link to your actual server or profile location
+              // Set user profile link to your Discord server
               userProfileLink.href = 'https://discord.gg/YOUR_DISCORD_INVITE'; // Update as needed
 
               userInfo.classList.remove('hidden');
@@ -1565,7 +1566,7 @@
           const userProfilePic = document.getElementById('userProfilePic');
           const userProfileLink = document.getElementById('userProfileLink');
 
-          userNameSpan.textContent = `${user.username}#${user.discriminator}`;
+          userNameSpan.textContent = `${user.username}`;
           userProfilePic.src = user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
           userProfilePic.alt = `${user.username}'s Profile Picture`;
           userProfileLink.href = 'https://discord.gg/YOUR_DISCORD_INVITE'; // Update as needed
