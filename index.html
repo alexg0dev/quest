@@ -11,7 +11,7 @@
     rel="stylesheet"
   >
 
-  <!-- Font Awesome -->
+  <!-- Font Awesome (Ensure this link is correct) -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -1164,7 +1164,7 @@
     </nav>
     <!-- USER INFO (hidden by default) -->
     <div class="user-info hidden" id="userInfo">
-      <a href="https://discord.gg/YOUR_DISCORD_INVITE" id="userProfileLink" target="_blank">
+      <a href="profile.html" id="userProfileLink" target="_blank">
         <img src="" alt="User Profile Picture" id="userProfilePic" />
         <span id="userName"></span>
       </a>
@@ -1527,13 +1527,12 @@
               const userProfilePic = document.getElementById('userProfilePic');
               const userProfileLink = document.getElementById('userProfileLink');
 
-              // Since discriminators are removed, display only username
               userNameSpan.textContent = `${data.user.username}`;
               userProfilePic.src = data.user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
               userProfilePic.alt = `${data.user.username}'s Profile Picture`;
 
-              // Set user profile link to your Discord server
-              userProfileLink.href = 'https://discord.gg/YOUR_DISCORD_INVITE'; // Update as needed
+              // Set user profile link to your profile page
+              userProfileLink.href = 'profile.html'; // Update as needed
 
               userInfo.classList.remove('hidden');
 
@@ -1569,7 +1568,7 @@
           userNameSpan.textContent = `${user.username}`;
           userProfilePic.src = user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
           userProfilePic.alt = `${user.username}'s Profile Picture`;
-          userProfileLink.href = 'https://discord.gg/YOUR_DISCORD_INVITE'; // Update as needed
+          userProfileLink.href = 'profile.html'; // Update as needed
 
           userInfo.classList.remove('hidden');
 
