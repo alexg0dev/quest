@@ -6,6 +6,8 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
+const fs = require('fs-extra');
+const path = require('path');
 const cors = require('cors');
 
 const app = express();
@@ -25,6 +27,46 @@ app.use(cors({
 // Body parsing middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+/**
+ * Helper function to save user profiles (profiles.json)
+ */
+const saveProfile = async (profile) => {
+  const filePath = path.join(__dirname, 'profiles.json');
+  let profiles = [];
+
+  try {
+    // Ensure file exists or create it
+    await fs.ensureFile(filePath);
+    const data = await fs.readFile(filePath, 'utf8');
+    profiles = data ? JSON.parse(data) : [];
+    console.log('Current profiles loaded:', profiles);
+  } catch (err) {
+    console.error('Error reading profiles.json:', err);
+    profiles = [];
+  }
+
+  // Check if user already exists
+  const userExists = profiles.some(p => p.id === profile.id);
+  if (userExists) {
+    console.log(`User with ID ${profile.id} already exists in profiles.json.`);
+    return profiles.find(p => p.id === profile.id);
+  }
+
+  // Append new profile
+  profiles.push(profile);
+  console.log('New profile to add:', profile);
+
+  // Write updated profiles back to JSON
+  try {
+    await fs.writeFile(filePath, JSON.stringify(profiles, null, 2));
+    console.log(`Added to profiles.json: ${JSON.stringify(profile)}`);
+  } catch (err) {
+    console.error('Error writing to profiles.json:', err);
+  }
+
+  return profile;
+};
 
 /**
  * OAuth2 Callback
@@ -81,8 +123,11 @@ app.post('/oauth/callback', async (req, res) => {
       email: user.email || 'No Email Provided'
     };
 
-    // Respond with user data without saving
-    res.json({ success: true, user: profile });
+    // Save profile to JSON
+    const savedUser = await saveProfile(profile);
+
+    // Respond with success
+    res.json({ success: true, user: savedUser });
   } catch (error) {
     if (error.response) {
       console.error('Error during OAuth callback (response):', error.response.data);
