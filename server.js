@@ -1,8 +1,5 @@
 // server.js
 
-// Load environment variables from .env file
-require('dotenv').config();
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
@@ -11,7 +8,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 8080; // Change to your desired port
 
 /**
  * Middleware
@@ -86,8 +83,8 @@ app.post('/oauth/callback', async (req, res) => {
     const tokenResponse = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: '1324622665323118642', // Put into .env in production
-        client_secret: 'K0cIXhm1ZweOvtoRqMdOsaUk5DFZFV7f', // Put into .env in production
+        client_id: '1324622665323118642', // Your Discord Client ID
+        client_secret: 'Rukg_rQAhewFoZbwwQNkf18nLJUiBPub', // Your Discord Client Secret
         grant_type: 'authorization_code',
         code,
         redirect_uri: 'https://alexg0dev.github.io/quest/', // Must match your Discord app settings
