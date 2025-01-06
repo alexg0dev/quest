@@ -11,14 +11,14 @@
     rel="stylesheet"
   >
 
-  <!-- Font Awesome (Corrected Integrity) -->
+  <!-- Font Awesome (CDN) Corrected -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    integrity="sha512-iecdLmaskl7CVkqkXNQ/zS5OENp1dQkL5fX7JqXpg6aLi7N9/OjJN1AsuK03eTPtYhfTLk9G6q3G/Q05aq+CmQ=="
+    integrity="sha512-pTrsmiq8k1beFnD5xupLTUYc4jh5feT9Z7SCQgT6rEJQc2Tvl4tUb4OaWHr0wPc7DKGgGljq44Pqmk5SSl0k5w=="
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
-  >
+  />
 
   <!-- Swiper.js CSS -->
   <link
@@ -83,13 +83,13 @@
       position: fixed;
       top: 0;
       width: 100%;
-      background: var(--q4g-black); /* Fully opaque */
+      background: var(--q4g-black);
       padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 1000;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5); /* Enhanced shadow */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
       transition: background var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
     }
 
@@ -112,14 +112,14 @@
       font-family: var(--q4g-font-heading);
       font-weight: 700;
       letter-spacing: 1px;
-      pointer-events: none; /* No hover effect */
+      pointer-events: none;
     }
 
     nav {
       display: flex;
       align-items: center;
       gap: 1rem;
-      position: relative; /* For dropdown positioning */
+      position: relative;
     }
     .nav-links {
       list-style: none;
@@ -236,7 +236,12 @@
       transform: translateY(-3px);
     }
 
-    /* LOGIN BUTTON (with animation) */
+    /* Hide Profile and Logout links initially */
+    .mobileUserLink.hidden {
+      display: none;
+    }
+
+    /* LOGIN BUTTON */
     .login-btn {
       padding: 0.5rem 1.5rem;
       border: 2px solid var(--q4g-orange);
@@ -255,7 +260,7 @@
       font-size: 1rem;
       text-decoration: none;
       transition: transform var(--transition-speed) ease;
-      z-index: 0; /* Ensure stacking context */
+      z-index: 0;
     }
     .login-btn::before {
       content: '';
@@ -265,7 +270,7 @@
       background: var(--q4g-orange);
       transform: skewX(-45deg);
       transition: all var(--transition-speed) ease;
-      z-index: -1; /* Place behind text */
+      z-index: -1;
     }
     .login-btn:hover::before {
       left: 0;
@@ -283,10 +288,9 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      position: relative; /* For dropdown positioning */
-      z-index: 1001; /* Ensure it stays above the header */
+      position: relative;
+      z-index: 1001;
     }
-    /* Replace <a> with <button> for profile toggle */
     .user-info button {
       background: none;
       border: none;
@@ -301,7 +305,8 @@
       outline: none;
     }
     .user-info img {
-      width: 40px; height: 40px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--q4g-orange);
@@ -324,7 +329,7 @@
     /* Dropdown Menu */
     .profile-dropdown {
       position: absolute;
-      top: 60px; /* Adjust based on header height */
+      top: 60px;
       right: 0;
       background: var(--q4g-gray);
       border: 1px solid var(--q4g-light-gray);
@@ -335,7 +340,6 @@
       min-width: 150px;
       z-index: 1002;
     }
-
     .profile-dropdown a {
       display: block;
       padding: 0.75rem 1.5rem;
@@ -343,13 +347,10 @@
       font-weight: 500;
       transition: background var(--transition-speed) ease;
     }
-
     .profile-dropdown a:hover {
       background: var(--q4g-orange);
       color: var(--q4g-black);
     }
-
-    /* Hide the dropdown by default */
     .profile-dropdown.hidden {
       opacity: 0;
       visibility: hidden;
@@ -369,12 +370,10 @@
       z-index: 2000;
       transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
     }
-
     .modal.hidden {
       opacity: 0;
       visibility: hidden;
     }
-
     .modal-content {
       background: var(--q4g-black);
       padding: 2rem;
@@ -385,21 +384,17 @@
       max-width: 400px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
-
     .modal-content h3 {
       margin-bottom: 1rem;
     }
-
     .modal-content p {
       margin-bottom: 2rem;
     }
-
     .modal-actions {
       display: flex;
       justify-content: center;
       gap: 1rem;
     }
-
     .modal-button {
       padding: 0.5rem 1.5rem;
       border: none;
@@ -408,22 +403,18 @@
       font-weight: 600;
       transition: background var(--transition-speed) ease, transform var(--transition-speed) ease;
     }
-
     .modal-button.confirm {
       background: var(--q4g-red);
       color: var(--q4g-white);
     }
-
     .modal-button.confirm:hover {
       background: #cc0000;
       transform: translateY(-2px);
     }
-
     .modal-button.cancel {
       background: var(--q4g-gray);
       color: var(--q4g-white);
     }
-
     .modal-button.cancel:hover {
       background: var(--q4g-light-gray);
       color: var(--q4g-black);
@@ -437,8 +428,8 @@
       height: calc(100vh - 80px);
       overflow: hidden;
       display: flex;
-      align-items: center;       /* Vertically center */
-      justify-content: center;   /* Horizontally center */
+      align-items: center;
+      justify-content: center;
       text-align: center;
       margin-top: 80px;
       background: #000;
@@ -448,7 +439,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      z-index: 1;                /* Behind hero-content */
+      z-index: 1; /* Behind hero-content */
     }
     .decorative-shape {
       position: absolute;
@@ -749,7 +740,6 @@
       transform: translateX(-50%);
       border-radius: 2px;
     }
-
     .divisions-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1053,7 +1043,6 @@
     .footer-support a:hover::after {
       background: #4653c9;
     }
-
     .footer-copy {
       margin-top: 1.5rem;
       font-size: 0.9rem;
@@ -1159,7 +1148,7 @@
           class="login-btn"
           id="loginButton"
         >
-          <i class="fas fa-sign-in-alt"></i> Login
+          <i class="fas fa-right-to-bracket"></i> Login
         </a>
       </div>
       <div class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
@@ -1177,19 +1166,22 @@
       </button>
       <!-- Dropdown Menu -->
       <div class="profile-dropdown hidden" id="profileDropdown">
-        <a href="#profile">Profile</a>
-        <a href="#stats">Stats</a>
-        <a href="#" id="logoutOption">Logout</a>
+        <a href="#profile"><i class="fas fa-user"></i> Profile</a>
+        <a href="#stats"><i class="fas fa-chart-line"></i> Stats</a>
+        <a href="#" id="logoutOption"><i class="fas fa-right-from-bracket"></i> Logout</a>
       </div>
     </div>
     <!-- MOBILE MENU -->
-    <div class="mobile-menu hidden" id="mobile-menu">
+    <div class="mobile-menu hidden" id="mobile-menu" aria-hidden="true">
       <ul>
         <li><a href="#"><i class="fas fa-newspaper"></i> News</a></li>
         <li><a href="#"><i class="fas fa-trophy"></i> Competitions</a></li>
         <li><a href="#"><i class="fas fa-lightbulb"></i> Vision</a></li>
         <li><a href="#"><i class="fas fa-comments"></i> Contact & Support</a></li>
         <li><a href="#"><i class="fas fa-star"></i> Power Rankings</a></li>
+        <!-- Conditional Profile and Logout Links -->
+        <li class="mobileUserLink hidden"><a href="#profile"><i class="fas fa-user"></i> Profile</a></li>
+        <li class="mobileUserLink hidden"><a href="#" id="mobileLogoutOption"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
       </ul>
       <div class="auth-buttons">
         <!-- OAuth Login Button for Mobile -->
@@ -1199,7 +1191,7 @@
           class="login-btn"
           id="mobileLoginButton"
         >
-          <i class="fas fa-sign-in-alt"></i> Login
+          <i class="fas fa-right-to-bracket"></i> Login
         </a>
       </div>
     </div>
@@ -1292,7 +1284,7 @@
       <!-- Discord Button -->
       <a
         class="discord-btn"
-        href="https://discord.gg/YOUR_DISCORD_INVITE" <!-- Replace with your actual Discord server invite link -->
+        href="https://discord.gg/YOUR_DISCORD_INVITE"
         target="_blank"
         aria-label="Join Quest for Glory Discord Server"
         data-aos="zoom-in"
@@ -1533,12 +1525,14 @@
               const userNameSpan = document.getElementById('userName');
               const userProfilePic = document.getElementById('userProfilePic');
               const userProfileButton = document.getElementById('userProfileButton');
+              const mobileUserLinks = document.querySelectorAll('.mobileUserLink'); // Updated for multiple elements
 
               userNameSpan.textContent = `${data.user.username}`;
               userProfilePic.src = data.user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
               userProfilePic.alt = `${data.user.username}'s Profile Picture`;
 
               userInfo.classList.remove('hidden');
+              mobileUserLinks.forEach(link => link.classList.remove('hidden')); // Show in mobile
 
               // Hide auth buttons
               const authButtons = document.querySelectorAll('.auth-buttons');
@@ -1567,12 +1561,14 @@
           const userInfo = document.getElementById('userInfo');
           const userNameSpan = document.getElementById('userName');
           const userProfilePic = document.getElementById('userProfilePic');
+          const mobileUserLinks = document.querySelectorAll('.mobileUserLink'); // Updated for multiple elements
 
           userNameSpan.textContent = `${user.username}`;
           userProfilePic.src = user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
           userProfilePic.alt = `${user.username}'s Profile Picture`;
 
           userInfo.classList.remove('hidden');
+          mobileUserLinks.forEach(link => link.classList.remove('hidden')); // Show in mobile
 
           // Hide auth buttons
           const authButtons = document.querySelectorAll('.auth-buttons');
@@ -1598,13 +1594,14 @@
     });
 
     /* ===========================
-       Logout Modal
+       Logout Modal Functionality
     ============================ */
     const logoutOption = document.getElementById('logoutOption');
     const logoutModal = document.getElementById('logoutModal');
     const confirmLogout = document.getElementById('confirmLogout');
     const cancelLogout = document.getElementById('cancelLogout');
     const userInfoDiv = document.getElementById('userInfo'); 
+    const mobileUserLinks = document.querySelectorAll('.mobileUserLink'); // Updated for multiple elements
 
     logoutOption.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1615,6 +1612,7 @@
       // Clear data
       localStorage.removeItem('userProfile');
       userInfoDiv.classList.add('hidden');
+      mobileUserLinks.forEach(link => link.classList.add('hidden')); // Hide in mobile
       const authButtons = document.querySelectorAll('.auth-buttons');
       authButtons.forEach(btn => btn.classList.remove('hidden'));
 
@@ -1624,6 +1622,20 @@
     cancelLogout.addEventListener('click', () => {
       logoutModal.classList.add('hidden');
     });
+
+    // MOBILE LOGOUT (uses same modal)
+    const mobileLogoutOption = document.getElementById('mobileLogoutOption');
+    if (mobileLogoutOption) {
+      mobileLogoutOption.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoutModal.classList.remove('hidden');
+        // Close the mobile menu
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+      });
+    }
   </script>
 
 </body>
