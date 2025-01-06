@@ -1,4 +1,4 @@
-// public/actions.js
+// actions.js
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
@@ -10,13 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
     handleOAuthCallback();
     checkExistingLogin();
     setupLogoutModal();
-    setupProfileDropdown();
   }
   
+  /* ===================================
+     AOS Initialization
+  =================================== */
   function initializeAOS() {
     AOS.init({ duration: 800, once: true, easing: 'ease-in-out' });
   }
   
+  /* ===================================
+     Hamburger Menu Setup
+  =================================== */
   function setupHamburgerMenu() {
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -30,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Close mobile menu on link click
     const mobileLinks = mobileMenu.querySelectorAll('a, button');
-    mobileLinks.forEach(link => {
+    mobileLinks.forEach((link) => {
       link.addEventListener('click', () => {
         hamburger.classList.remove('active');
         mobileMenu.classList.remove('open');
@@ -40,10 +45,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
+  /* ===================================
+     OAuth Callback Handling
+  =================================== */
   function handleOAuthCallback() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    const backendURL = window.location.origin; // Assuming backend serves the frontend
+    const backendURL = 'https://quest-production-5c69.up.railway.app'; // Your backend URL
   
     if (code) {
       exchangeCodeForUser(code, backendURL);
@@ -51,32 +59,43 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   function exchangeCodeForUser(code, backendURL) {
+    // Example: we assume your server uses POST /oauth/callback
+    // and also has some client secret on the backend side.
     fetch(`${backendURL}/oauth/callback`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.success && data.user) {
           displayUserInfo(data.user);
           storeUserData(data.user);
-          if (data.user.id === '756297907170181292') { // Replace with your admin user ID
+  
+          // If the user is the admin:
+          if (data.user.id === '756297907170181292') {
             enableAdminFeatures();
           }
+  
           removeOAuthCodeFromURL();
+  
+          // Once logged in, fetch standings and matches
           fetchAndRenderStandings();
+          fetchAndRenderMatches();
         } else {
           console.error('Authentication failed:', data.message);
           alert('Login error. Please try again.');
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('OAuth callback error:', error);
         alert('An error occurred during the login process. Please try again.');
       });
   }
   
+  /* ===================================
+     User Display & Storage
+  =================================== */
   function displayUserInfo(user) {
     const userInfo = document.getElementById('userInfo');
     const userNameSpan = document.getElementById('userName');
@@ -88,13 +107,10 @@ document.addEventListener('DOMContentLoaded', () => {
     userProfilePic.alt = `${user.username}'s Profile Picture`;
   
     userInfo.classList.remove('hidden');
-    mobileUserLinks.forEach(link => link.classList.remove('hidden'));
+    mobileUserLinks.forEach((link) => link.classList.remove('hidden'));
   
-    // Hide auth buttons
-    document.querySelectorAll('.auth-buttons').forEach(btn => btn.classList.add('hidden'));
-  
-    // Populate Profile Section (if any)
-    // Example: document.getElementById('profileUsername').textContent = user.username;
+    // Hide login buttons
+    document.querySelectorAll('.auth-buttons').forEach((btn) => btn.classList.add('hidden'));
   }
   
   function storeUserData(user) {
@@ -111,41 +127,47 @@ document.addEventListener('DOMContentLoaded', () => {
     if (storedUser) {
       const user = JSON.parse(storedUser);
       displayUserInfo(user);
-      if (user.id === '756297907170181292') { // Replace with your admin user ID
+  
+      // If user is admin
+      if (user.id === '756297907170181292') {
         enableAdminFeatures();
       }
+  
+      // If logged in, fetch current data
       fetchAndRenderStandings();
+      fetchAndRenderMatches();
     }
   }
   
+  /* ===================================
+     Admin Features
+  =================================== */
   function enableAdminFeatures() {
-    // Show admin controls
+    // Show admin controls section
     const adminControls = document.getElementById('adminControls');
     if (adminControls) {
       adminControls.classList.add('active');
     }
   
-    // Show match management section (if any)
-    // Example:
-    // const matchManagement = document.getElementById('matchManagement');
-    // if (matchManagement) {
-    //   matchManagement.classList.remove('hidden');
-    // }
-  
     // Show admin columns in standings tables
-    document.querySelectorAll('.admin-col').forEach(col => col.style.display = 'table-cell');
+    document.querySelectorAll('.admin-col').forEach((col) => (col.style.display = 'table-cell'));
   
-    // Setup admin form submissions
+    // Setup admin forms (e.g. Add Team, Add Match, etc.)
     setupAdminForms();
   }
   
   function setupAdminForms() {
+    // Add Team Form
     const addTeamForm = document.getElementById('addTeamForm');
     if (addTeamForm) {
       addTeamForm.addEventListener('submit', handleAddTeam);
     }
   
-    // Add more admin forms (e.g., editTeamForm, addMatchForm) here as needed
+    // Example: Add Match Form (if you create one in the HTML)
+    const addMatchForm = document.getElementById('addMatchForm');
+    if (addMatchForm) {
+      addMatchForm.addEventListener('submit', handleAddMatch);
+    }
   }
   
   function handleAddTeam(e) {
@@ -155,25 +177,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const division = document.getElementById('divisionSelect').value;
   
     if (teamName && teamImage && division) {
-      // Send data to backend to add the team
-      fetch('/api/teams', { // Relative URL since server serves frontend
+      fetch('https://quest-production-5c69.up.railway.app/api/teams', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: teamName, image: teamImage, division }),
       })
-        .then(response => response.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (data.success) {
             alert(`Team "${teamName}" added to Division ${division}!`);
-            // Clear form
             document.getElementById('addTeamForm').reset();
-            // Refresh standings
             fetchAndRenderStandings();
           } else {
             alert(`Error: ${data.message}`);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error adding team:', error);
           alert('An error occurred while adding the team. Please try again.');
         });
@@ -182,19 +201,102 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
+  /* Example: Add Match Handler */
+  function handleAddMatch(e) {
+    e.preventDefault();
+    const team1 = document.getElementById('matchTeam1').value.trim();
+    const team2 = document.getElementById('matchTeam2').value.trim();
+    const date = document.getElementById('matchDate').value.trim();
+  
+    if (team1 && team2 && date) {
+      fetch('https://quest-production-5c69.up.railway.app/api/matches', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ team1, team2, date }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            alert('Match created successfully!');
+            document.getElementById('addMatchForm').reset();
+            fetchAndRenderMatches();
+          } else {
+            alert(`Error: ${data.message}`);
+          }
+        })
+        .catch((error) => {
+          console.error('Error creating match:', error);
+          alert('An error occurred while creating the match. Please try again.');
+        });
+    } else {
+      alert('Please fill in all match fields.');
+    }
+  }
+  
+  /* ===================================
+     Logout Modal
+  =================================== */
+  function setupLogoutModal() {
+    const logoutOption = document.getElementById('logoutOption');
+    const logoutModal = document.getElementById('logoutModal');
+    const confirmLogout = document.getElementById('confirmLogout');
+    const cancelLogout = document.getElementById('cancelLogout');
+    const userInfoDiv = document.getElementById('userInfo');
+    const mobileUserLinks = document.querySelectorAll('.mobileUserLink');
+  
+    if (logoutOption && logoutModal && confirmLogout && cancelLogout) {
+      logoutOption.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoutModal.classList.remove('hidden');
+      });
+  
+      confirmLogout.addEventListener('click', () => {
+        localStorage.removeItem('userProfile');
+        userInfoDiv.classList.add('hidden');
+        mobileUserLinks.forEach((link) => link.classList.add('hidden'));
+        document.querySelectorAll('.auth-buttons').forEach((btn) => btn.classList.remove('hidden'));
+        logoutModal.classList.add('hidden');
+      });
+  
+      cancelLogout.addEventListener('click', () => {
+        logoutModal.classList.add('hidden');
+      });
+    }
+  
+    const mobileLogoutOption = document.getElementById('mobileLogoutOption');
+    if (mobileLogoutOption && logoutModal && confirmLogout && cancelLogout) {
+      mobileLogoutOption.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoutModal.classList.remove('hidden');
+  
+        // Close the mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+      });
+    }
+  }
+  
+  /* ===================================
+     Fetch & Render Standings
+  =================================== */
   function fetchAndRenderStandings() {
     const divisions = [1, 2, 3];
-    divisions.forEach(division => {
-      fetch(`/api/standings?division=${division}`) // Relative URL
-        .then(response => response.json())
-        .then(data => {
+  
+    divisions.forEach((division) => {
+      fetch(`https://quest-production-5c69.up.railway.app/api/standings?division=${division}`)
+        .then((response) => response.json())
+        .then((data) => {
           if (data.success && data.standings) {
             renderStandingsTable(division, data.standings);
           } else {
             console.error(`Error fetching standings for Division ${division}:`, data.message);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(`Error fetching standings for Division ${division}:`, error);
         });
     });
@@ -202,21 +304,31 @@ document.addEventListener('DOMContentLoaded', () => {
   
   function renderStandingsTable(division, standings) {
     const tbody = document.getElementById(`division${division}Body`);
-    tbody.innerHTML = ''; // Clear existing rows
+    if (!tbody) return;
+    tbody.innerHTML = '';
   
     standings.forEach((team, index) => {
       const tr = document.createElement('tr');
   
+      // Apply custom style for W/D/L columns if needed
+      const winClass = team.wins > team.draws && team.wins > team.losses ? 'win' : '';
+      const drawClass = team.draws > team.wins && team.draws > team.losses ? 'draw' : '';
+      const lossClass = team.losses > team.wins && team.losses > team.draws ? 'loss' : '';
+  
       tr.innerHTML = `
         <td>${index + 1}</td>
         <td>
-          <img src="${team.image}" alt="${team.name} Logo" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 0.5rem;">
+          <img
+            src="${team.image}"
+            alt="${team.name} Logo"
+            style="width: 30px; height: 30px; border-radius: 50%; margin-right: 0.5rem;"
+          >
           ${team.name}
         </td>
         <td>${team.matchesPlayed}</td>
-        <td class="${team.wins > team.draws && team.wins > team.losses ? 'win' : ''}">${team.wins}</td>
-        <td class="${team.draws > team.wins && team.draws > team.losses ? 'draw' : ''}">${team.draws}</td>
-        <td class="${team.losses > team.wins && team.losses > team.draws ? 'loss' : ''}">${team.losses}</td>
+        <td class="${winClass}">${team.wins}</td>
+        <td class="${drawClass}">${team.draws}</td>
+        <td class="${lossClass}">${team.losses}</td>
         <td>${team.goalsFor}</td>
         <td>${team.goalsAgainst}</td>
         <td>${team.goalDifference}</td>
@@ -232,24 +344,108 @@ document.addEventListener('DOMContentLoaded', () => {
       tbody.appendChild(tr);
     });
   
-    // Attach event listeners to edit and delete buttons if admin is active
-    if (!document.getElementById('adminControls').classList.contains('hidden')) {
+    // If admin controls are active, attach button listeners
+    const adminControls = document.getElementById('adminControls');
+    if (adminControls && adminControls.classList.contains('active')) {
       attachAdminActionListeners(division);
     }
   }
   
+  /* ===================================
+     Fetch & Render Matches
+  =================================== */
+  function fetchAndRenderMatches() {
+    // Example endpoint: /api/matches
+    fetch('https://quest-production-5c69.up.railway.app/api/matches')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.matches) {
+          renderMatchesTable(data.matches);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching matches:', error);
+      });
+  }
+  
+  function renderMatchesTable(matches) {
+    // Suppose you have a <tbody id="matchesBody"> in your competitions.html
+    const matchesBody = document.getElementById('matchesBody');
+    if (!matchesBody) return;
+    matchesBody.innerHTML = '';
+  
+    matches.forEach((match) => {
+      const tr = document.createElement('tr');
+      // match.result can store something like "3-1" or "Pending"
+      tr.innerHTML = `
+        <td>${match.team1}</td>
+        <td>${match.team2}</td>
+        <td>${match.date}</td>
+        <td>${match.result || 'Pending'}</td>
+        <td class="admin-col">
+          <button class="edit-match-btn" data-match-id="${match.id}"><i class="fas fa-edit"></i></button>
+        </td>
+      `;
+      matchesBody.appendChild(tr);
+    });
+  
+    // If admin, attach match-editing handlers here.
+    const adminControls = document.getElementById('adminControls');
+    if (adminControls && adminControls.classList.contains('active')) {
+      attachMatchEditListeners();
+    }
+  }
+  
+  function attachMatchEditListeners() {
+    const editMatchBtns = document.querySelectorAll('.edit-match-btn');
+    editMatchBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const matchId = btn.getAttribute('data-match-id');
+        editMatchResult(matchId);
+      });
+    });
+  }
+  
+  function editMatchResult(matchId) {
+    const newResult = prompt('Enter new match result (e.g., 3-1):', '');
+    if (newResult) {
+      // PUT to /api/matches/:id
+      fetch(`https://quest-production-5c69.up.railway.app/api/matches/${matchId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ result: newResult }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            alert('Match result updated!');
+            fetchAndRenderMatches();
+          } else {
+            alert(`Error: ${data.message}`);
+          }
+        })
+        .catch((error) => {
+          console.error('Error updating match result:', error);
+          alert('An error occurred while updating the match result. Please try again.');
+        });
+    }
+  }
+  
+  /* ===================================
+     Admin-Action Listeners (Teams)
+  =================================== */
   function attachAdminActionListeners(division) {
     const editButtons = document.querySelectorAll(`#division${division}Body .edit-btn`);
     const deleteButtons = document.querySelectorAll(`#division${division}Body .delete-btn`);
   
-    editButtons.forEach(button => {
+    editButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const teamId = button.getAttribute('data-team-id');
         editTeam(division, teamId);
       });
     });
   
-    deleteButtons.forEach(button => {
+    deleteButtons.forEach((button) => {
       button.addEventListener('click', () => {
         const teamId = button.getAttribute('data-team-id');
         deleteTeam(division, teamId);
@@ -258,25 +454,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   function editTeam(division, teamId) {
-    // Fetch team details
-    fetch(`/api/teams/${teamId}`) // Relative URL
-      .then(response => response.json())
-      .then(data => {
+    fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`)
+      .then((res) => res.json())
+      .then((data) => {
         if (data.success && data.team) {
-          // Populate a modal or form with team details for editing
-          // For simplicity, using prompt dialogs
           const newName = prompt('Enter new team name:', data.team.name);
           const newImage = prompt('Enter new team image URL:', data.team.image);
   
           if (newName && newImage) {
-            // Send update to backend
-            fetch(`/api/teams/${teamId}`, { // Relative URL
+            fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ name: newName, image: newImage }),
             })
-              .then(response => response.json())
-              .then(updateData => {
+              .then((res) => res.json())
+              .then((updateData) => {
                 if (updateData.success) {
                   alert(`Team "${newName}" updated successfully!`);
                   fetchAndRenderStandings();
@@ -284,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   alert(`Error: ${updateData.message}`);
                 }
               })
-              .catch(error => {
+              .catch((error) => {
                 console.error('Error updating team:', error);
                 alert('An error occurred while updating the team. Please try again.');
               });
@@ -293,18 +485,18 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error('Error fetching team details:', data.message);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching team details:', error);
       });
   }
   
   function deleteTeam(division, teamId) {
     if (confirm('Are you sure you want to delete this team?')) {
-      fetch(`/api/teams/${teamId}`, { // Relative URL
+      fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`, {
         method: 'DELETE',
       })
-        .then(response => response.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (data.success) {
             alert('Team deleted successfully!');
             fetchAndRenderStandings();
@@ -312,96 +504,10 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(`Error: ${data.message}`);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('Error deleting team:', error);
           alert('An error occurred while deleting the team. Please try again.');
         });
     }
-  }
-  
-  function setupLogoutModal() {
-    const logoutOption = document.getElementById('logoutOption');
-    const logoutModal = document.getElementById('logoutModal');
-    const confirmLogout = document.getElementById('confirmLogout');
-    const cancelLogout = document.getElementById('cancelLogout');
-    const userInfoDiv = document.getElementById('userInfo'); 
-    const mobileUserLinks = document.querySelectorAll('.mobileUserLink');
-  
-    if (logoutOption && logoutModal && confirmLogout && cancelLogout) {
-      logoutOption.addEventListener('click', (e) => {
-        e.preventDefault();
-        logoutModal.classList.remove('hidden');
-      });
-  
-      confirmLogout.addEventListener('click', () => {
-        // Clear data
-        localStorage.removeItem('userProfile');
-        userInfoDiv.classList.add('hidden');
-        mobileUserLinks.forEach(link => link.classList.add('hidden')); // Hide in mobile
-        document.querySelectorAll('.auth-buttons').forEach(btn => btn.classList.remove('hidden'));
-  
-        logoutModal.classList.add('hidden');
-      });
-  
-      cancelLogout.addEventListener('click', () => {
-        logoutModal.classList.add('hidden');
-      });
-    }
-  
-    // MOBILE LOGOUT (uses same modal)
-    const mobileLogoutOption = document.getElementById('mobileLogoutOption');
-    if (mobileLogoutOption && logoutModal && confirmLogout && cancelLogout) {
-      mobileLogoutOption.addEventListener('click', (e) => {
-        e.preventDefault();
-        logoutModal.classList.remove('hidden');
-        // Close the mobile menu
-        const hamburger = document.getElementById('hamburger');
-        const mobileMenu = document.getElementById('mobile-menu');
-        hamburger.classList.remove('active');
-        mobileMenu.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
-        mobileMenu.setAttribute('aria-hidden', 'true');
-      });
-    }
-  }
-  
-  function setupProfileDropdown() {
-    const userProfileButton = document.getElementById('userProfileButton');
-    const profileDropdown = document.getElementById('profileDropdown');
-  
-    if (userProfileButton && profileDropdown) {
-      userProfileButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        profileDropdown.classList.toggle('hidden');
-      });
-  
-      // Close dropdown when clicking outside
-      document.addEventListener('click', () => {
-        if (!profileDropdown.classList.contains('hidden')) {
-          profileDropdown.classList.add('hidden');
-        }
-      });
-    }
-  }
-  
-  // Login Button Handlers
-  document.getElementById('loginButton').addEventListener('click', (e) => {
-    e.preventDefault();
-    initiateOAuth();
-  });
-  
-  document.getElementById('mobileLoginButton').addEventListener('click', (e) => {
-    e.preventDefault();
-    initiateOAuth();
-  });
-  
-  function initiateOAuth() {
-    const CLIENT_ID = '1324622665323118642'; // Replace with your Discord Client ID
-    const redirectURI = `${window.location.origin}/competitions.html`;
-    const scope = 'identify email';
-    const responseType = 'code';
-    const discordAuthURL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectURI)}&response_type=${responseType}&scope=${encodeURIComponent(scope)}`;
-  
-    window.location.href = discordAuthURL;
   }
   
