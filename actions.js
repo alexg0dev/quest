@@ -93,11 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hide auth buttons
     document.querySelectorAll('.auth-buttons').forEach(btn => btn.classList.add('hidden'));
   
-    // Populate Profile Section
-    const profileUsername = document.getElementById('profileUsername');
-    if (profileUsername) {
-      profileUsername.textContent = user.username;
-    }
+    // Populate Profile Section (if any)
+    // Example: document.getElementById('profileUsername').textContent = user.username;
   }
   
   function storeUserData(user) {
@@ -128,18 +125,18 @@ document.addEventListener('DOMContentLoaded', () => {
       adminControls.classList.add('active');
     }
   
-    // Show match management section
-    const matchManagement = document.getElementById('matchManagement');
-    if (matchManagement) {
-      matchManagement.classList.remove('hidden');
-    }
+    // Show match management section (if any)
+    // Example:
+    // const matchManagement = document.getElementById('matchManagement');
+    // if (matchManagement) {
+    //   matchManagement.classList.remove('hidden');
+    // }
   
     // Show admin columns in standings tables
     document.querySelectorAll('.admin-col').forEach(col => col.style.display = 'table-cell');
   
     // Setup admin form submissions
     setupAdminForms();
-    setupMatchManagement();
   }
   
   function setupAdminForms() {
@@ -148,10 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
       addTeamForm.addEventListener('submit', handleAddTeam);
     }
   
-    const addMatchForm = document.getElementById('addMatchForm');
-    if (addMatchForm) {
-      addMatchForm.addEventListener('submit', handleAddMatch);
-    }
+    // Add more admin forms (e.g., editTeamForm, addMatchForm) here as needed
   }
   
   function handleAddTeam(e) {
@@ -188,589 +182,226 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
-  function setupMatchManagement() {
-    const addMatchForm = document.getElementById('addMatchForm');
-    if (addMatchForm) {
-      addMatchForm.addEventListener('submit', handleAddMatch);
-    }
-  
-    // Fetch and render matches
-    fetchAndRenderMatches();
+  function fetchAndRenderStandings() {
+    const divisions = [1, 2, 3];
+    divisions.forEach(division => {
+      fetch(`/api/standings?division=${division}`) // Relative URL
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.standings) {
+            renderStandingsTable(division, data.standings);
+          } else {
+            console.error(`Error fetching standings for Division ${division}:`, data.message);
+          }
+        })
+        .catch(error => {
+          console.error(`Error fetching standings for Division ${division}:`, error);
+        });
+    });
   }
   
-  function handleAddMatch(e) {
+  function renderStandingsTable(division, standings) {
+    const tbody = document.getElementById(`division${division}Body`);
+    tbody.innerHTML = ''; // Clear existing rows
+  
+    standings.forEach((team, index) => {
+      const tr = document.createElement('tr');
+  
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td>
+          <img src="${team.image}" alt="${team.name} Logo" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 0.5rem;">
+          ${team.name}
+        </td>
+        <td>${team.matchesPlayed}</td>
+        <td class="${team.wins > team.draws && team.wins > team.losses ? 'win' : ''}">${team.wins}</td>
+        <td class="${team.draws > team.wins && team.draws > team.losses ? 'draw' : ''}">${team.draws}</td>
+        <td class="${team.losses > team.wins && team.losses > team.draws ? 'loss' : ''}">${team.losses}</td>
+        <td>${team.goalsFor}</td>
+        <td>${team.goalsAgainst}</td>
+        <td>${team.goalDifference}</td>
+        <td>${team.points}</td>
+        <td class="admin-col">
+          <div class="admin-actions">
+            <button class="edit-btn" data-team-id="${team.id}"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" data-team-id="${team.id}"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </td>
+      `;
+  
+      tbody.appendChild(tr);
+    });
+  
+    // Attach event listeners to edit and delete buttons if admin is active
+    if (!document.getElementById('adminControls').classList.contains('hidden')) {
+      attachAdminActionListeners(division);
+    }
+  }
+  
+  function attachAdminActionListeners(division) {
+    const editButtons = document.querySelectorAll(`#division${division}Body .edit-btn`);
+    const deleteButtons = document.querySelectorAll(`#division${division}Body .delete-btn`);
+  
+    editButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const teamId = button.getAttribute('data-team-id');
+        editTeam(division, teamId);
+      });
+    });
+  
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const teamId = button.getAttribute('data-team-id');
+        deleteTeam(division, teamId);
+      });
+    });
+  }
+  
+  function editTeam(division, teamId) {
+    // Fetch team details
+    fetch(`/api/teams/${teamId}`) // Relative URL
+      .then(response => response.json())
+      .then(data => {
+        if (data.success && data.team) {
+          // Populate a modal or form with team details for editing
+          // For simplicity, using prompt dialogs
+          const newName = prompt('Enter new team name:', data.team.name);
+          const newImage = prompt('Enter new team image URL:', data.team.image);
+  
+          if (newName && newImage) {
+            // Send update to backend
+            fetch(`/api/teams/${teamId}`, { // Relative URL
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: newName, image: newImage }),
+            })
+              .then(response => response.json())
+              .then(updateData => {
+                if (updateData.success) {
+                  alert(`Team "${newName}" updated successfully!`);
+                  fetchAndRenderStandings();
+                } else {
+                  alert(`Error: ${updateData.message}`);
+                }
+              })
+              .catch(error => {
+                console.error('Error updating team:', error);
+                alert('An error occurred while updating the team. Please try again.');
+              });
+          }
+        } else {
+          console.error('Error fetching team details:', data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching team details:', error);
+      });
+  }
+  
+  function deleteTeam(division, teamId) {
+    if (confirm('Are you sure you want to delete this team?')) {
+      fetch(`/api/teams/${teamId}`, { // Relative URL
+        method: 'DELETE',
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Team deleted successfully!');
+            fetchAndRenderStandings();
+          } else {
+            alert(`Error: ${data.message}`);
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting team:', error);
+          alert('An error occurred while deleting the team. Please try again.');
+        });
+    }
+  }
+  
+  function setupLogoutModal() {
+    const logoutOption = document.getElementById('logoutOption');
+    const logoutModal = document.getElementById('logoutModal');
+    const confirmLogout = document.getElementById('confirmLogout');
+    const cancelLogout = document.getElementById('cancelLogout');
+    const userInfoDiv = document.getElementById('userInfo'); 
+    const mobileUserLinks = document.querySelectorAll('.mobileUserLink');
+  
+    if (logoutOption && logoutModal && confirmLogout && cancelLogout) {
+      logoutOption.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoutModal.classList.remove('hidden');
+      });
+  
+      confirmLogout.addEventListener('click', () => {
+        // Clear data
+        localStorage.removeItem('userProfile');
+        userInfoDiv.classList.add('hidden');
+        mobileUserLinks.forEach(link => link.classList.add('hidden')); // Hide in mobile
+        document.querySelectorAll('.auth-buttons').forEach(btn => btn.classList.remove('hidden'));
+  
+        logoutModal.classList.add('hidden');
+      });
+  
+      cancelLogout.addEventListener('click', () => {
+        logoutModal.classList.add('hidden');
+      });
+    }
+  
+    // MOBILE LOGOUT (uses same modal)
+    const mobileLogoutOption = document.getElementById('mobileLogoutOption');
+    if (mobileLogoutOption && logoutModal && confirmLogout && cancelLogout) {
+      mobileLogoutOption.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoutModal.classList.remove('hidden');
+        // Close the mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+      });
+    }
+  }
+  
+  function setupProfileDropdown() {
+    const userProfileButton = document.getElementById('userProfileButton');
+    const profileDropdown = document.getElementById('profileDropdown');
+  
+    if (userProfileButton && profileDropdown) {
+      userProfileButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('hidden');
+      });
+  
+      // Close dropdown when clicking outside
+      document.addEventListener('click', () => {
+        if (!profileDropdown.classList.contains('hidden')) {
+          profileDropdown.classList.add('hidden');
+        }
+      });
+    }
+  }
+  
+  // Login Button Handlers
+  document.getElementById('loginButton').addEventListener('click', (e) => {
     e.preventDefault();
-    const team1 = document.getElementById('team1').value.trim();
-    const team2 = document.getElementById('team2').value.trim();
-    const date = document.getElementById('matchDate').value.trim();
-    const division = document.getElementById('divisionSelectMatch').value;
+    initiateOAuth();
+  });
   
-    if (team1 && team2 && date && division) {
-      // Send data to backend to add the match
-      fetch('/api/matches', { // Relative URL since server serves frontend
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ team1, team2, date, division }),
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            alert('Match added successfully!');
-            // Clear form
-            document.getElementById('addMatchForm').reset();
-            // Refresh matches
-            fetchAndRenderMatches();
-          } else {
-            alert(`Error: ${data.message}`);
-          }
-        })
-        .catch(error => {
-          console.error('Error adding match:', error);
-          alert('An error occurred while adding the match. Please try again.');
-        });
-    } else {
-      alert('Please fill in all fields.');
-    }
-  }
+  document.getElementById('mobileLoginButton').addEventListener('click', (e) => {
+    e.preventDefault();
+    initiateOAuth();
+  });
   
-  function fetchAndRenderStandings() {
-    const divisions = [1, 2, 3];
-    divisions.forEach(division => {
-      fetch(`/api/standings?division=${division}`) // Relative URL
-        .then(response => response.json())
-        .then(data => {
-          if (data.success && data.standings) {
-            renderStandingsTable(division, data.standings);
-          } else {
-            console.error(`Error fetching standings for Division ${division}:`, data.message);
-          }
-        })
-        .catch(error => {
-          console.error(`Error fetching standings for Division ${division}:`, error);
-        });
-    });
-  }
+  function initiateOAuth() {
+    const CLIENT_ID = '1324622665323118642'; // Replace with your Discord Client ID
+    const redirectURI = `${window.location.origin}/competitions.html`;
+    const scope = 'identify email';
+    const responseType = 'code';
+    const discordAuthURL = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectURI)}&response_type=${responseType}&scope=${encodeURIComponent(scope)}`;
   
-  function renderStandingsTable(division, standings) {
-    const tbody = document.getElementById(`division${division}Body`);
-    tbody.innerHTML = ''; // Clear existing rows
-  
-    standings.forEach((team, index) => {
-      const tr = document.createElement('tr');
-  
-      tr.innerHTML = `
-        <td>${index + 1}</td>
-        <td>
-          <img src="${team.image}" alt="${team.name} Logo" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 0.5rem;">
-          ${team.name}
-        </td>
-        <td>${team.matchesPlayed}</td>
-        <td class="${team.wins > team.draws && team.wins > team.losses ? 'win' : ''}">${team.wins}</td>
-        <td class="${team.draws > team.wins && team.draws > team.losses ? 'draw' : ''}">${team.draws}</td>
-        <td class="${team.losses > team.wins && team.losses > team.draws ? 'loss' : ''}">${team.losses}</td>
-        <td>${team.goalsFor}</td>
-        <td>${team.goalsAgainst}</td>
-        <td>${team.goalDifference}</td>
-        <td>${team.points}</td>
-        <td class="admin-col">
-          <div class="admin-actions">
-            <button class="edit-btn" data-team-id="${team.id}"><i class="fas fa-edit"></i></button>
-            <button class="delete-btn" data-team-id="${team.id}"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </td>
-      `;
-  
-      tbody.appendChild(tr);
-    });
-  
-    // Attach event listeners to edit and delete buttons if admin is active
-    if (!document.getElementById('adminControls').classList.contains('hidden')) {
-      attachAdminActionListeners(division);
-    }
-  }
-  
-  function attachAdminActionListeners(division) {
-    const editButtons = document.querySelectorAll(`#division${division}Body .edit-btn`);
-    const deleteButtons = document.querySelectorAll(`#division${division}Body .delete-btn`);
-  
-    editButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const teamId = button.getAttribute('data-team-id');
-        editTeam(division, teamId);
-      });
-    });
-  
-    deleteButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const teamId = button.getAttribute('data-team-id');
-        deleteTeam(division, teamId);
-      });
-    });
-  }
-  
-  function editTeam(division, teamId) {
-    // Fetch team details
-    fetch(`/api/teams/${teamId}`) // Relative URL
-      .then(response => response.json())
-      .then(data => {
-        if (data.success && data.team) {
-          // Populate a modal or form with team details for editing
-          // For simplicity, using prompt dialogs
-          const newName = prompt('Enter new team name:', data.team.name);
-          const newImage = prompt('Enter new team image URL:', data.team.image);
-  
-          if (newName && newImage) {
-            // Send update to backend
-            fetch(`/api/teams/${teamId}`, { // Relative URL
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ name: newName, image: newImage }),
-            })
-              .then(response => response.json())
-              .then(updateData => {
-                if (updateData.success) {
-                  alert(`Team "${newName}" updated successfully!`);
-                  fetchAndRenderStandings();
-                } else {
-                  alert(`Error: ${updateData.message}`);
-                }
-              })
-              .catch(error => {
-                console.error('Error updating team:', error);
-                alert('An error occurred while updating the team. Please try again.');
-              });
-          }
-        } else {
-          console.error('Error fetching team details:', data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching team details:', error);
-      });
-  }
-  
-  function deleteTeam(division, teamId) {
-    if (confirm('Are you sure you want to delete this team?')) {
-      fetch(`/api/teams/${teamId}`, { // Relative URL
-        method: 'DELETE',
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            alert('Team deleted successfully!');
-            fetchAndRenderStandings();
-          } else {
-            alert(`Error: ${data.message}`);
-          }
-        })
-        .catch(error => {
-          console.error('Error deleting team:', error);
-          alert('An error occurred while deleting the team. Please try again.');
-        });
-    }
-  }
-  
-  function setupLogoutModal() {
-    const logoutOption = document.getElementById('logoutOption');
-    const logoutModal = document.getElementById('logoutModal');
-    const confirmLogout = document.getElementById('confirmLogout');
-    const cancelLogout = document.getElementById('cancelLogout');
-    const userInfoDiv = document.getElementById('userInfo'); 
-    const mobileUserLinks = document.querySelectorAll('.mobileUserLink');
-  
-    if (logoutOption && logoutModal && confirmLogout && cancelLogout) {
-      logoutOption.addEventListener('click', (e) => {
-        e.preventDefault();
-        logoutModal.classList.remove('hidden');
-      });
-  
-      confirmLogout.addEventListener('click', () => {
-        // Clear data
-        localStorage.removeItem('userProfile');
-        userInfoDiv.classList.add('hidden');
-        mobileUserLinks.forEach(link => link.classList.add('hidden')); // Hide in mobile
-        document.querySelectorAll('.auth-buttons').forEach(btn => btn.classList.remove('hidden'));
-  
-        logoutModal.classList.add('hidden');
-      });
-  
-      cancelLogout.addEventListener('click', () => {
-        logoutModal.classList.add('hidden');
-      });
-    }
-  
-    // MOBILE LOGOUT (uses same modal)
-    const mobileLogoutOption = document.getElementById('mobileLogoutOption');
-    if (mobileLogoutOption && logoutModal && confirmLogout && cancelLogout) {
-      mobileLogoutOption.addEventListener('click', (e) => {
-        e.preventDefault();
-        logoutModal.classList.remove('hidden');
-        // Close the mobile menu
-        const hamburger = document.getElementById('hamburger');
-        const mobileMenu = document.getElementById('mobile-menu');
-        hamburger.classList.remove('active');
-        mobileMenu.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
-        mobileMenu.setAttribute('aria-hidden', 'true');
-      });
-    }
-  }
-  
-  function setupProfileDropdown() {
-    const userProfileButton = document.getElementById('userProfileButton');
-    const profileDropdown = document.getElementById('profileDropdown');
-  
-    if (userProfileButton && profileDropdown) {
-      userProfileButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        profileDropdown.classList.toggle('hidden');
-      });
-  
-      // Close dropdown when clicking outside
-      document.addEventListener('click', () => {
-        if (!profileDropdown.classList.contains('hidden')) {
-          profileDropdown.classList.add('hidden');
-        }
-      });
-    }
-  }
-  
-  function fetchAndRenderStandings() {
-    const divisions = [1, 2, 3];
-    divisions.forEach(division => {
-      fetch(`/api/standings?division=${division}`) // Relative URL
-        .then(response => response.json())
-        .then(data => {
-          if (data.success && data.standings) {
-            renderStandingsTable(division, data.standings);
-          } else {
-            console.error(`Error fetching standings for Division ${division}:`, data.message);
-          }
-        })
-        .catch(error => {
-          console.error(`Error fetching standings for Division ${division}:`, error);
-        });
-    });
-  }
-  
-  function renderStandingsTable(division, standings) {
-    const tbody = document.getElementById(`division${division}Body`);
-    tbody.innerHTML = ''; // Clear existing rows
-  
-    standings.forEach((team, index) => {
-      const tr = document.createElement('tr');
-  
-      tr.innerHTML = `
-        <td>${index + 1}</td>
-        <td>
-          <img src="${team.image}" alt="${team.name} Logo" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 0.5rem;">
-          ${team.name}
-        </td>
-        <td>${team.matchesPlayed}</td>
-        <td class="${team.wins > team.draws && team.wins > team.losses ? 'win' : ''}">${team.wins}</td>
-        <td class="${team.draws > team.wins && team.draws > team.losses ? 'draw' : ''}">${team.draws}</td>
-        <td class="${team.losses > team.wins && team.losses > team.draws ? 'loss' : ''}">${team.losses}</td>
-        <td>${team.goalsFor}</td>
-        <td>${team.goalsAgainst}</td>
-        <td>${team.goalDifference}</td>
-        <td>${team.points}</td>
-        <td class="admin-col">
-          <div class="admin-actions">
-            <button class="edit-btn" data-team-id="${team.id}"><i class="fas fa-edit"></i></button>
-            <button class="delete-btn" data-team-id="${team.id}"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </td>
-      `;
-  
-      tbody.appendChild(tr);
-    });
-  
-    // Attach event listeners to edit and delete buttons if admin is active
-    if (!document.getElementById('adminControls').classList.contains('hidden')) {
-      attachAdminActionListeners(division);
-    }
-  }
-  
-  function attachAdminActionListeners(division) {
-    const editButtons = document.querySelectorAll(`#division${division}Body .edit-btn`);
-    const deleteButtons = document.querySelectorAll(`#division${division}Body .delete-btn`);
-  
-    editButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const teamId = button.getAttribute('data-team-id');
-        editTeam(division, teamId);
-      });
-    });
-  
-    deleteButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const teamId = button.getAttribute('data-team-id');
-        deleteTeam(division, teamId);
-      });
-    });
-  }
-  
-  function editTeam(division, teamId) {
-    // Fetch team details
-    fetch(`/api/teams/${teamId}`) // Relative URL
-      .then(response => response.json())
-      .then(data => {
-        if (data.success && data.team) {
-          // Populate a modal or form with team details for editing
-          // For simplicity, using prompt dialogs
-          const newName = prompt('Enter new team name:', data.team.name);
-          const newImage = prompt('Enter new team image URL:', data.team.image);
-  
-          if (newName && newImage) {
-            // Send update to backend
-            fetch(`/api/teams/${teamId}`, { // Relative URL
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ name: newName, image: newImage }),
-            })
-              .then(response => response.json())
-              .then(updateData => {
-                if (updateData.success) {
-                  alert(`Team "${newName}" updated successfully!`);
-                  fetchAndRenderStandings();
-                } else {
-                  alert(`Error: ${updateData.message}`);
-                }
-              })
-              .catch(error => {
-                console.error('Error updating team:', error);
-                alert('An error occurred while updating the team. Please try again.');
-              });
-          }
-        } else {
-          console.error('Error fetching team details:', data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching team details:', error);
-      });
-  }
-  
-  function deleteTeam(division, teamId) {
-    if (confirm('Are you sure you want to delete this team?')) {
-      fetch(`/api/teams/${teamId}`, { // Relative URL
-        method: 'DELETE',
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            alert('Team deleted successfully!');
-            fetchAndRenderStandings();
-          } else {
-            alert(`Error: ${data.message}`);
-          }
-        })
-        .catch(error => {
-          console.error('Error deleting team:', error);
-          alert('An error occurred while deleting the team. Please try again.');
-        });
-    }
-  }
-  
-  function setupLogoutModal() {
-    const logoutOption = document.getElementById('logoutOption');
-    const logoutModal = document.getElementById('logoutModal');
-    const confirmLogout = document.getElementById('confirmLogout');
-    const cancelLogout = document.getElementById('cancelLogout');
-    const userInfoDiv = document.getElementById('userInfo'); 
-    const mobileUserLinks = document.querySelectorAll('.mobileUserLink');
-  
-    if (logoutOption && logoutModal && confirmLogout && cancelLogout) {
-      logoutOption.addEventListener('click', (e) => {
-        e.preventDefault();
-        logoutModal.classList.remove('hidden');
-      });
-  
-      confirmLogout.addEventListener('click', () => {
-        // Clear data
-        localStorage.removeItem('userProfile');
-        userInfoDiv.classList.add('hidden');
-        mobileUserLinks.forEach(link => link.classList.add('hidden')); // Hide in mobile
-        document.querySelectorAll('.auth-buttons').forEach(btn => btn.classList.remove('hidden'));
-  
-        logoutModal.classList.add('hidden');
-      });
-  
-      cancelLogout.addEventListener('click', () => {
-        logoutModal.classList.add('hidden');
-      });
-    }
-  
-    // MOBILE LOGOUT (uses same modal)
-    const mobileLogoutOption = document.getElementById('mobileLogoutOption');
-    if (mobileLogoutOption && logoutModal && confirmLogout && cancelLogout) {
-      mobileLogoutOption.addEventListener('click', (e) => {
-        e.preventDefault();
-        logoutModal.classList.remove('hidden');
-        // Close the mobile menu
-        const hamburger = document.getElementById('hamburger');
-        const mobileMenu = document.getElementById('mobile-menu');
-        hamburger.classList.remove('active');
-        mobileMenu.classList.remove('open');
-        hamburger.setAttribute('aria-expanded', 'false');
-        mobileMenu.setAttribute('aria-hidden', 'true');
-      });
-    }
-  }
-  
-  function setupProfileDropdown() {
-    const userProfileButton = document.getElementById('userProfileButton');
-    const profileDropdown = document.getElementById('profileDropdown');
-  
-    if (userProfileButton && profileDropdown) {
-      userProfileButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        profileDropdown.classList.toggle('hidden');
-      });
-  
-      // Close dropdown when clicking outside
-      document.addEventListener('click', () => {
-        if (!profileDropdown.classList.contains('hidden')) {
-          profileDropdown.classList.add('hidden');
-        }
-      });
-    }
-  }
-  
-  function fetchAndRenderStandings() {
-    const divisions = [1, 2, 3];
-    divisions.forEach(division => {
-      fetch(`/api/standings?division=${division}`) // Relative URL
-        .then(response => response.json())
-        .then(data => {
-          if (data.success && data.standings) {
-            renderStandingsTable(division, data.standings);
-          } else {
-            console.error(`Error fetching standings for Division ${division}:`, data.message);
-          }
-        })
-        .catch(error => {
-          console.error(`Error fetching standings for Division ${division}:`, error);
-        });
-    });
-  }
-  
-  function renderStandingsTable(division, standings) {
-    const tbody = document.getElementById(`division${division}Body`);
-    tbody.innerHTML = ''; // Clear existing rows
-  
-    standings.forEach((team, index) => {
-      const tr = document.createElement('tr');
-  
-      tr.innerHTML = `
-        <td>${index + 1}</td>
-        <td>
-          <img src="${team.image}" alt="${team.name} Logo" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 0.5rem;">
-          ${team.name}
-        </td>
-        <td>${team.matchesPlayed}</td>
-        <td class="${team.wins > team.draws && team.wins > team.losses ? 'win' : ''}">${team.wins}</td>
-        <td class="${team.draws > team.wins && team.draws > team.losses ? 'draw' : ''}">${team.draws}</td>
-        <td class="${team.losses > team.wins && team.losses > team.draws ? 'loss' : ''}">${team.losses}</td>
-        <td>${team.goalsFor}</td>
-        <td>${team.goalsAgainst}</td>
-        <td>${team.goalDifference}</td>
-        <td>${team.points}</td>
-        <td class="admin-col">
-          <div class="admin-actions">
-            <button class="edit-btn" data-team-id="${team.id}"><i class="fas fa-edit"></i></button>
-            <button class="delete-btn" data-team-id="${team.id}"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </td>
-      `;
-  
-      tbody.appendChild(tr);
-    });
-  
-    // Attach event listeners to edit and delete buttons if admin is active
-    if (!document.getElementById('adminControls').classList.contains('hidden')) {
-      attachAdminActionListeners(division);
-    }
-  }
-  
-  function attachAdminActionListeners(division) {
-    const editButtons = document.querySelectorAll(`#division${division}Body .edit-btn`);
-    const deleteButtons = document.querySelectorAll(`#division${division}Body .delete-btn`);
-  
-    editButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const teamId = button.getAttribute('data-team-id');
-        editTeam(division, teamId);
-      });
-    });
-  
-    deleteButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const teamId = button.getAttribute('data-team-id');
-        deleteTeam(division, teamId);
-      });
-    });
-  }
-  
-  function editTeam(division, teamId) {
-    // Fetch team details
-    fetch(`/api/teams/${teamId}`) // Relative URL
-      .then(response => response.json())
-      .then(data => {
-        if (data.success && data.team) {
-          // Populate a modal or form with team details for editing
-          // For simplicity, using prompt dialogs
-          const newName = prompt('Enter new team name:', data.team.name);
-          const newImage = prompt('Enter new team image URL:', data.team.image);
-  
-          if (newName && newImage) {
-            // Send update to backend
-            fetch(`/api/teams/${teamId}`, { // Relative URL
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ name: newName, image: newImage }),
-            })
-              .then(response => response.json())
-              .then(updateData => {
-                if (updateData.success) {
-                  alert(`Team "${newName}" updated successfully!`);
-                  fetchAndRenderStandings();
-                } else {
-                  alert(`Error: ${updateData.message}`);
-                }
-              })
-              .catch(error => {
-                console.error('Error updating team:', error);
-                alert('An error occurred while updating the team. Please try again.');
-              });
-          }
-        } else {
-          console.error('Error fetching team details:', data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching team details:', error);
-      });
-  }
-  
-  function deleteTeam(division, teamId) {
-    if (confirm('Are you sure you want to delete this team?')) {
-      fetch(`/api/teams/${teamId}`, { // Relative URL
-        method: 'DELETE',
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            alert('Team deleted successfully!');
-            fetchAndRenderStandings();
-          } else {
-            alert(`Error: ${data.message}`);
-          }
-        })
-        .catch(error => {
-          console.error('Error deleting team:', error);
-          alert('An error occurred while deleting the team. Please try again.');
-        });
-    }
+    window.location.href = discordAuthURL;
   }
   
