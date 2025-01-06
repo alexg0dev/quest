@@ -1,11 +1,10 @@
-// server.js
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const fs = require('fs-extra');
 const path = require('path');
 const cors = require('cors');
+const { spawn } = require('child_process'); // Import child_process to run actions.js
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Use dynamic port if available, else default to 3000
@@ -118,7 +117,6 @@ app.post('/oauth/callback', async (req, res) => {
         ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512`
         : `https://cdn.discordapp.com/embed/avatars/${user.id % 5}.png?size=512`,
       email: user.email || 'No Email Provided'
-      // Discriminator is removed
     };
 
     // Save profile to JSON
@@ -140,10 +138,23 @@ app.post('/oauth/callback', async (req, res) => {
 });
 
 /**
- * Start the server
+ * Start the server and spawn actions.js
  */
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+
+  // Spawn a separate process to run actions.js
+  const actionsProcess = spawn('node', ['actions.js'], {
+    stdio: 'inherit' // Redirect stdout and stderr to the parent process
+  });
+
+  actionsProcess.on('error', (err) => {
+    console.error('Failed to start actions.js:', err);
+  });
+
+  actionsProcess.on('exit', (code) => {
+    console.log(`actions.js exited with code ${code}`);
+  });
 });
 
 /**
@@ -153,12 +164,10 @@ app.listen(PORT, () => {
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  // Optionally, you can decide to close the server or attempt a graceful shutdown
 });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception thrown:', err);
-  // It's generally unsafe to continue running after an uncaught exception
   process.exit(1); // Exit the process to avoid unknown states
 });
