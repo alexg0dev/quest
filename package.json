@@ -2,9 +2,9 @@
   "name": "quest-for-glory",
   "version": "1.0.0",
   "description": "Quest for Glory Backend and Frontend",
-  "main": "servers.js",   
+  "main": "server.js",   
   "scripts": {
-    "start": "node servers.js",         
+    "start": "node server.js",         
     "actions": "node actions.js",      
     "start:dev": "concurrently \"npm run start\" \"npm run actions\"" 
   },
