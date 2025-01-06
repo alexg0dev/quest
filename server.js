@@ -8,7 +8,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000; // Fixed port number
+const PORT = 3000; // Use a number, not a string
 
 /**
  * Middleware
@@ -157,5 +157,5 @@ process.on('unhandledRejection', (reason, promise) => {
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception thrown:', err);
-  process.exit(1); // Optional: Exit the process to avoid unknown states
+  process.exit(1); // Exit the process to avoid unknown states
 });
