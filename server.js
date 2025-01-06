@@ -7,9 +7,8 @@ const fs = require('fs-extra');
 const path = require('path');
 const cors = require('cors');
 
-
 const app = express();
-const PORT = '3000' || 8080; // Use PORT from environment or default to 8080
+const PORT = 3000; // Fixed port number
 
 /**
  * Middleware
@@ -17,7 +16,7 @@ const PORT = '3000' || 8080; // Use PORT from environment or default to 8080
 
 // Apply CORS before other middleware
 app.use(cors({
-  origin: 'https://alexg0dev.github.io',
+  origin: 'https://alexg0dev.github.io', // Ensure this matches your frontend's URL
   methods: ['POST'],
   allowedHeaders: ['Content-Type']
 }));
@@ -84,8 +83,8 @@ app.post('/oauth/callback', async (req, res) => {
     const tokenResponse = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: '1324622665323118642', // Your Discord Client ID from environment variables
-        client_secret: 'Rukg_rQAhewFoZbwwQNkf18nLJUiBPub', // Your Discord Client Secret from environment variables
+        client_id: '1324622665323118642', // Your Discord Client ID
+        client_secret: 'Rukg_rQAhewFoZbwwQNkf18nLJUiBPub', // Your Discord Client Secret
         grant_type: 'authorization_code',
         code,
         redirect_uri: 'https://alexg0dev.github.io/quest/', // Must match your Discord app settings
@@ -144,4 +143,19 @@ app.post('/oauth/callback', async (req, res) => {
  */
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+/**
+ * Global Error Handlers
+ */
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception thrown:', err);
+  process.exit(1); // Optional: Exit the process to avoid unknown states
 });
