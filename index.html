@@ -284,7 +284,6 @@
       align-items: center;
       gap: 0.5rem;
       position: relative; /* For dropdown positioning */
-      /* Removed absolute positioning */
       z-index: 1001; /* Ensure it stays above the header */
     }
     .user-info a {
@@ -449,10 +448,10 @@
       position: absolute;
       top: 50%; 
       left: 50%;
-      transform: translate(-50%, -50%); /* Center the SVG */
-      width: 200px;                      /* Adjust size as needed */
-      height: 200px;                     /* Adjust size as needed */
-      z-index: 2;                        /* Above video */
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      z-index: 2; /* Above video */
     }
     .hero .swiper-slide video {
       width: 100%; height: 100%;
@@ -475,7 +474,7 @@
     }
     .hero-content {
       z-index: 3;
-      width: 100%;              /* Ensure full width */
+      width: 100%;
       max-width: 800px;
       padding: 0 1rem;
       display: flex;
@@ -489,14 +488,14 @@
     .hero-content h1 {
       font-family: var(--q4g-font-heading);
       font-size: 3rem;
-      margin: 0 0 1rem 0;            /* Remove default margins */
-      padding: 0;                     /* Remove default padding */
+      margin: 0 0 1rem 0;
+      padding: 0;
       text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
     }
     .hero-content p {
       font-size: 1.3rem;
-      margin: 0 0 2rem 0;            /* Remove default margins */
-      padding: 0;                     /* Remove default padding */
+      margin: 0 0 2rem 0;
+      padding: 0;
       text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
     }
     .cta-btn {
@@ -515,8 +514,8 @@
       position: relative;
       overflow: hidden;
       transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-      z-index: 0; /* Ensure stacking context */
-      opacity: 1; /* Removed animation opacity */
+      z-index: 0;
+      opacity: 1;
     }
     .cta-btn::before {
       content: '';
@@ -526,7 +525,7 @@
       background: var(--q4g-orange);
       transform: skewX(-45deg);
       transition: all var(--transition-speed) ease;
-      z-index: -1; /* Place behind text */
+      z-index: -1;
     }
     .cta-btn:hover::before {
       left: 0;
@@ -567,7 +566,7 @@
     .partner-carousel {
       max-width: 1200px;
       margin: 0 auto;
-      opacity: 1; /* Removed animation opacity */
+      opacity: 1;
     }
     .partner-carousel .swiper-slide {
       display: flex;
@@ -620,7 +619,6 @@
       margin: 0 auto;
       justify-items: center;
       text-align: left;
-      /* Added AOS animation */
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.8s ease, transform 0.8s ease;
@@ -643,12 +641,10 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      /* Removed box-shadow */
     }
     .step:hover {
       transform: translateY(-5px) scale(1.02);
       background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,103,0,0.2));
-      /* Removed box-shadow */
     }
     .step-number {
       background: var(--q4g-orange);
@@ -696,8 +692,8 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
       background: linear-gradient(45deg, #7289DA, #5b6eae);
       transition: all var(--transition-speed) ease;
-      z-index: 2; /* Above steps */
-      opacity: 1; /* Removed animation opacity */
+      z-index: 2;
+      opacity: 1;
       position: relative;
       overflow: hidden;
       cursor: pointer;
@@ -710,7 +706,7 @@
       background: rgba(255,255,255,0.1);
       transform: skewX(-45deg);
       transition: transform var(--transition-speed) ease;
-      z-index: -1; /* Place behind text */
+      z-index: -1;
     }
     .discord-btn:hover::before {
       transform: translateX(100%) skewX(-45deg);
@@ -784,7 +780,6 @@
       margin-bottom: 1rem;
       transition: transform var(--transition-speed) ease;
     }
-    /* Rotate the logo when hovering over the entire card */
     .division-card:hover img {
       transform: rotate(360deg);
     }
@@ -793,7 +788,6 @@
       margin-bottom: 0.5rem;
       font-size: 1.5rem;
       font-family: var(--q4g-font-heading);
-      /* Removed the ::after pseudo-element to eliminate the line */
     }
     .division-card p {
       color: var(--q4g-light-gray);
@@ -818,7 +812,7 @@
       background: linear-gradient(45deg, var(--q4g-orange), #ff8f00);
       position: relative;
       overflow: hidden;
-      z-index: 0; /* Ensure stacking context */
+      z-index: 0;
     }
     .apply-btn::before {
       content: '';
@@ -828,7 +822,7 @@
       background: var(--q4g-orange);
       transform: skewX(-45deg);
       transition: all var(--transition-speed) ease;
-      z-index: -1; /* Place behind text */
+      z-index: -1;
     }
     .apply-btn:hover::before {
       left: 0;
@@ -877,7 +871,7 @@
     .live-byot-content {
       max-width: 800px;
       margin: 0 auto;
-      opacity: 1; /* Removed animation opacity */
+      opacity: 1;
     }
     .live-byot-content iframe {
       width: 100%;
@@ -886,7 +880,7 @@
       border-radius: 15px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.5);
       transition: transform var(--transition-speed) ease;
-      z-index: 1; /* Ensure iframe stays above pseudo-elements */
+      z-index: 1;
     }
     .live-byot-content iframe:hover {
       transform: scale(1.02);
@@ -1012,7 +1006,7 @@
       background: var(--q4g-orange);
       transform: skewX(-45deg);
       transition: all var(--transition-speed) ease;
-      z-index: -1; /* Place behind text */
+      z-index: -1;
     }
     .rules-button:hover::after {
       left: 0;
@@ -1313,8 +1307,8 @@
         </p>
         <!-- Images for "Our Mission" and "Global Expansion" -->
         <div class="about-images">
-          <img src="our-mission.jpg" alt="Our Mission"> <!-- Replace with actual image paths -->
-          <img src="global-expansion.jpg" alt="Global Expansion"> <!-- Replace with actual image paths -->
+          <img src="our-mission.jpg" alt="Our Mission">
+          <img src="global-expansion.jpg" alt="Global Expansion">
         </div>
       </div>
     </section>
@@ -1325,7 +1319,7 @@
       <div class="divisions-container">
         <!-- Division 1 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="100">
-          <img src="qg.png" alt="Division 1 Icon" /> <!-- Replace with actual image paths -->
+          <img src="qg.png" alt="Division 1 Icon" />
           <h3>Division 1</h3>
           <p><strong>Prize:</strong> $2000</p>
           <p>Compete at the highest level with the best players. Exclusive rewards and recognition await.</p>
@@ -1339,7 +1333,7 @@
         </div>
         <!-- Division 2 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="200">
-          <img src="qg.png" alt="Division 2 Icon" /> <!-- Replace with actual image paths -->
+          <img src="qg.png" alt="Division 2 Icon" />
           <h3>Division 2</h3>
           <p><strong>Prize:</strong> $1500</p>
           <p>Join a competitive yet accessible tier. Improve your skills and climb the ranks.</p>
@@ -1353,7 +1347,7 @@
         </div>
         <!-- Division 3 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="300">
-          <img src="qg.png" alt="Division 3 Icon" /> <!-- Replace with actual image paths -->
+          <img src="qg.png" alt="Division 3 Icon" />
           <h3>Division 3</h3>
           <p><strong>Prize:</strong> Discord Privileges</p>
           <p>Perfect for newcomers and casual players. Get in the game with zero entry fees!</p>
@@ -1373,7 +1367,7 @@
       <h2>Watch the Finals of the BYOT</h2>
       <div class="live-byot-content">
         <iframe
-          src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID" <!-- Replace YOUR_CHANNEL_ID with your actual YouTube channel ID -->
+          src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID"
           title="Live BYOT"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
@@ -1483,7 +1477,7 @@
       });
     });
 
-    // Header Scroll Effect (Optional: Add styles for .scrolled if desired)
+    // Header Scroll Effect (Optional)
     window.addEventListener('scroll', () => {
       const header = document.getElementById('header');
       if (window.scrollY > 50) {
@@ -1505,18 +1499,19 @@
     });
 
     /* ===========================
-       Handle OAuth2 Callback and Display User Profile
+       Handle OAuth2 Callback
     ============================ */
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
 
+      // Your back-end URL
+      const backendURL = 'https://quest-production-5c69.up.railway.app'; 
+
       if (code) {
         console.log('OAuth2 code detected:', code);
-        // Backend URL as deployed (ensure this is correct)
-        const backendURL = 'https://quest-production-5c69.up.railway.app'; // Replace with your actual backend URL
 
-        // Send the code to the backend for processing
+        // Exchange the code for user data
         fetch(`${backendURL}/oauth/callback`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1526,18 +1521,18 @@
           .then(data => {
             console.log('Response from backend:', data);
             if (data.success && data.user) {
-              // Update UI with user data
+              // Show user info
               const userInfo = document.getElementById('userInfo');
               const userNameSpan = document.getElementById('userName');
               const userProfilePic = document.getElementById('userProfilePic');
               const userProfileLink = document.getElementById('userProfileLink');
 
               userNameSpan.textContent = `${data.user.username}#${data.user.discriminator}`;
-              userProfilePic.src = data.user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'; // Fallback to default avatar
+              userProfilePic.src = data.user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
               userProfilePic.alt = `${data.user.username}'s Profile Picture`;
 
-              // Update the link to your Discord server
-              userProfileLink.href = `https://discord.gg/example`; // Set to your actual Discord server invite link
+              // Set user profile link to your actual server or profile location
+              userProfileLink.href = 'https://discord.gg/example';
 
               userInfo.classList.remove('hidden');
 
@@ -1545,14 +1540,14 @@
               const authButtons = document.querySelectorAll('.auth-buttons');
               authButtons.forEach(btn => btn.classList.add('hidden'));
 
-              // Store user data in localStorage for persistence
+              // Store user data locally
               localStorage.setItem('userProfile', JSON.stringify(data.user));
 
-              // Remove query params from URL without reloading
-              window.history.replaceState({}, document.title, "/quest/");
+              // Remove the OAuth code from the URL
+              window.history.replaceState({}, document.title, '/quest/');
             } else {
               console.error('Authentication failed:', data.message);
-              alert('An error occurred during the login process. Please try again.');
+              alert('Login error. Please try again.');
             }
           })
           .catch(error => {
@@ -1560,7 +1555,7 @@
             alert('An error occurred during the login process. Please try again.');
           });
       } else {
-        // Check if user data is stored in localStorage
+        // Check localStorage if user is already logged in
         const storedUser = localStorage.getItem('userProfile');
         if (storedUser) {
           const user = JSON.parse(storedUser);
@@ -1570,11 +1565,9 @@
           const userProfileLink = document.getElementById('userProfileLink');
 
           userNameSpan.textContent = `${user.username}#${user.discriminator}`;
-          userProfilePic.src = user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'; // Fallback to default avatar
+          userProfilePic.src = user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
           userProfilePic.alt = `${user.username}'s Profile Picture`;
-
-          // Update the link to your Discord server
-          userProfileLink.href = `https://discord.gg/example`; // Set to your actual Discord server invite link
+          userProfileLink.href = 'https://discord.gg/example';
 
           userInfo.classList.remove('hidden');
 
@@ -1586,19 +1579,15 @@
     });
 
     /* ===========================
-       Dropdown Menu Functionality
+       Dropdown Menu
     ============================ */
-    // Dropdown Toggle
     const userInfoDiv = document.getElementById('userInfo');
     const profileDropdown = document.getElementById('profileDropdown');
 
     userInfoDiv.addEventListener('click', (e) => {
-      // Prevent the click from propagating to the document
       e.stopPropagation();
       profileDropdown.classList.toggle('hidden');
     });
-
-    // Close dropdown when clicking outside
     document.addEventListener('click', () => {
       if (!profileDropdown.classList.contains('hidden')) {
         profileDropdown.classList.add('hidden');
@@ -1606,36 +1595,30 @@
     });
 
     /* ===========================
-       Logout Confirmation Modal and Dropdown Handling
+       Logout Modal
     ============================ */
     const logoutOption = document.getElementById('logoutOption');
     const logoutModal = document.getElementById('logoutModal');
     const confirmLogout = document.getElementById('confirmLogout');
     const cancelLogout = document.getElementById('cancelLogout');
+    const userInfoDiv2 = document.getElementById('userInfo'); 
 
-    // Show modal when "Logout" is clicked
     logoutOption.addEventListener('click', (e) => {
-      e.preventDefault(); // Prevent default link behavior
+      e.preventDefault();
       logoutModal.classList.remove('hidden');
     });
 
-    // Confirm Logout
     confirmLogout.addEventListener('click', () => {
-      // Clear user data from localStorage
+      // Clear data
       localStorage.removeItem('userProfile');
-
-      // Hide user info and show auth buttons
-      userInfoDiv.classList.add('hidden');
+      userInfoDiv2.classList.add('hidden');
       const authButtons = document.querySelectorAll('.auth-buttons');
       authButtons.forEach(btn => btn.classList.remove('hidden'));
 
-      // Hide the modal
       logoutModal.classList.add('hidden');
     });
 
-    // Cancel Logout
     cancelLogout.addEventListener('click', () => {
-      // Hide the modal
       logoutModal.classList.add('hidden');
     });
   </script>
