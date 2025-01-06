@@ -1,34 +1,21 @@
 {
-  "name": "quest-backend",
+  "name": "quest-for-glory",
   "version": "1.0.0",
-  "description": "Backend server for Quest for Glory (server.js) + competitions logic (actions.js).",
-  "main": "server.js",
+  "description": "Quest for Glory Backend and Frontend",
+  "main": "servers.js",
   "scripts": {
-    "start": "node server.js",
-    "run:actions": "node actions.js", 
-    "dev": "concurrently \"nodemon server.js\" \"nodemon actions.js\""
+    "start": "node servers.js",
+    "actions": "node actions.js",
+    "start:dev": "concurrently \"npm run start\" \"npm run actions\""
   },
-  "keywords": [
-    "quest",
-    "backend",
-    "oauth2",
-    "discord"
-  ],
-  "author": "Your Name",
-  "license": "ISC",
   "dependencies": {
-    "axios": "^1.4.0",
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "fs-extra": "^11.1.0"
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22",
-    "concurrently": "^7.6.0"
+    "concurrently": "^7.0.0"
   },
-  "engines": {
-    "node": ">=16.x"
-  }
+  "author": "Your Name",
+  "license": "MIT"
 }
