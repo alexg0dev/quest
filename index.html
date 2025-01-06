@@ -11,14 +11,14 @@
     rel="stylesheet"
   >
 
-  <!-- Font Awesome (Ensure this link is correct) -->
+  <!-- Font Awesome (Corrected Integrity) -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    integrity="sha512-p3U6bA7fCt4K+CrGc+jfswWgk2XYB2hMt96vFscS4bEHBhHY5O0H6u5nXnBn/tFgYVwMGweQlY1J3j+MGJtI2w=="
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/zS5OENp1dQkL5fX7JqXpg6aLi7N9/OjJN1AsuK03eTPtYhfTLk9G6q3G/Q05aq+CmQ=="
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
-  />
+  >
 
   <!-- Swiper.js CSS -->
   <link
@@ -286,19 +286,25 @@
       position: relative; /* For dropdown positioning */
       z-index: 1001; /* Ensure it stays above the header */
     }
-    .user-info a {
+    /* Replace <a> with <button> for profile toggle */
+    .user-info button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      text-decoration: none;
       color: inherit;
+    }
+    .user-info button:focus {
+      outline: none;
     }
     .user-info img {
       width: 40px; height: 40px;
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--q4g-orange);
-      cursor: pointer;
       transition: transform var(--transition-speed) ease;
     }
     .user-info img:hover {
@@ -1164,10 +1170,11 @@
     </nav>
     <!-- USER INFO (hidden by default) -->
     <div class="user-info hidden" id="userInfo">
-      <a href="profile.html" id="userProfileLink" target="_blank">
+      <!-- Replaced <a> with <button> to prevent redirection -->
+      <button id="userProfileButton" aria-label="User Menu" class="user-profile-button">
         <img src="" alt="User Profile Picture" id="userProfilePic" />
         <span id="userName"></span>
-      </a>
+      </button>
       <!-- Dropdown Menu -->
       <div class="profile-dropdown hidden" id="profileDropdown">
         <a href="#profile">Profile</a>
@@ -1525,14 +1532,11 @@
               const userInfo = document.getElementById('userInfo');
               const userNameSpan = document.getElementById('userName');
               const userProfilePic = document.getElementById('userProfilePic');
-              const userProfileLink = document.getElementById('userProfileLink');
+              const userProfileButton = document.getElementById('userProfileButton');
 
               userNameSpan.textContent = `${data.user.username}`;
               userProfilePic.src = data.user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
               userProfilePic.alt = `${data.user.username}'s Profile Picture`;
-
-              // Set user profile link to your profile page
-              userProfileLink.href = 'profile.html'; // Update as needed
 
               userInfo.classList.remove('hidden');
 
@@ -1563,12 +1567,10 @@
           const userInfo = document.getElementById('userInfo');
           const userNameSpan = document.getElementById('userName');
           const userProfilePic = document.getElementById('userProfilePic');
-          const userProfileLink = document.getElementById('userProfileLink');
 
           userNameSpan.textContent = `${user.username}`;
           userProfilePic.src = user.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png';
           userProfilePic.alt = `${user.username}'s Profile Picture`;
-          userProfileLink.href = 'profile.html'; // Update as needed
 
           userInfo.classList.remove('hidden');
 
@@ -1582,10 +1584,10 @@
     /* ===========================
        Dropdown Menu
     ============================ */
-    const userInfoDiv = document.getElementById('userInfo');
+    const userProfileButton = document.getElementById('userProfileButton');
     const profileDropdown = document.getElementById('profileDropdown');
 
-    userInfoDiv.addEventListener('click', (e) => {
+    userProfileButton.addEventListener('click', (e) => {
       e.stopPropagation();
       profileDropdown.classList.toggle('hidden');
     });
@@ -1602,7 +1604,7 @@
     const logoutModal = document.getElementById('logoutModal');
     const confirmLogout = document.getElementById('confirmLogout');
     const cancelLogout = document.getElementById('cancelLogout');
-    const userInfoDiv2 = document.getElementById('userInfo'); 
+    const userInfoDiv = document.getElementById('userInfo'); 
 
     logoutOption.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1612,7 +1614,7 @@
     confirmLogout.addEventListener('click', () => {
       // Clear data
       localStorage.removeItem('userProfile');
-      userInfoDiv2.classList.add('hidden');
+      userInfoDiv.classList.add('hidden');
       const authButtons = document.querySelectorAll('.auth-buttons');
       authButtons.forEach(btn => btn.classList.remove('hidden'));
 
