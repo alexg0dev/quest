@@ -16,16 +16,20 @@ const PORT = '3000' || 3000;
 /**
  * Middleware
  */
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
-// Configure CORS to allow requests from your GitHub Pages domain
-// Note: The "origin" should NOT include the trailing slash in typical setups.
+// Apply CORS before other middleware
 app.use(cors({
   origin: 'https://alexg0dev.github.io',
   methods: ['POST'],
   allowedHeaders: ['Content-Type']
 }));
+
+// Body parsing middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Serve static files if needed (optional)
+// app.use(express.static(path.join(__dirname, 'public')));
 
 /**
  * Helper function to save user profiles (profiles.json)
