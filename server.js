@@ -1,12 +1,15 @@
+// server.js
 
 const express = require('express');
+const bodyParser = require('body-parser');
 const axios = require('axios');
 const fs = require('fs-extra');
 const path = require('path');
 const cors = require('cors');
 
+
 const app = express();
-const PORT = '3000' || 8080; // Use environment variable or default to 8080
+const PORT = '3000' || 8080; // Use PORT from environment or default to 8080
 
 /**
  * Middleware
@@ -14,18 +17,17 @@ const PORT = '3000' || 8080; // Use environment variable or default to 8080
 
 // Apply CORS before other middleware
 app.use(cors({
-  origin: 'https://alexg0dev.github.io', // Your frontend domain
+  origin: 'https://alexg0dev.github.io',
   methods: ['POST'],
   allowedHeaders: ['Content-Type']
 }));
 
 // Body parsing middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 /**
  * Helper function to save user profiles (profiles.json)
- * Excludes discriminators as Discord no longer uses them
  */
 const saveProfile = async (profile) => {
   const filePath = path.join(__dirname, 'profiles.json');
@@ -42,7 +44,7 @@ const saveProfile = async (profile) => {
     profiles = [];
   }
 
-  // Check if user already exists based on Discord ID
+  // Check if user already exists
   const userExists = profiles.some(p => p.id === profile.id);
   if (userExists) {
     console.log(`User with ID ${profile.id} already exists in profiles.json.`);
@@ -82,11 +84,11 @@ app.post('/oauth/callback', async (req, res) => {
     const tokenResponse = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: '1324622665323118642', // From .env
-        client_secret: 'Rukg_rQAhewFoZbwwQNkf18nLJUiBPub', // From .env
+        client_id: '1324622665323118642', // Your Discord Client ID from environment variables
+        client_secret: 'Rukg_rQAhewFoZbwwQNkf18nLJUiBPub', // Your Discord Client Secret from environment variables
         grant_type: 'authorization_code',
         code,
-        redirect_uri: 'https://alexg0dev.github.io/quest/', // From .env
+        redirect_uri: 'https://alexg0dev.github.io/quest/', // Must match your Discord app settings
         scope: 'identify email'
       }),
       {
@@ -116,6 +118,7 @@ app.post('/oauth/callback', async (req, res) => {
         ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512`
         : `https://cdn.discordapp.com/embed/avatars/${user.id % 5}.png?size=512`,
       email: user.email || 'No Email Provided'
+      // Discriminator is removed
     };
 
     // Save profile to JSON
