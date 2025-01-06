@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "actions": "node actions.js",
+    "dev:actions": "nodemon actions.js"
   },
   "keywords": [
     "quest",
