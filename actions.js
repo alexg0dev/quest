@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleOAuthCallback();
     checkExistingLogin();
     setupLogoutModal();
+    setupProfileDropdown();
   }
   
   function initializeAOS() {
@@ -60,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.success && data.user) {
           displayUserInfo(data.user);
           storeUserData(data.user);
-          if (data.user.id === '756297907170181292') {
+          if (data.user.id === '756297907170181292') { // Replace with your admin user ID
             enableAdminFeatures();
           }
           removeOAuthCodeFromURL();
@@ -91,6 +92,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
     // Hide auth buttons
     document.querySelectorAll('.auth-buttons').forEach(btn => btn.classList.add('hidden'));
+  
+    // Populate Profile Section
+    const profileUsername = document.getElementById('profileUsername');
+    if (profileUsername) {
+      profileUsername.textContent = user.username;
+    }
   }
   
   function storeUserData(user) {
@@ -107,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (storedUser) {
       const user = JSON.parse(storedUser);
       displayUserInfo(user);
-      if (user.id === '756297907170181292') {
+      if (user.id === '756297907170181292') { // Replace with your admin user ID
         enableAdminFeatures();
       }
       fetchAndRenderStandings();
@@ -121,11 +128,18 @@ document.addEventListener('DOMContentLoaded', () => {
       adminControls.classList.add('active');
     }
   
+    // Show match management section
+    const matchManagement = document.getElementById('matchManagement');
+    if (matchManagement) {
+      matchManagement.classList.remove('hidden');
+    }
+  
     // Show admin columns in standings tables
     document.querySelectorAll('.admin-col').forEach(col => col.style.display = 'table-cell');
   
     // Setup admin form submissions
     setupAdminForms();
+    setupMatchManagement();
   }
   
   function setupAdminForms() {
@@ -134,7 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
       addTeamForm.addEventListener('submit', handleAddTeam);
     }
   
-    // Additional admin forms (e.g., addMatchForm) can be initialized here
+    const addMatchForm = document.getElementById('addMatchForm');
+    if (addMatchForm) {
+      addMatchForm.addEventListener('submit', handleAddMatch);
+    }
   }
   
   function handleAddTeam(e) {
@@ -148,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch('https://quest-production-5c69.up.railway.app/api/teams', { // Replace with your API endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: teamName, image: teamImage, division: division }),
+        body: JSON.stringify({ name: teamName, image: teamImage, division }),
       })
         .then(response => response.json())
         .then(data => {
@@ -168,6 +185,188 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     } else {
       alert('Please fill in all fields.');
+    }
+  }
+  
+  function setupMatchManagement() {
+    const addMatchForm = document.getElementById('addMatchForm');
+    if (addMatchForm) {
+      addMatchForm.addEventListener('submit', handleAddMatch);
+    }
+  
+    // Fetch and render matches
+    fetchAndRenderMatches();
+  }
+  
+  function handleAddMatch(e) {
+    e.preventDefault();
+    const team1 = document.getElementById('team1').value.trim();
+    const team2 = document.getElementById('team2').value.trim();
+    const date = document.getElementById('matchDate').value.trim();
+    const division = document.getElementById('divisionSelectMatch').value;
+  
+    if (team1 && team2 && date && division) {
+      // Send data to backend to add the match
+      fetch('https://quest-production-5c69.up.railway.app/api/matches', { // Replace with your API endpoint
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ team1, team2, date, division }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Match added successfully!');
+            // Clear form
+            document.getElementById('addMatchForm').reset();
+            // Refresh matches
+            fetchAndRenderMatches();
+          } else {
+            alert(`Error: ${data.message}`);
+          }
+        })
+        .catch(error => {
+          console.error('Error adding match:', error);
+          alert('An error occurred while adding the match. Please try again.');
+        });
+    } else {
+      alert('Please fill in all fields.');
+    }
+  }
+  
+  function fetchAndRenderStandings() {
+    const divisions = [1, 2, 3];
+    divisions.forEach(division => {
+      fetch(`https://quest-production-5c69.up.railway.app/api/standings?division=${division}`) // Replace with your API endpoint
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.standings) {
+            renderStandingsTable(division, data.standings);
+          } else {
+            console.error(`Error fetching standings for Division ${division}:`, data.message);
+          }
+        })
+        .catch(error => {
+          console.error(`Error fetching standings for Division ${division}:`, error);
+        });
+    });
+  }
+  
+  function renderStandingsTable(division, standings) {
+    const tbody = document.getElementById(`division${division}Body`);
+    tbody.innerHTML = ''; // Clear existing rows
+  
+    standings.forEach((team, index) => {
+      const tr = document.createElement('tr');
+  
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td>
+          <img src="${team.image}" alt="${team.name} Logo" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 0.5rem;">
+          ${team.name}
+        </td>
+        <td>${team.matchesPlayed}</td>
+        <td class="${team.wins > team.draws && team.wins > team.losses ? 'win' : ''}">${team.wins}</td>
+        <td class="${team.draws > team.wins && team.draws > team.losses ? 'draw' : ''}">${team.draws}</td>
+        <td class="${team.losses > team.wins && team.losses > team.draws ? 'loss' : ''}">${team.losses}</td>
+        <td>${team.goalsFor}</td>
+        <td>${team.goalsAgainst}</td>
+        <td>${team.goalDifference}</td>
+        <td>${team.points}</td>
+        <td class="admin-col">
+          <div class="admin-actions">
+            <button class="edit-btn" data-team-id="${team.id}"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" data-team-id="${team.id}"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </td>
+      `;
+  
+      tbody.appendChild(tr);
+    });
+  
+    // Attach event listeners to edit and delete buttons if admin is active
+    if (!document.getElementById('adminControls').classList.contains('hidden')) {
+      attachAdminActionListeners(division);
+    }
+  }
+  
+  function attachAdminActionListeners(division) {
+    const editButtons = document.querySelectorAll(`#division${division}Body .edit-btn`);
+    const deleteButtons = document.querySelectorAll(`#division${division}Body .delete-btn`);
+  
+    editButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const teamId = button.getAttribute('data-team-id');
+        editTeam(division, teamId);
+      });
+    });
+  
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const teamId = button.getAttribute('data-team-id');
+        deleteTeam(division, teamId);
+      });
+    });
+  }
+  
+  function editTeam(division, teamId) {
+    // Fetch team details
+    fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`) // Replace with your API endpoint
+      .then(response => response.json())
+      .then(data => {
+        if (data.success && data.team) {
+          // Populate a modal or form with team details for editing
+          // For simplicity, using prompt dialogs
+          const newName = prompt('Enter new team name:', data.team.name);
+          const newImage = prompt('Enter new team image URL:', data.team.image);
+  
+          if (newName && newImage) {
+            // Send update to backend
+            fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`, { // Replace with your API endpoint
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: newName, image: newImage }),
+            })
+              .then(response => response.json())
+              .then(updateData => {
+                if (updateData.success) {
+                  alert(`Team "${newName}" updated successfully!`);
+                  fetchAndRenderStandings();
+                } else {
+                  alert(`Error: ${updateData.message}`);
+                }
+              })
+              .catch(error => {
+                console.error('Error updating team:', error);
+                alert('An error occurred while updating the team. Please try again.');
+              });
+          }
+        } else {
+          console.error('Error fetching team details:', data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching team details:', error);
+      });
+  }
+  
+  function deleteTeam(division, teamId) {
+    if (confirm('Are you sure you want to delete this team?')) {
+      fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`, { // Replace with your API endpoint
+        method: 'DELETE',
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Team deleted successfully!');
+            fetchAndRenderStandings();
+          } else {
+            alert(`Error: ${data.message}`);
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting team:', error);
+          alert('An error occurred while deleting the team. Please try again.');
+        });
     }
   }
   
@@ -213,6 +412,25 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileMenu.classList.remove('open');
         hamburger.setAttribute('aria-expanded', 'false');
         mobileMenu.setAttribute('aria-hidden', 'true');
+      });
+    }
+  }
+  
+  function setupProfileDropdown() {
+    const userProfileButton = document.getElementById('userProfileButton');
+    const profileDropdown = document.getElementById('profileDropdown');
+  
+    if (userProfileButton && profileDropdown) {
+      userProfileButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('hidden');
+      });
+  
+      // Close dropdown when clicking outside
+      document.addEventListener('click', () => {
+        if (!profileDropdown.classList.contains('hidden')) {
+          profileDropdown.classList.add('hidden');
+        }
       });
     }
   }
@@ -350,6 +568,172 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
           console.error('Error deleting team:', error);
           alert('An error occurred while deleting the team. Please try again.');
+        });
+    }
+  }
+  
+  function setupMatchManagement() {
+    const addMatchForm = document.getElementById('addMatchForm');
+    if (addMatchForm) {
+      addMatchForm.addEventListener('submit', handleAddMatch);
+    }
+  
+    // Fetch and render matches
+    fetchAndRenderMatches();
+  }
+  
+  function handleAddMatch(e) {
+    e.preventDefault();
+    const team1 = document.getElementById('team1').value.trim();
+    const team2 = document.getElementById('team2').value.trim();
+    const date = document.getElementById('matchDate').value.trim();
+    const division = document.getElementById('divisionSelectMatch').value;
+  
+    if (team1 && team2 && date && division) {
+      // Send data to backend to add the match
+      fetch('https://quest-production-5c69.up.railway.app/api/matches', { // Replace with your API endpoint
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ team1, team2, date, division }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Match added successfully!');
+            // Clear form
+            document.getElementById('addMatchForm').reset();
+            // Refresh matches
+            fetchAndRenderMatches();
+          } else {
+            alert(`Error: ${data.message}`);
+          }
+        })
+        .catch(error => {
+          console.error('Error adding match:', error);
+          alert('An error occurred while adding the match. Please try again.');
+        });
+    } else {
+      alert('Please fill in all fields.');
+    }
+  }
+  
+  function fetchAndRenderMatches() {
+    fetch('https://quest-production-5c69.up.railway.app/api/matches') // Replace with your API endpoint
+      .then(response => response.json())
+      .then(data => {
+        if (data.success && data.matches) {
+          renderMatchTable(data.matches);
+        } else {
+          console.error('Error fetching matches:', data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching matches:', error);
+      });
+  }
+  
+  function renderMatchTable(matches) {
+    const tbody = document.getElementById('matchTableBody');
+    tbody.innerHTML = '';
+    matches.forEach(match => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${match.team1}</td>
+        <td>${match.team2}</td>
+        <td>${match.date}</td>
+        <td>${match.result || 'Pending'}</td>
+        <td class="admin-col">
+          <div class="admin-actions">
+            <button class="edit-match-btn" data-match-id="${match.id}"><i class="fas fa-edit"></i></button>
+            <button class="delete-match-btn" data-match-id="${match.id}"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  
+    // Attach event listeners to edit and delete buttons if admin is active
+    if (!document.getElementById('adminControls').classList.contains('hidden')) {
+      attachMatchActionListeners();
+    }
+  }
+  
+  function attachMatchActionListeners() {
+    const editMatchButtons = document.querySelectorAll('.edit-match-btn');
+    const deleteMatchButtons = document.querySelectorAll('.delete-match-btn');
+  
+    editMatchButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const matchId = button.getAttribute('data-match-id');
+        editMatch(matchId);
+      });
+    });
+  
+    deleteMatchButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const matchId = button.getAttribute('data-match-id');
+        deleteMatch(matchId);
+      });
+    });
+  }
+  
+  function editMatch(matchId) {
+    // Fetch match details
+    fetch(`https://quest-production-5c69.up.railway.app/api/matches/${matchId}`) // Replace with your API endpoint
+      .then(response => response.json())
+      .then(data => {
+        if (data.success && data.match) {
+          // Populate a modal or form with match details for editing
+          // For simplicity, using prompt dialogs
+          const newResult = prompt('Enter match result (e.g., 2-1):', data.match.result || '');
+          if (newResult !== null) {
+            // Update match result
+            fetch(`https://quest-production-5c69.up.railway.app/api/matches/${matchId}`, { // Replace with your API endpoint
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ result: newResult }),
+            })
+              .then(response => response.json())
+              .then(updateData => {
+                if (updateData.success) {
+                  alert('Match result updated successfully!');
+                  fetchAndRenderStandings();
+                  fetchAndRenderMatches();
+                } else {
+                  alert(`Error: ${updateData.message}`);
+                }
+              })
+              .catch(error => {
+                console.error('Error updating match:', error);
+                alert('An error occurred while updating the match. Please try again.');
+              });
+          }
+        } else {
+          console.error('Error fetching match details:', data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching match details:', error);
+      });
+  }
+  
+  function deleteMatch(matchId) {
+    if (confirm('Are you sure you want to delete this match?')) {
+      fetch(`https://quest-production-5c69.up.railway.app/api/matches/${matchId}`, { // Replace with your API endpoint
+        method: 'DELETE',
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Match deleted successfully!');
+            fetchAndRenderMatches();
+          } else {
+            alert(`Error: ${data.message}`);
+          }
+        })
+        .catch(error => {
+          console.error('Error deleting match:', error);
+          alert('An error occurred while deleting the match. Please try again.');
         });
     }
   }
