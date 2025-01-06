@@ -60,6 +60,7 @@ const saveProfile = async (profile) => {
     console.log(`Added to profiles.json: ${JSON.stringify(profile)}`);
   } catch (err) {
     console.error('Error writing to profiles.json:', err);
+    throw new Error('Failed to write user profile to profiles.json');
   }
 
   return profile;
@@ -152,10 +153,12 @@ app.listen(PORT, () => {
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Optionally, you can decide to close the server or attempt a graceful shutdown
 });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception thrown:', err);
+  // It's generally unsafe to continue running after an uncaught exception
   process.exit(1); // Exit the process to avoid unknown states
 });
