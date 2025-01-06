@@ -8,7 +8,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000; // Use a number, not a string
+const PORT = process.env.PORT || 3000; // Use dynamic port if available, else default to 3000
 
 /**
  * Middleware
