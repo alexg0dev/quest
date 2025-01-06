@@ -4,13 +4,8 @@
   "description": "Backend server for Quest for Glory (server.js) + competitions logic (actions.js).",
   "main": "server.js",
   "scripts": {
-
     "start": "node server.js",
-
- 
-    "run:actions": "node actions.js",
-
- 
+    "run:actions": "node actions.js", 
     "dev": "concurrently \"nodemon server.js\" \"nodemon actions.js\""
   },
   "keywords": [
