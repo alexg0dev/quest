@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quest for Glory - Competitions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Font Awesome (CDN) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-jS9L+Uju46iTKl5ryZ8Twpb8hDJZwUnBmDN98fjc+ZtZ8dABb0oxFL9kgRzfjngUpwDdJ0m6opugFKm3MAB3Pg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <!-- Swiper.js CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/swiper/swiper-bundle.min.css"
+  />
+
+  <!-- AOS CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/aos@2.3.1/dist/aos.css"
+  />
+
+  <!-- Main Styles -->
+  <style>
+    /* Root Variables */
+    :root {
+      --q4g-orange: #FF6700;
+      --q4g-red: #FF0000;
+      --q4g-black: #1A1A1A;
+      --q4g-white: #FFFFFF;
+      --q4g-gray: #2B2B2B;
+      --q4g-light-gray: #D4D4D4;
+      --q4g-font-heading: 'Montserrat', sans-serif;
+      --q4g-font-body: 'Poppins', sans-serif;
+      --transition-speed: 0.3s; /* Faster for snappier animations */
+      --button-height: 50px;
+      --card-shadow: rgba(255, 103, 0, 0.5);
+    }
+
+    /* RESET */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: var(--q4g-font-body);
+      background: var(--q4g-black);
+      color: var(--q4g-white);
+      line-height: 1.6;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: color var(--transition-speed) ease;
+    }
+    a:hover {
+      color: var(--q4g-orange);
+    }
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--q4g-black);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      transition: background var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+    }
+    .brand-logo img {
+      width: 60px;
+      margin-right: 0.5rem;
+      border-radius: 8px;
+      transition: transform var(--transition-speed) ease;
+    }
+    .brand-logo img:hover {
+      transform: scale(1.05);
+    }
+    .brand-text {
+      color: var(--q4g-orange);
+      font-size: 1.8rem;
+      font-family: var(--q4g-font-heading);
+      font-weight: 700;
+      letter-spacing: 1px;
+      pointer-events: none;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    .nav-links li a {
+      font-size: 1rem;
+      font-weight: 600;
+      position: relative;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: transform var(--transition-speed) ease;
+    }
+    .nav-links li a::after {
+      content: '';
+      width: 0%;
+      height: 2px;
+      background: var(--q4g-orange);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transition: width var(--transition-speed) ease;
+    }
+    .nav-links li a:hover::after {
+      width: 100%;
+    }
+    .nav-links li a:hover {
+      transform: translateY(-3px);
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1100;
+    }
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background: var(--q4g-white);
+      transition: all var(--transition-speed) ease;
+    }
+    .hamburger.active div:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active div:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active div:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* MOBILE MENU */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 80%;
+      height: 100vh;
+      background: var(--q4g-black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      z-index: 999;
+      visibility: hidden;
+      opacity: 0;
+      transition: right var(--transition-speed) ease, opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+    }
+    .mobile-menu.open {
+      right: 0;
+      visibility: visible;
+      opacity: 1;
+      animation: slideInRight 0.3s forwards;
+    }
+    @keyframes slideInRight {
+      from { right: -100%; }
+      to   { right: 0; }
+    }
+    .mobile-menu ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      text-align: center;
+    }
+    .mobile-menu a {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--q4g-white);
+      position: relative;
+      transition: transform var(--transition-speed) ease;
+    }
+    .mobile-menu a::after {
+      content: '';
+      width: 0%;
+      height: 2px;
+      background: var(--q4g-orange);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transition: width var(--transition-speed) ease;
+    }
+    .mobile-menu a:hover::after {
+      width: 100%;
+    }
+    .mobile-menu a:hover {
+      transform: translateY(-3px);
+    }
+
+    /* Hide Profile and Logout links initially */
+    .mobileUserLink.hidden {
+      display: none;
+    }
+
+    /* LOGIN BUTTON */
+    .login-btn {
+      padding: 0.5rem 1.5rem;
+      border: 2px solid var(--q4g-orange);
+      border-radius: 25px;
+      color: var(--q4g-orange);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      height: var(--button-height);
+      position: relative;
+      overflow: hidden;
+      background: none;
+      cursor: pointer;
+      font-family: var(--q4g-font-heading);
+      font-size: 1rem;
+      text-decoration: none;
+      transition: transform var(--transition-speed) ease;
+      z-index: 0;
+    }
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--q4g-orange);
+      transform: skewX(-45deg);
+      transition: all var(--transition-speed) ease;
+      z-index: -1;
+    }
+    .login-btn:hover::before {
+      left: 0;
+    }
+    .login-btn:hover {
+      color: var(--q4g-white);
+      transform: translateY(-3px);
+    }
+    .auth-buttons.hidden {
+      display: none;
+    }
+
+    /* USER INFO */
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 1001;
+    }
+    .user-info button {
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: inherit;
+    }
+    .user-info button:focus {
+      outline: none;
+    }
+    .user-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--q4g-orange);
+      transition: transform var(--transition-speed) ease;
+    }
+    .user-info img:hover {
+      transform: scale(1.1);
+    }
+    .user-info span {
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .user-info.hidden {
+      opacity: 0;
+      transform: scale(0.95);
+      pointer-events: none;
+    }
+
+    /* Dropdown Menu */
+    .profile-dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: var(--q4g-gray);
+      border: 1px solid var(--q4g-light-gray);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+      min-width: 150px;
+      z-index: 1002;
+    }
+    .profile-dropdown a {
+      display: block;
+      padding: 0.75rem 1.5rem;
+      color: var(--q4g-white);
+      font-weight: 500;
+      transition: background var(--transition-speed) ease;
+    }
+    .profile-dropdown a:hover {
+      background: var(--q4g-orange);
+      color: var(--q4g-black);
+    }
+    .profile-dropdown.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+    }
+    .modal.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .modal-content {
+      background: var(--q4g-black);
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      color: var(--q4g-white);
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .modal-content h3 {
+      margin-bottom: 1rem;
+    }
+    .modal-content p {
+      margin-bottom: 2rem;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    .modal-button {
+      padding: 0.5rem 1.5rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background var(--transition-speed) ease, transform var(--transition-speed) ease;
+    }
+    .modal-button.confirm {
+      background: var(--q4g-red);
+      color: var(--q4g-white);
+    }
+    .modal-button.confirm:hover {
+      background: #cc0000;
+      transform: translateY(-2px);
+    }
+    .modal-button.cancel {
+      background: var(--q4g-gray);
+      color: var(--q4g-white);
+    }
+    .modal-button.cancel:hover {
+      background: var(--q4g-light-gray);
+      color: var(--q4g-black);
+      transform: translateY(-2px);
+    }
+
+    /* COMPETITIONS HERO */
+    .competitions-hero {
+      background: radial-gradient(circle, rgba(255,103,0,0.1) 0%, #111111 60%);
+      padding: 5rem 2rem;
+      text-align: center;
+      position: relative;
+      margin-top: 80px;
+    }
+    .competitions-hero h1 {
+      font-family: var(--q4g-font-heading);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--q4g-orange);
+      position: relative;
+      display: inline-block;
+    }
+    .competitions-hero h1::after {
+      content: '';
+      width: 60px;
+      height: 4px;
+      background: var(--q4g-orange);
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+    .competitions-hero p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: var(--q4g-light-gray);
+    }
+    .competitions-hero .cta-btn {
+      padding: 0.75rem 2rem;
+      color: var(--q4g-white);
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+      background: linear-gradient(45deg, var(--q4g-orange), #ff8f00);
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      z-index: 0;
+      opacity: 1;
+    }
+    .competitions-hero .cta-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--q4g-orange);
+      transform: skewX(-45deg);
+      transition: all var(--transition-speed) ease;
+      z-index: -1;
+    }
+    .competitions-hero .cta-btn:hover::before {
+      left: 0;
+    }
+    .competitions-hero .cta-btn:hover {
+      color: var(--q4g-white);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    }
+
+    /* DIVISION STANDINGS */
+    .division-standings-section {
+      background: #1A1A1A;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .division-standings-section h2 {
+      font-family: var(--q4g-font-heading);
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      color: var(--q4g-orange);
+      position: relative;
+      display: inline-block;
+    }
+    .division-standings-section h2::after {
+      content: '';
+      width: 80px;
+      height: 4px;
+      background: var(--q4g-orange);
+      position: absolute;
+      left: 50%;
+      bottom: -20px;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+    .divisions-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      justify-items: center;
+    }
+    .division-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,103,0,0.1));
+      width: 100%;
+      max-width: 350px;
+      padding: 2rem 1.5rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+    .division-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 15px 30px var(--card-shadow);
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,103,0,0.2));
+    }
+    .division-card img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      transition: transform var(--transition-speed) ease;
+    }
+    .division-card:hover img {
+      transform: rotate(360deg);
+    }
+    .division-card h3 {
+      color: var(--q4g-orange);
+      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+      font-family: var(--q4g-font-heading);
+    }
+    .division-card p {
+      color: var(--q4g-light-gray);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .apply-btn {
+      padding: 0.5rem 1.5rem;
+      border-radius: 25px;
+      color: var(--q4g-white);
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      text-decoration: none;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      background: linear-gradient(45deg, var(--q4g-orange), #ff8f00);
+      position: relative;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .apply-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--q4g-orange);
+      transform: skewX(-45deg);
+      transition: all var(--transition-speed) ease;
+      z-index: -1;
+    }
+    .apply-btn:hover::before {
+      left: 0;
+    }
+    .apply-btn:hover {
+      background: linear-gradient(45deg, #e65a00, #ff7f50);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 10px rgba(0,0,0,0.4);
+    }
+    .team-count {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--q4g-light-gray);
+    }
+    .team-count span:first-child {
+      font-weight: 600;
+    }
+
+    /* ADMIN CONTROLS */
+    .admin-controls {
+      margin-top: 4rem;
+      padding: 2rem;
+      background: #2B2B2B;
+      border-radius: 15px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--q4g-white);
+      display: none; /* Hidden by default */
+    }
+    .admin-controls.active {
+      display: block;
+    }
+    .admin-controls h3 {
+      margin-bottom: 1.5rem;
+      color: var(--q4g-orange);
+    }
+    .admin-controls form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .admin-controls label {
+      font-weight: 600;
+    }
+    .admin-controls input, .admin-controls select, .admin-controls textarea {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--q4g-gray);
+      border-radius: 8px;
+      background: #1A1A1A;
+      color: var(--q4g-white);
+      font-family: var(--q4g-font-body);
+    }
+    .admin-controls button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 25px;
+      background: var(--q4g-orange);
+      color: var(--q4g-black);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--transition-speed) ease, transform var(--transition-speed) ease;
+    }
+    .admin-controls button:hover {
+      background: #e65a00;
+      transform: translateY(-3px);
+    }
+
+    /* TABLE STANDINGS */
+    .standings-section {
+      background: #1A1A1A;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .standings-section h2 {
+      font-family: var(--q4g-font-heading);
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      color: var(--q4g-orange);
+      position: relative;
+      display: inline-block;
+    }
+    .standings-section h2::after {
+      content: '';
+      width: 80px;
+      height: 4px;
+      background: var(--q4g-orange);
+      position: absolute;
+      left: 50%;
+      bottom: -20px;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+    .standings-table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 3rem auto;
+      border-collapse: collapse;
+      background: #2B2B2B;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .standings-table th, .standings-table td {
+      padding: 0.75rem 1rem;
+      text-align: center;
+      border-bottom: 1px solid #444;
+    }
+    .standings-table th {
+      background: var(--q4g-orange);
+      color: var(--q4g-black);
+    }
+    .standings-table tr:nth-child(even) {
+      background: #1A1A1A;
+    }
+    .standings-table tr:hover {
+      background: #333;
+    }
+    .standings-table td.win {
+      color: var(--q4g-green);
+      font-weight: 600;
+    }
+    .standings-table td.draw {
+      color: var(--q4g-yellow);
+      font-weight: 600;
+    }
+    .standings-table td.loss {
+      color: var(--q4g-red);
+      font-weight: 600;
+    }
+    .admin-col {
+      display: none; /* Hidden by default, shown for admin */
+    }
+    .admin-actions {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .admin-actions button {
+      padding: 0.3rem 0.6rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: var(--q4g-white);
+      transition: background var(--transition-speed) ease;
+      font-size: 0.8rem;
+    }
+    .admin-actions .edit-btn {
+      background: #ff8f00;
+    }
+    .admin-actions .delete-btn {
+      background: var(--q4g-red);
+    }
+    .admin-actions button:hover {
+      opacity: 0.8;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--q4g-black);
+      color: #ccc;
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: auto;
+      border-top: 2px solid var(--q4g-gray);
+    }
+    .footer-nav, .social-links {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .footer-nav a, .social-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #ccc;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      position: relative;
+      transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    }
+    .footer-nav a::after, .social-links a::after {
+      content: '';
+      width: 0%;
+      height: 2px;
+      background: var(--q4g-orange);
+      position: absolute;
+      bottom: 0; left: 0;
+      transition: width var(--transition-speed) ease;
+    }
+    .footer-nav a:hover::after, .social-links a:hover::after {
+      width: 100%;
+    }
+    .footer-nav a:hover, .social-links a:hover {
+      color: var(--q4g-orange);
+      transform: translateY(-3px);
+    }
+    .rules-button {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 2px solid var(--q4g-orange);
+      border-radius: 25px;
+      color: var(--q4g-orange);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform var(--transition-speed) ease;
+    }
+    .rules-button::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--q4g-orange);
+      transform: skewX(-45deg);
+      transition: all var(--transition-speed) ease;
+      z-index: -1;
+    }
+    .rules-button:hover::after {
+      left: 0;
+    }
+    .rules-button:hover {
+      color: var(--q4g-white);
+      transform: translateY(-3px);
+    }
+    .footer-support {
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    .footer-support a {
+      color: #5865F2;
+      text-decoration: underline;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      position: relative;
+      transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    }
+    .footer-support a::after {
+      content: '';
+      width: 0%;
+      height: 2px;
+      background: #5865F2;
+      position: absolute;
+      bottom: 0; left: 0;
+      transition: width var(--transition-speed) ease;
+    }
+    .footer-support a:hover::after {
+      width: 100%;
+    }
+    .footer-support a:hover {
+      color: #4653c9;
+      transform: translateY(-2px);
+    }
+    .footer-support a:hover::after {
+      background: #4653c9;
+    }
+    .footer-copy {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #999;
+    }
+
+    /* RESPONSIVE UPDATES */
+    @media (max-width: 1024px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+    }
+    @media (max-width: 768px) {
+      .competitions-hero h1 {
+        font-size: 2rem;
+      }
+      .competitions-hero p {
+        font-size: 1rem;
+      }
+      .competitions-hero .cta-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+      }
+      .standings-section h2 {
+        font-size: 1.8rem;
+      }
+      .divisions-container {
+        grid-template-columns: 1fr;
+      }
+      .division-card {
+        max-width: 100%;
+      }
+      /* Hide user-info on small screens */
+      .user-info {
+        display: none;
+      }
+      .admin-controls {
+        padding: 1rem;
+      }
+      .standings-table th, .standings-table td {
+        padding: 0.5rem;
+      }
+    }
+
+    /* KEYFRAMES */
+    @keyframes slideInRight {
+      from { right: -100%; }
+      to   { right: 0; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header id="header">
+    <div class="brand">
+      <div class="brand-logo">
+        <img src="qg.png" alt="Quest for Glory Logo" />
+      </div>
+      <div class="brand-text">Quest for Glory</div>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="competitions.html"><i class="fas fa-trophy"></i> Competitions</a></li>
+        <li><a href="#"><i class="fas fa-lightbulb"></i> Vision</a></li>
+        <li><a href="#"><i class="fas fa-comments"></i> Contact & Support</a></li>
+        <li><a href="#"><i class="fas fa-star"></i> Power Rankings</a></li>
+      </ul>
+      <div class="auth-buttons">
+        <!-- OAuth Login Button -->
+        <a
+          href="https://discord.com/oauth2/authorize?client_id=1324622665323118642&response_type=code&redirect_uri=https%3A%2F%2Falexg0dev.github.io%2Fquest-competitions%2F&scope=identify%20email"
+          aria-label="Login with Discord"
+          class="login-btn"
+          id="loginButton"
+        >
+          <i class="fas fa-right-to-bracket"></i> Login
+        </a>
+      </div>
+      <div class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </nav>
+    <!-- USER INFO (hidden by default) -->
+    <div class="user-info hidden" id="userInfo">
+      <!-- Replaced <a> with <button> to prevent redirection -->
+      <button id="userProfileButton" aria-label="User Menu" class="user-profile-button">
+        <img src="" alt="User Profile Picture" id="userProfilePic" />
+        <span id="userName"></span>
+      </button>
+      <!-- Dropdown Menu -->
+      <div class="profile-dropdown hidden" id="profileDropdown">
+        <a href="#profile"><i class="fas fa-user"></i> Profile</a>
+        <a href="#stats"><i class="fas fa-chart-line"></i> Stats</a>
+        <a href="#" id="logoutOption"><i class="fas fa-right-from-bracket"></i> Logout</a>
+      </div>
+    </div>
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu hidden" id="mobile-menu" aria-hidden="true">
+      <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="competitions.html"><i class="fas fa-trophy"></i> Competitions</a></li>
+        <li><a href="#"><i class="fas fa-lightbulb"></i> Vision</a></li>
+        <li><a href="#"><i class="fas fa-comments"></i> Contact & Support</a></li>
+        <li><a href="#"><i class="fas fa-star"></i> Power Rankings</a></li>
+        <!-- Conditional Profile and Logout Links -->
+        <li class="mobileUserLink hidden"><a href="#profile"><i class="fas fa-user"></i> Profile</a></li>
+        <li class="mobileUserLink hidden"><a href="#" id="mobileLogoutOption"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+      </ul>
+      <div class="auth-buttons">
+        <!-- OAuth Login Button for Mobile -->
+        <a
+          href="https://discord.com/oauth2/authorize?client_id=1324622665323118642&response_type=code&redirect_uri=https%3A%2F%2Falexg0dev.github.io%2Fquest-competitions%2F&scope=identify%20email"
+          aria-label="Login with Discord"
+          class="login-btn"
+          id="mobileLoginButton"
+        >
+          <i class="fas fa-right-to-bracket"></i> Login
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <!-- COMPETITIONS HERO -->
+    <section class="competitions-hero" id="competitionsHero">
+      <h1>Competitions & Standings</h1>
+      <p>Manage Divisions, Teams, Matches, and Results Here.</p>
+      <a class="cta-btn" href="#divisionStandings">
+        <i class="fas fa-trophy"></i> View Standings
+      </a>
+    </section>
+
+    <!-- DIVISION STANDINGS -->
+    <section class="division-standings-section" id="divisionStandings" data-aos="fade-up">
+      <h2>Division Standings</h2>
+      <div class="divisions-container">
+        <!-- Division 1 -->
+        <div class="division-card" data-aos="zoom-in" data-aos-delay="100">
+          <img src="qg.png" alt="Division 1 Icon" />
+          <h3>Division 1</h3>
+          <p><strong>Prize:</strong> $2000</p>
+          <p>Top-tier competition with the best squads.</p>
+          <a href="#division1Standings" class="apply-btn">
+            <i class="fas fa-arrow-right"></i> View Standings
+          </a>
+          <div class="team-count">
+            <span>Teams:</span>
+            <span>20</span>
+          </div>
+        </div>
+        <!-- Division 2 -->
+        <div class="division-card" data-aos="zoom-in" data-aos-delay="200">
+          <img src="qg.png" alt="Division 2 Icon" />
+          <h3>Division 2</h3>
+          <p><strong>Prize:</strong> $1500</p>
+          <p>Competitive but more accessible tier for upcoming teams.</p>
+          <a href="#division2Standings" class="apply-btn">
+            <i class="fas fa-arrow-right"></i> View Standings
+          </a>
+          <div class="team-count">
+            <span>Teams:</span>
+            <span>16</span>
+          </div>
+        </div>
+        <!-- Division 3 -->
+        <div class="division-card" data-aos="zoom-in" data-aos-delay="300">
+          <img src="qg.png" alt="Division 3 Icon" />
+          <h3>Division 3</h3>
+          <p><strong>Prize:</strong> Discord Privileges</p>
+          <p>Beginner-friendly with zero entry fees. Perfect for newcomers.</p>
+          <a href="#division3Standings" class="apply-btn">
+            <i class="fas fa-arrow-right"></i> View Standings
+          </a>
+          <div class="team-count">
+            <span>Teams:</span>
+            <span>10</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STANDINGS TABLES -->
+    <!-- Division 1 Standings -->
+    <section class="standings-section" id="division1Standings" data-aos="fade-up">
+      <h2>Division 1 Standings</h2>
+      <table class="standings-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Team</th>
+            <th>MP</th>
+            <th>W</th>
+            <th>D</th>
+            <th>L</th>
+            <th>GF</th>
+            <th>GA</th>
+            <th>GD</th>
+            <th>Pts</th>
+            <th class="admin-col">Actions</th> <!-- Visible only to admin -->
+          </tr>
+        </thead>
+        <tbody id="division1Body">
+          <!-- Dynamic Rows Populated by actions.js -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Division 2 Standings -->
+    <section class="standings-section" id="division2Standings" data-aos="fade-up">
+      <h2>Division 2 Standings</h2>
+      <table class="standings-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Team</th>
+            <th>MP</th>
+            <th>W</th>
+            <th>D</th>
+            <th>L</th>
+            <th>GF</th>
+            <th>GA</th>
+            <th>GD</th>
+            <th>Pts</th>
+            <th class="admin-col">Actions</th> <!-- Visible only to admin -->
+          </tr>
+        </thead>
+        <tbody id="division2Body">
+          <!-- Dynamic Rows Populated by actions.js -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Division 3 Standings -->
+    <section class="standings-section" id="division3Standings" data-aos="fade-up">
+      <h2>Division 3 Standings</h2>
+      <table class="standings-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Team</th>
+            <th>MP</th>
+            <th>W</th>
+            <th>D</th>
+            <th>L</th>
+            <th>GF</th>
+            <th>GA</th>
+            <th>GD</th>
+            <th>Pts</th>
+            <th class="admin-col">Actions</th> <!-- Visible only to admin -->
+          </tr>
+        </thead>
+        <tbody id="division3Body">
+          <!-- Dynamic Rows Populated by actions.js -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ADMIN CONTROLS -->
+    <section class="admin-controls hidden" id="adminControls" data-aos="fade-up">
+      <h3>Admin Panel</h3>
+      <form id="addTeamForm">
+        <label for="teamName">Team Name</label>
+        <input type="text" id="teamName" placeholder="Enter team name" required>
+
+        <label for="teamImage">Team Image URL</label>
+        <input type="url" id="teamImage" placeholder="Enter image URL" required>
+
+        <label for="divisionSelect">Select Division</label>
+        <select id="divisionSelect" required>
+          <option value="">--Select Division--</option>
+          <option value="1">Division 1</option>
+          <option value="2">Division 2</option>
+          <option value="3">Division 3</option>
+        </select>
+
+        <button type="submit"><i class="fas fa-plus"></i> Add Team</button>
+      </form>
+
+      <!-- Additional Admin Forms for Editing/Removing Teams, Matches, etc. can be added here -->
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <ul class="footer-nav">
+        <li><a href="#privacyPolicy"><i class="fas fa-shield-alt"></i> How We Protect Your Data</a></li>
+        <li><a href="#cookiesPolicy"><i class="fas fa-cookie-bite"></i> Our Cookie Practices</a></li>
+        <li><a href="#termsService"><i class="fas fa-file-contract"></i> Terms You Should Know</a></li>
+        <li><a href="#ourStory"><i class="fas fa-book-open"></i> Our Story</a></li>
+      </ul>
+      
+      <ul class="social-links">
+        <li><a href="https://twitter.com/questforglory" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
+        <li><a href="https://facebook.com/questforglory" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+        <li><a href="https://instagram.com/questforglory" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+        <li><a href="https://discord.gg/YOUR_DISCORD_INVITE" target="_blank"><i class="fab fa-discord"></i> Discord</a></li>
+      </ul>
+      
+      <a href="#rulesGuidelines" class="rules-button">
+        <i class="fas fa-book"></i> Rules and Guidelines
+      </a>
+
+      <div class="footer-support">
+        <p>Need help?
+          <a href="https://discord.gg/YOUR_DISCORD_INVITE" target="_blank">
+            <i class="fab fa-discord"></i> Join our Discord Help Desk
+          </a>
+        </p>
+      </div>
+      
+      <div class="footer-copy">
+        © 2024 Quest for Glory. All Rights Reserved. Not affiliated with EA Sports or its licensors.
+      </div>
+    </footer>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal hidden" id="logoutModal">
+      <div class="modal-content">
+        <h3>Confirm Logout</h3>
+        <p>Are you sure you want to logout?</p>
+        <div class="modal-actions">
+          <button id="confirmLogout" class="modal-button confirm">Yes</button>
+          <button id="cancelLogout" class="modal-button cancel">No</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Swiper.js JS -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- actions.js -->
+  <script src="actions.js"></script>
+</body>
+</html>
