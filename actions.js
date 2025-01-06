@@ -1,4 +1,4 @@
-// actions.js
+// public/actions.js
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function handleOAuthCallback() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    const backendURL = 'https://quest-production-5c69.up.railway.app'; // Replace with your backend URL
+    const backendURL = window.location.origin; // Assuming backend serves the frontend
   
     if (code) {
       exchangeCodeForUser(code, backendURL);
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     if (teamName && teamImage && division) {
       // Send data to backend to add the team
-      fetch('https://quest-production-5c69.up.railway.app/api/teams', { // Replace with your API endpoint
+      fetch('/api/teams', { // Relative URL since server serves frontend
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: teamName, image: teamImage, division }),
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     if (team1 && team2 && date && division) {
       // Send data to backend to add the match
-      fetch('https://quest-production-5c69.up.railway.app/api/matches', { // Replace with your API endpoint
+      fetch('/api/matches', { // Relative URL since server serves frontend
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ team1, team2, date, division }),
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function fetchAndRenderStandings() {
     const divisions = [1, 2, 3];
     divisions.forEach(division => {
-      fetch(`https://quest-production-5c69.up.railway.app/api/standings?division=${division}`) // Replace with your API endpoint
+      fetch(`/api/standings?division=${division}`) // Relative URL
         .then(response => response.json())
         .then(data => {
           if (data.success && data.standings) {
@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   function editTeam(division, teamId) {
     // Fetch team details
-    fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`) // Replace with your API endpoint
+    fetch(`/api/teams/${teamId}`) // Relative URL
       .then(response => response.json())
       .then(data => {
         if (data.success && data.team) {
@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
           if (newName && newImage) {
             // Send update to backend
-            fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`, { // Replace with your API endpoint
+            fetch(`/api/teams/${teamId}`, { // Relative URL
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ name: newName, image: newImage }),
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   function deleteTeam(division, teamId) {
     if (confirm('Are you sure you want to delete this team?')) {
-      fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`, { // Replace with your API endpoint
+      fetch(`/api/teams/${teamId}`, { // Relative URL
         method: 'DELETE',
       })
         .then(response => response.json())
@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function fetchAndRenderStandings() {
     const divisions = [1, 2, 3];
     divisions.forEach(division => {
-      fetch(`https://quest-production-5c69.up.railway.app/api/standings?division=${division}`) // Replace with your API endpoint
+      fetch(`/api/standings?division=${division}`) // Relative URL
         .then(response => response.json())
         .then(data => {
           if (data.success && data.standings) {
@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   function editTeam(division, teamId) {
     // Fetch team details
-    fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`) // Replace with your API endpoint
+    fetch(`/api/teams/${teamId}`) // Relative URL
       .then(response => response.json())
       .then(data => {
         if (data.success && data.team) {
@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
           if (newName && newImage) {
             // Send update to backend
-            fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`, { // Replace with your API endpoint
+            fetch(`/api/teams/${teamId}`, { // Relative URL
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ name: newName, image: newImage }),
@@ -553,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   function deleteTeam(division, teamId) {
     if (confirm('Are you sure you want to delete this team?')) {
-      fetch(`https://quest-production-5c69.up.railway.app/api/teams/${teamId}`, { // Replace with your API endpoint
+      fetch(`/api/teams/${teamId}`, { // Relative URL
         method: 'DELETE',
       })
         .then(response => response.json())
@@ -572,168 +572,204 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
-  function setupMatchManagement() {
-    const addMatchForm = document.getElementById('addMatchForm');
-    if (addMatchForm) {
-      addMatchForm.addEventListener('submit', handleAddMatch);
+  function setupLogoutModal() {
+    const logoutOption = document.getElementById('logoutOption');
+    const logoutModal = document.getElementById('logoutModal');
+    const confirmLogout = document.getElementById('confirmLogout');
+    const cancelLogout = document.getElementById('cancelLogout');
+    const userInfoDiv = document.getElementById('userInfo'); 
+    const mobileUserLinks = document.querySelectorAll('.mobileUserLink');
+  
+    if (logoutOption && logoutModal && confirmLogout && cancelLogout) {
+      logoutOption.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoutModal.classList.remove('hidden');
+      });
+  
+      confirmLogout.addEventListener('click', () => {
+        // Clear data
+        localStorage.removeItem('userProfile');
+        userInfoDiv.classList.add('hidden');
+        mobileUserLinks.forEach(link => link.classList.add('hidden')); // Hide in mobile
+        document.querySelectorAll('.auth-buttons').forEach(btn => btn.classList.remove('hidden'));
+  
+        logoutModal.classList.add('hidden');
+      });
+  
+      cancelLogout.addEventListener('click', () => {
+        logoutModal.classList.add('hidden');
+      });
     }
   
-    // Fetch and render matches
-    fetchAndRenderMatches();
+    // MOBILE LOGOUT (uses same modal)
+    const mobileLogoutOption = document.getElementById('mobileLogoutOption');
+    if (mobileLogoutOption && logoutModal && confirmLogout && cancelLogout) {
+      mobileLogoutOption.addEventListener('click', (e) => {
+        e.preventDefault();
+        logoutModal.classList.remove('hidden');
+        // Close the mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+      });
+    }
   }
   
-  function handleAddMatch(e) {
-    e.preventDefault();
-    const team1 = document.getElementById('team1').value.trim();
-    const team2 = document.getElementById('team2').value.trim();
-    const date = document.getElementById('matchDate').value.trim();
-    const division = document.getElementById('divisionSelectMatch').value;
+  function setupProfileDropdown() {
+    const userProfileButton = document.getElementById('userProfileButton');
+    const profileDropdown = document.getElementById('profileDropdown');
   
-    if (team1 && team2 && date && division) {
-      // Send data to backend to add the match
-      fetch('https://quest-production-5c69.up.railway.app/api/matches', { // Replace with your API endpoint
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ team1, team2, date, division }),
-      })
+    if (userProfileButton && profileDropdown) {
+      userProfileButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('hidden');
+      });
+  
+      // Close dropdown when clicking outside
+      document.addEventListener('click', () => {
+        if (!profileDropdown.classList.contains('hidden')) {
+          profileDropdown.classList.add('hidden');
+        }
+      });
+    }
+  }
+  
+  function fetchAndRenderStandings() {
+    const divisions = [1, 2, 3];
+    divisions.forEach(division => {
+      fetch(`/api/standings?division=${division}`) // Relative URL
         .then(response => response.json())
         .then(data => {
-          if (data.success) {
-            alert('Match added successfully!');
-            // Clear form
-            document.getElementById('addMatchForm').reset();
-            // Refresh matches
-            fetchAndRenderMatches();
+          if (data.success && data.standings) {
+            renderStandingsTable(division, data.standings);
           } else {
-            alert(`Error: ${data.message}`);
+            console.error(`Error fetching standings for Division ${division}:`, data.message);
           }
         })
         .catch(error => {
-          console.error('Error adding match:', error);
-          alert('An error occurred while adding the match. Please try again.');
+          console.error(`Error fetching standings for Division ${division}:`, error);
         });
-    } else {
-      alert('Please fill in all fields.');
-    }
+    });
   }
   
-  function fetchAndRenderMatches() {
-    fetch('https://quest-production-5c69.up.railway.app/api/matches') // Replace with your API endpoint
-      .then(response => response.json())
-      .then(data => {
-        if (data.success && data.matches) {
-          renderMatchTable(data.matches);
-        } else {
-          console.error('Error fetching matches:', data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching matches:', error);
-      });
-  }
+  function renderStandingsTable(division, standings) {
+    const tbody = document.getElementById(`division${division}Body`);
+    tbody.innerHTML = ''; // Clear existing rows
   
-  function renderMatchTable(matches) {
-    const tbody = document.getElementById('matchTableBody');
-    tbody.innerHTML = '';
-    matches.forEach(match => {
+    standings.forEach((team, index) => {
       const tr = document.createElement('tr');
+  
       tr.innerHTML = `
-        <td>${match.team1}</td>
-        <td>${match.team2}</td>
-        <td>${match.date}</td>
-        <td>${match.result || 'Pending'}</td>
+        <td>${index + 1}</td>
+        <td>
+          <img src="${team.image}" alt="${team.name} Logo" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 0.5rem;">
+          ${team.name}
+        </td>
+        <td>${team.matchesPlayed}</td>
+        <td class="${team.wins > team.draws && team.wins > team.losses ? 'win' : ''}">${team.wins}</td>
+        <td class="${team.draws > team.wins && team.draws > team.losses ? 'draw' : ''}">${team.draws}</td>
+        <td class="${team.losses > team.wins && team.losses > team.draws ? 'loss' : ''}">${team.losses}</td>
+        <td>${team.goalsFor}</td>
+        <td>${team.goalsAgainst}</td>
+        <td>${team.goalDifference}</td>
+        <td>${team.points}</td>
         <td class="admin-col">
           <div class="admin-actions">
-            <button class="edit-match-btn" data-match-id="${match.id}"><i class="fas fa-edit"></i></button>
-            <button class="delete-match-btn" data-match-id="${match.id}"><i class="fas fa-trash-alt"></i></button>
+            <button class="edit-btn" data-team-id="${team.id}"><i class="fas fa-edit"></i></button>
+            <button class="delete-btn" data-team-id="${team.id}"><i class="fas fa-trash-alt"></i></button>
           </div>
         </td>
       `;
+  
       tbody.appendChild(tr);
     });
   
     // Attach event listeners to edit and delete buttons if admin is active
     if (!document.getElementById('adminControls').classList.contains('hidden')) {
-      attachMatchActionListeners();
+      attachAdminActionListeners(division);
     }
   }
   
-  function attachMatchActionListeners() {
-    const editMatchButtons = document.querySelectorAll('.edit-match-btn');
-    const deleteMatchButtons = document.querySelectorAll('.delete-match-btn');
+  function attachAdminActionListeners(division) {
+    const editButtons = document.querySelectorAll(`#division${division}Body .edit-btn`);
+    const deleteButtons = document.querySelectorAll(`#division${division}Body .delete-btn`);
   
-    editMatchButtons.forEach(button => {
+    editButtons.forEach(button => {
       button.addEventListener('click', () => {
-        const matchId = button.getAttribute('data-match-id');
-        editMatch(matchId);
+        const teamId = button.getAttribute('data-team-id');
+        editTeam(division, teamId);
       });
     });
   
-    deleteMatchButtons.forEach(button => {
+    deleteButtons.forEach(button => {
       button.addEventListener('click', () => {
-        const matchId = button.getAttribute('data-match-id');
-        deleteMatch(matchId);
+        const teamId = button.getAttribute('data-team-id');
+        deleteTeam(division, teamId);
       });
     });
   }
   
-  function editMatch(matchId) {
-    // Fetch match details
-    fetch(`https://quest-production-5c69.up.railway.app/api/matches/${matchId}`) // Replace with your API endpoint
+  function editTeam(division, teamId) {
+    // Fetch team details
+    fetch(`/api/teams/${teamId}`) // Relative URL
       .then(response => response.json())
       .then(data => {
-        if (data.success && data.match) {
-          // Populate a modal or form with match details for editing
+        if (data.success && data.team) {
+          // Populate a modal or form with team details for editing
           // For simplicity, using prompt dialogs
-          const newResult = prompt('Enter match result (e.g., 2-1):', data.match.result || '');
-          if (newResult !== null) {
-            // Update match result
-            fetch(`https://quest-production-5c69.up.railway.app/api/matches/${matchId}`, { // Replace with your API endpoint
+          const newName = prompt('Enter new team name:', data.team.name);
+          const newImage = prompt('Enter new team image URL:', data.team.image);
+  
+          if (newName && newImage) {
+            // Send update to backend
+            fetch(`/api/teams/${teamId}`, { // Relative URL
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ result: newResult }),
+              body: JSON.stringify({ name: newName, image: newImage }),
             })
               .then(response => response.json())
               .then(updateData => {
                 if (updateData.success) {
-                  alert('Match result updated successfully!');
+                  alert(`Team "${newName}" updated successfully!`);
                   fetchAndRenderStandings();
-                  fetchAndRenderMatches();
                 } else {
                   alert(`Error: ${updateData.message}`);
                 }
               })
               .catch(error => {
-                console.error('Error updating match:', error);
-                alert('An error occurred while updating the match. Please try again.');
+                console.error('Error updating team:', error);
+                alert('An error occurred while updating the team. Please try again.');
               });
           }
         } else {
-          console.error('Error fetching match details:', data.message);
+          console.error('Error fetching team details:', data.message);
         }
       })
       .catch(error => {
-        console.error('Error fetching match details:', error);
+        console.error('Error fetching team details:', error);
       });
   }
   
-  function deleteMatch(matchId) {
-    if (confirm('Are you sure you want to delete this match?')) {
-      fetch(`https://quest-production-5c69.up.railway.app/api/matches/${matchId}`, { // Replace with your API endpoint
+  function deleteTeam(division, teamId) {
+    if (confirm('Are you sure you want to delete this team?')) {
+      fetch(`/api/teams/${teamId}`, { // Relative URL
         method: 'DELETE',
       })
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            alert('Match deleted successfully!');
-            fetchAndRenderMatches();
+            alert('Team deleted successfully!');
+            fetchAndRenderStandings();
           } else {
             alert(`Error: ${data.message}`);
           }
         })
         .catch(error => {
-          console.error('Error deleting match:', error);
-          alert('An error occurred while deleting the match. Please try again.');
+          console.error('Error deleting team:', error);
+          alert('An error occurred while deleting the team. Please try again.');
         });
     }
   }

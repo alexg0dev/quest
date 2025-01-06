@@ -2,12 +2,10 @@
   "name": "quest-backend",
   "version": "1.0.0",
   "description": "Backend server for Quest for Glory handling OAuth2 authentication and profile management.",
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "actions": "node actions.js",
-    "dev:actions": "nodemon actions.js"
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js"
   },
   "keywords": [
     "quest",
@@ -21,8 +19,10 @@
     "axios": "^1.4.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "fs-extra": "^11.1.0"
+    "fs-extra": "^11.1.0",
+    "path": "^0.12.7" 
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
