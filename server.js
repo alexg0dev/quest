@@ -7,7 +7,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = 8080; // or any port you'd like
+const PORT =  3000; // Use SERVER_PORT env variable
 
 /**
  * Middleware
