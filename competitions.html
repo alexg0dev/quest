@@ -32,11 +32,13 @@
     href="https://unpkg.com/aos@2.3.1/dist/aos.css"
   />
 
-  <!-- Main Styles -->
-  <link rel="stylesheet" href="styles.css"> <!-- If you have external CSS -->
-
-  <!-- Inline Styles (as provided) -->
+  <!-- Inline (or External) CSS -->
   <style>
+    /* ================================
+       Your Existing CSS from
+       the Provided Code
+       ================================ */
+
     /* Root Variables */
     :root {
       --q4g-orange: #FF6700;
@@ -424,7 +426,7 @@
       transform: translateY(-2px);
     }
 
-    /* COMPETITIONS HERO */
+    /* Competitions Hero */
     .competitions-hero {
       background: radial-gradient(circle, rgba(255,103,0,0.1) 0%, #111111 60%);
       padding: 5rem 2rem;
@@ -494,7 +496,7 @@
       box-shadow: 0 8px 16px rgba(0,0,0,0.5);
     }
 
-    /* DIVISION STANDINGS */
+    /* Division Standings */
     .division-standings-section {
       background: #1A1A1A;
       padding: 4rem 2rem;
@@ -795,7 +797,8 @@
       height: 2px;
       background: var(--q4g-orange);
       position: absolute;
-      bottom: 0; left: 0;
+      bottom: 0;
+      left: 0;
       transition: width var(--transition-speed) ease;
     }
     .footer-nav a:hover::after, .social-links a:hover::after {
@@ -878,8 +881,12 @@
 
     /* RESPONSIVE UPDATES */
     @media (max-width: 1024px) {
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
+      .nav-links {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
     }
     @media (max-width: 768px) {
       .competitions-hero h1 {
@@ -908,7 +915,8 @@
       .admin-controls {
         padding: 1rem;
       }
-      .standings-table th, .standings-table td {
+      .standings-table th,
+      .standings-table td {
         padding: 0.5rem;
       }
     }
@@ -946,9 +954,9 @@
         <li><a href="#"><i class="fas fa-star"></i> Power Rankings</a></li>
       </ul>
       <div class="auth-buttons">
-        <!-- OAuth Login Button -->
+        <!-- Example OAuth redirect (Edit with your real URL & client_id) -->
         <a
-          href="#"
+          href="https://discord.com/oauth2/authorize?client_id=1324622665323118642&response_type=code&redirect_uri=https%3A%2F%2Falexg0dev.github.io%2Fquest%2F&scope=identify%20email"
           aria-label="Login with Discord"
           class="login-btn"
           id="loginButton"
@@ -962,9 +970,9 @@
         <div></div>
       </div>
     </nav>
+
     <!-- USER INFO (hidden by default) -->
     <div class="user-info hidden" id="userInfo">
-      <!-- Replaced <a> with <button> to prevent redirection -->
       <button id="userProfileButton" aria-label="User Menu" class="user-profile-button">
         <img src="" alt="User Profile Picture" id="userProfilePic" />
         <span id="userName"></span>
@@ -976,6 +984,7 @@
         <a href="#" id="logoutOption"><i class="fas fa-right-from-bracket"></i> Logout</a>
       </div>
     </div>
+
     <!-- MOBILE MENU -->
     <div class="mobile-menu hidden" id="mobile-menu" aria-hidden="true">
       <ul>
@@ -984,14 +993,14 @@
         <li><a href="#"><i class="fas fa-lightbulb"></i> Vision</a></li>
         <li><a href="#"><i class="fas fa-comments"></i> Contact & Support</a></li>
         <li><a href="#"><i class="fas fa-star"></i> Power Rankings</a></li>
-        <!-- Conditional Profile and Logout Links -->
+        <!-- Conditional Profile/Logout Links -->
         <li class="mobileUserLink hidden"><a href="#profile"><i class="fas fa-user"></i> Profile</a></li>
         <li class="mobileUserLink hidden"><a href="#" id="mobileLogoutOption"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
       </ul>
       <div class="auth-buttons">
-        <!-- OAuth Login Button for Mobile -->
+        <!-- Same OAuth URL for mobile -->
         <a
-          href="#"
+          href="https://discord.com/oauth2/authorize?client_id=https://discord.com/oauth2/authorize?client_id=1324622665323118642&response_type=code&redirect_uri=https%3A%2F%2Falexg0dev.github.io%2Fquest%2F&scope=identify%20email&response_type=code&redirect_uri=https%3A%2F%2FYOUR_FRONTEND_URL%2Fcompetitions.html&scope=identify%20email"
           aria-label="Login with Discord"
           class="login-btn"
           id="mobileLoginButton"
@@ -1002,7 +1011,7 @@
     </div>
   </header>
 
-  <!-- MAIN -->
+  <!-- MAIN CONTENT -->
   <main>
     <!-- COMPETITIONS HERO -->
     <section class="competitions-hero" id="competitionsHero">
@@ -1031,6 +1040,7 @@
             <span>20</span>
           </div>
         </div>
+
         <!-- Division 2 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="200">
           <img src="qg.png" alt="Division 2 Icon" />
@@ -1045,6 +1055,7 @@
             <span>16</span>
           </div>
         </div>
+
         <!-- Division 3 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="300">
           <img src="qg.png" alt="Division 3 Icon" />
@@ -1083,7 +1094,7 @@
           </tr>
         </thead>
         <tbody id="division1Body">
-          <!-- Dynamic Rows Populated by actions.js -->
+          <!-- Filled by client-side JavaScript -->
         </tbody>
       </table>
     </section>
@@ -1108,7 +1119,7 @@
           </tr>
         </thead>
         <tbody id="division2Body">
-          <!-- Dynamic Rows Populated by actions.js -->
+          <!-- Filled by client-side JavaScript -->
         </tbody>
       </table>
     </section>
@@ -1133,20 +1144,20 @@
           </tr>
         </thead>
         <tbody id="division3Body">
-          <!-- Dynamic Rows Populated by actions.js -->
+          <!-- Filled by client-side JavaScript -->
         </tbody>
       </table>
     </section>
 
-    <!-- ADMIN CONTROLS -->
+    <!-- ADMIN CONTROLS (Hidden by Default) -->
     <section class="admin-controls hidden" id="adminControls" data-aos="fade-up">
       <h3>Admin Panel</h3>
       <form id="addTeamForm">
         <label for="teamName">Team Name</label>
-        <input type="text" id="teamName" placeholder="Enter team name" required>
+        <input type="text" id="teamName" placeholder="Enter team name" required />
 
         <label for="teamImage">Team Image URL</label>
-        <input type="url" id="teamImage" placeholder="Enter image URL" required>
+        <input type="url" id="teamImage" placeholder="Enter image URL" required />
 
         <label for="divisionSelect">Select Division</label>
         <select id="divisionSelect" required>
@@ -1158,55 +1169,53 @@
 
         <button type="submit"><i class="fas fa-plus"></i> Add Team</button>
       </form>
-
-      <!-- Additional Admin Forms for Editing/Removing Teams, Matches, etc. can be added here -->
     </section>
+  </main>
 
-    <!-- FOOTER -->
-    <footer>
-      <ul class="footer-nav">
-        <li><a href="#privacyPolicy"><i class="fas fa-shield-alt"></i> How We Protect Your Data</a></li>
-        <li><a href="#cookiesPolicy"><i class="fas fa-cookie-bite"></i> Our Cookie Practices</a></li>
-        <li><a href="#termsService"><i class="fas fa-file-contract"></i> Terms You Should Know</a></li>
-        <li><a href="#ourStory"><i class="fas fa-book-open"></i> Our Story</a></li>
-      </ul>
-      
-      <ul class="social-links">
-        <li><a href="https://twitter.com/questforglory" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
-        <li><a href="https://facebook.com/questforglory" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a></li>
-        <li><a href="https://instagram.com/questforglory" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
-        <li><a href="https://discord.gg/YOUR_DISCORD_INVITE" target="_blank"><i class="fab fa-discord"></i> Discord</a></li>
-      </ul>
-      
-      <a href="#rulesGuidelines" class="rules-button">
-        <i class="fas fa-book"></i> Rules and Guidelines
-      </a>
+  <!-- FOOTER -->
+  <footer>
+    <ul class="footer-nav">
+      <li><a href="#privacyPolicy"><i class="fas fa-shield-alt"></i> How We Protect Your Data</a></li>
+      <li><a href="#cookiesPolicy"><i class="fas fa-cookie-bite"></i> Our Cookie Practices</a></li>
+      <li><a href="#termsService"><i class="fas fa-file-contract"></i> Terms You Should Know</a></li>
+      <li><a href="#ourStory"><i class="fas fa-book-open"></i> Our Story</a></li>
+    </ul>
 
-      <div class="footer-support">
-        <p>Need help?
-          <a href="https://discord.gg/YOUR_DISCORD_INVITE" target="_blank">
-            <i class="fab fa-discord"></i> Join our Discord Help Desk
-          </a>
-        </p>
-      </div>
-      
-      <div class="footer-copy">
-        © 2024 Quest for Glory. All Rights Reserved. Not affiliated with EA Sports or its licensors.
-      </div>
-    </footer>
+    <ul class="social-links">
+      <li><a href="https://twitter.com/questforglory" target="_blank"><i class="fab fa-twitter"></i> Twitter</a></li>
+      <li><a href="https://facebook.com/questforglory" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+      <li><a href="https://instagram.com/questforglory" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+      <li><a href="https://discord.gg/YOUR_DISCORD_INVITE" target="_blank"><i class="fab fa-discord"></i> Discord</a></li>
+    </ul>
 
-    <!-- Logout Confirmation Modal -->
-    <div class="modal hidden" id="logoutModal">
-      <div class="modal-content">
-        <h3>Confirm Logout</h3>
-        <p>Are you sure you want to logout?</p>
-        <div class="modal-actions">
-          <button id="confirmLogout" class="modal-button confirm">Yes</button>
-          <button id="cancelLogout" class="modal-button cancel">No</button>
-        </div>
+    <a href="#rulesGuidelines" class="rules-button">
+      <i class="fas fa-book"></i> Rules and Guidelines
+    </a>
+
+    <div class="footer-support">
+      <p>Need help?
+        <a href="https://discord.gg/YOUR_DISCORD_INVITE" target="_blank">
+          <i class="fab fa-discord"></i> Join our Discord Help Desk
+        </a>
+      </p>
+    </div>
+
+    <div class="footer-copy">
+      © 2024 Quest for Glory. All Rights Reserved. Not affiliated with EA Sports or its licensors.
+    </div>
+  </footer>
+
+  <!-- Logout Confirmation Modal -->
+  <div class="modal hidden" id="logoutModal">
+    <div class="modal-content">
+      <h3>Confirm Logout</h3>
+      <p>Are you sure you want to logout?</p>
+      <div class="modal-actions">
+        <button id="confirmLogout" class="modal-button confirm">Yes</button>
+        <button id="cancelLogout" class="modal-button cancel">No</button>
       </div>
     </div>
-  </main>
+  </div>
 
   <!-- Swiper.js JS -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -1214,7 +1223,275 @@
   <!-- AOS JS -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-  <!-- actions.js -->
-  <script src="actions.js"></script>
+  <!-- Client-Side JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init();
+
+      const actionsBackendURL = 'https://quest-production-5c69.up.railway.app/'; // Replace with your actual actions.js backend URL
+
+      // Function to fetch and display standings
+      const fetchStandings = async (division, tbodyId) => {
+        try {
+          const response = await fetch(`${actionsBackendURL}/api/standings?division=${division}`);
+          const data = await response.json();
+
+          if (data.success) {
+            const tbody = document.getElementById(tbodyId);
+            tbody.innerHTML = ''; // Clear existing rows
+
+            data.standings.forEach((team, index) => {
+              const tr = document.createElement('tr');
+
+              tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${team.name}</td>
+                <td>${team.matchesPlayed}</td>
+                <td class="win">${team.wins}</td>
+                <td class="draw">${team.draws}</td>
+                <td class="loss">${team.losses}</td>
+                <td>${team.goalsFor}</td>
+                <td>${team.goalsAgainst}</td>
+                <td>${team.goalDifference}</td>
+                <td>${team.points}</td>
+                <td class="admin-col">
+                  <div class="admin-actions">
+                    <button class="edit-btn" data-id="${team.id}"><i class="fas fa-edit"></i></button>
+                    <button class="delete-btn" data-id="${team.id}"><i class="fas fa-trash"></i></button>
+                  </div>
+                </td>
+              `;
+
+              tbody.appendChild(tr);
+            });
+
+            // Attach event listeners for edit and delete buttons
+            attachAdminActions();
+          } else {
+            console.error('Failed to fetch standings:', data.message);
+          }
+        } catch (error) {
+          console.error('Error fetching standings:', error);
+        }
+      };
+
+      // Function to attach event listeners to admin buttons
+      const attachAdminActions = () => {
+        // Edit buttons
+        document.querySelectorAll('.edit-btn').forEach(button => {
+          button.addEventListener('click', () => {
+            const teamId = button.getAttribute('data-id');
+            // Implement your edit logic here
+            alert(`Edit Team ID: ${teamId} - Feature not implemented yet.`);
+          });
+        });
+
+        // Delete buttons
+        document.querySelectorAll('.delete-btn').forEach(button => {
+          button.addEventListener('click', async () => {
+            const teamId = button.getAttribute('data-id');
+            const confirmDelete = confirm('Are you sure you want to delete this team?');
+
+            if (confirmDelete) {
+              try {
+                const response = await fetch(`${actionsBackendURL}/api/teams/${teamId}`, {
+                  method: 'DELETE',
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                  alert('Team deleted successfully.');
+                  // Refresh standings
+                  loadAllStandings();
+                } else {
+                  alert(`Failed to delete team: ${data.message}`);
+                }
+              } catch (error) {
+                console.error('Error deleting team:', error);
+                alert('An error occurred while deleting the team.');
+              }
+            }
+          });
+        });
+      };
+
+      // Function to load standings for all divisions
+      const loadAllStandings = () => {
+        fetchStandings(1, 'division1Body');
+        fetchStandings(2, 'division2Body');
+        fetchStandings(3, 'division3Body');
+      };
+
+      // Load standings on page load
+      loadAllStandings();
+
+      // Handle Admin Controls
+      const adminControls = document.getElementById('adminControls');
+      const addTeamForm = document.getElementById('addTeamForm');
+
+      // Function to check if the user is an admin
+      const checkAdmin = () => {
+        // Example: Check for a token in localStorage
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          // Optionally, verify the token with the server
+          // For simplicity, assume token is valid and user is admin
+          adminControls.classList.add('active');
+          document.querySelectorAll('.admin-col').forEach(col => {
+            col.style.display = 'table-cell';
+          });
+        } else {
+          adminControls.classList.remove('active');
+          document.querySelectorAll('.admin-col').forEach(col => {
+            col.style.display = 'none';
+          });
+        }
+      };
+
+      checkAdmin();
+
+      // Handle form submission to add a new team
+      addTeamForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const teamName = document.getElementById('teamName').value.trim();
+        const teamImage = document.getElementById('teamImage').value.trim();
+        const division = document.getElementById('divisionSelect').value;
+
+        if (!teamName || !teamImage || !division) {
+          alert('Please fill in all fields.');
+          return;
+        }
+
+        try {
+          const response = await fetch(`${actionsBackendURL}/api/teams`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              // Include authentication headers if required
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}` // Example
+            },
+            body: JSON.stringify({
+              name: teamName,
+              image: teamImage,
+              division: division
+            })
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            alert('Team added successfully!');
+            addTeamForm.reset();
+            loadAllStandings();
+          } else {
+            alert(`Failed to add team: ${data.message}`);
+          }
+        } catch (error) {
+          console.error('Error adding team:', error);
+          alert('An error occurred while adding the team.');
+        }
+      });
+
+      // Hamburger Menu Toggle
+      const hamburger = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobile-menu');
+
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('open');
+      });
+
+      // Handle Logout
+      const logoutOption = document.getElementById('logoutOption');
+      const mobileLogoutOption = document.getElementById('mobileLogoutOption');
+      const logoutModal = document.getElementById('logoutModal');
+      const confirmLogout = document.getElementById('confirmLogout');
+      const cancelLogout = document.getElementById('cancelLogout');
+
+      const showLogoutModal = () => {
+        logoutModal.classList.remove('hidden');
+      };
+
+      const hideLogoutModal = () => {
+        logoutModal.classList.add('hidden');
+      };
+
+      logoutOption?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showLogoutModal();
+      });
+
+      mobileLogoutOption?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showLogoutModal();
+      });
+
+      confirmLogout?.addEventListener('click', () => {
+        // Clear authentication tokens or perform logout actions
+        localStorage.removeItem('authToken');
+        adminControls.classList.remove('active');
+        document.querySelectorAll('.admin-col').forEach(col => {
+          col.style.display = 'none';
+        });
+        hideLogoutModal();
+        alert('Logged out successfully.');
+      });
+
+      cancelLogout?.addEventListener('click', () => {
+        hideLogoutModal();
+      });
+
+      // Handle User Profile Button (Toggle Dropdown)
+      const userProfileButton = document.getElementById('userProfileButton');
+      const profileDropdown = document.getElementById('profileDropdown');
+
+      userProfileButton?.addEventListener('click', () => {
+        profileDropdown.classList.toggle('hidden');
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!userProfileButton.contains(e.target) && !profileDropdown.contains(e.target)) {
+          profileDropdown.classList.add('hidden');
+        }
+      });
+
+      // Toggle visibility of user info based on authentication
+      const updateUserInfo = async () => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          try {
+            const response = await fetch(`${actionsBackendURL}/api/user/profile`, {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+            const data = await response.json();
+            if (data.success) {
+              const userInfo = document.getElementById('userInfo');
+              const userProfilePic = document.getElementById('userProfilePic');
+              const userName = document.getElementById('userName');
+
+              userProfilePic.src = data.user.avatar || 'default-avatar.png';
+              userName.textContent = data.user.username;
+
+              userInfo.classList.remove('hidden');
+            } else {
+              // Token invalid or user not found
+              localStorage.removeItem('authToken');
+              checkAdmin();
+            }
+          } catch (error) {
+            console.error('Error fetching user profile:', error);
+          }
+        } else {
+          checkAdmin();
+        }
+      };
+
+      updateUserInfo();
+    });
+  </script>
 </body>
 </html>

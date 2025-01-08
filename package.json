@@ -1,28 +1,21 @@
 {
-  "name": "quest-for-glory",
+  "name": "my-project",
   "version": "1.0.0",
-  "description": "Quest for Glory Backend and Frontend",
+  "description": "Backend for Quest for Glory",
   "main": "server.js",
   "scripts": {
-    
-    "start": "node server.js",
-
-    
-    "actions": "node actions.js",
-
-    
-    "start:all": "concurrently \"node server.js\" \"node actions.js\""
+    "start": "concurrently \"node server.js\" \"node actions.js\"",
+    "start:server": "node server.js",
+    "start:actions": "node actions.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "axios": "^1.3.5",
-    "fs-extra": "^11.1.1"
+    "body-parser": "^1.20.2",
+    "fs-extra": "^10.1.0",
+    "axios": "^1.4.0"
   },
   "devDependencies": {
-    "concurrently": "^7.6.0"
-  },
-  "author": "Your Name",
-  "license": "MIT"
+    "concurrently": "^8.2.0"
+  }
 }
