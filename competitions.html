@@ -32,14 +32,7 @@
     href="https://unpkg.com/aos@2.3.1/dist/aos.css"
   />
 
-  <!-- Inline (or External) CSS -->
   <style>
-    /* ================================
-       Your Existing CSS from
-       the Provided Code
-       ================================ */
-
-    /* Root Variables */
     :root {
       --q4g-orange: #FF6700;
       --q4g-red: #FF0000;
@@ -49,12 +42,13 @@
       --q4g-light-gray: #D4D4D4;
       --q4g-font-heading: 'Montserrat', sans-serif;
       --q4g-font-body: 'Poppins', sans-serif;
-      --transition-speed: 0.3s; /* Faster for snappier animations */
+      --transition-speed: 0.3s;
       --button-height: 50px;
       --card-shadow: rgba(255, 103, 0, 0.5);
+      --q4g-green: #28a745;
+      --q4g-yellow: #ffc107;
     }
 
-    /* RESET */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -83,7 +77,6 @@
       display: block;
     }
 
-    /* HEADER */
     header {
       position: fixed;
       top: 0;
@@ -158,7 +151,6 @@
       transform: translateY(-3px);
     }
 
-    /* HAMBURGER */
     .hamburger {
       display: none;
       flex-direction: column;
@@ -182,7 +174,6 @@
       transform: rotate(-45deg) translate(5px, -5px);
     }
 
-    /* MOBILE MENU */
     .mobile-menu {
       position: fixed;
       top: 0;
@@ -241,12 +232,10 @@
       transform: translateY(-3px);
     }
 
-    /* Hide Profile and Logout links initially */
     .mobileUserLink.hidden {
       display: none;
     }
 
-    /* LOGIN BUTTON */
     .login-btn {
       padding: 0.5rem 1.5rem;
       border: 2px solid var(--q4g-orange);
@@ -284,11 +273,7 @@
       color: var(--q4g-white);
       transform: translateY(-3px);
     }
-    .auth-buttons.hidden {
-      display: none;
-    }
 
-    /* USER INFO */
     .user-info {
       display: flex;
       align-items: center;
@@ -331,7 +316,6 @@
       pointer-events: none;
     }
 
-    /* Dropdown Menu */
     .profile-dropdown {
       position: absolute;
       top: 60px;
@@ -361,13 +345,10 @@
       visibility: hidden;
     }
 
-    /* Modal Styles */
     .modal {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background-color: rgba(0,0,0,0.6);
       display: flex;
       align-items: center;
@@ -376,8 +357,7 @@
       transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
     }
     .modal.hidden {
-      opacity: 0;
-      visibility: hidden;
+      opacity: 0; visibility: hidden;
     }
     .modal-content {
       background: var(--q4g-black);
@@ -385,8 +365,7 @@
       border-radius: 10px;
       text-align: center;
       color: var(--q4g-white);
-      width: 90%;
-      max-width: 400px;
+      width: 90%; max-width: 400px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
     .modal-content h3 {
@@ -413,8 +392,7 @@
       color: var(--q4g-white);
     }
     .modal-button.confirm:hover {
-      background: #cc0000;
-      transform: translateY(-2px);
+      background: #cc0000; transform: translateY(-2px);
     }
     .modal-button.cancel {
       background: var(--q4g-gray);
@@ -426,7 +404,6 @@
       transform: translateY(-2px);
     }
 
-    /* Competitions Hero */
     .competitions-hero {
       background: radial-gradient(circle, rgba(255,103,0,0.1) 0%, #111111 60%);
       padding: 5rem 2rem;
@@ -448,8 +425,7 @@
       height: 4px;
       background: var(--q4g-orange);
       position: absolute;
-      left: 50%;
-      bottom: -10px;
+      left: 50%; bottom: -10px;
       transform: translateX(-50%);
       border-radius: 2px;
     }
@@ -496,7 +472,6 @@
       box-shadow: 0 8px 16px rgba(0,0,0,0.5);
     }
 
-    /* Division Standings */
     .division-standings-section {
       background: #1A1A1A;
       padding: 4rem 2rem;
@@ -518,8 +493,7 @@
       height: 4px;
       background: var(--q4g-orange);
       position: absolute;
-      left: 50%;
-      bottom: -20px;
+      left: 50%; bottom: -20px;
       transform: translateX(-50%);
       border-radius: 2px;
     }
@@ -533,8 +507,7 @@
     }
     .division-card {
       background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,103,0,0.1));
-      width: 100%;
-      max-width: 350px;
+      width: 100%; max-width: 350px;
       padding: 2rem 1.5rem;
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 20px;
@@ -552,11 +525,8 @@
       background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,103,0,0.2));
     }
     .division-card img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 50%;
-      margin-bottom: 1rem;
+      width: 80px; height: 80px; object-fit: cover;
+      border-radius: 50%; margin-bottom: 1rem;
       transition: transform var(--transition-speed) ease;
     }
     .division-card:hover img {
@@ -583,15 +553,11 @@
       border: none;
       cursor: pointer;
       transition: background var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
+      display: inline-flex; align-items: center; gap: 0.3rem;
       text-decoration: none;
       box-shadow: 0 4px 6px rgba(0,0,0,0.3);
       background: linear-gradient(45deg, var(--q4g-orange), #ff8f00);
-      position: relative;
-      overflow: hidden;
-      z-index: 0;
+      position: relative; overflow: hidden; z-index: 0;
     }
     .apply-btn::before {
       content: '';
@@ -622,100 +588,32 @@
       font-weight: 600;
     }
 
-    /* ADMIN CONTROLS */
-    .admin-controls {
-      margin-top: 4rem;
-      padding: 2rem;
-      background: #2B2B2B;
-      border-radius: 15px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
-      color: var(--q4g-white);
-      display: none; /* Hidden by default */
-    }
-    .admin-controls.active {
-      display: block;
-    }
-    .admin-controls h3 {
-      margin-bottom: 1.5rem;
-      color: var(--q4g-orange);
-    }
-    .admin-controls form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .admin-controls label {
-      font-weight: 600;
-    }
-    .admin-controls input, .admin-controls select, .admin-controls textarea {
-      padding: 0.5rem 1rem;
-      border: 1px solid var(--q4g-gray);
-      border-radius: 8px;
-      background: #1A1A1A;
-      color: var(--q4g-white);
-      font-family: var(--q4g-font-body);
-    }
-    .admin-controls button {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 25px;
-      background: var(--q4g-orange);
-      color: var(--q4g-black);
-      font-weight: 600;
-      cursor: pointer;
-      transition: background var(--transition-speed) ease, transform var(--transition-speed) ease;
-    }
-    .admin-controls button:hover {
-      background: #e65a00;
-      transform: translateY(-3px);
-    }
-
-    /* TABLE STANDINGS */
     .standings-section {
-      background: #1A1A1A;
-      padding: 4rem 2rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+      background: #1A1A1A; padding: 4rem 2rem; text-align: center;
+      position: relative; overflow: hidden;
     }
     .standings-section h2 {
-      font-family: var(--q4g-font-heading);
-      font-size: 2.5rem;
-      margin-bottom: 3rem;
-      color: var(--q4g-orange);
-      position: relative;
-      display: inline-block;
+      font-family: var(--q4g-font-heading); font-size: 2.5rem;
+      margin-bottom: 3rem; color: var(--q4g-orange);
+      position: relative; display: inline-block;
     }
     .standings-section h2::after {
       content: '';
-      width: 80px;
-      height: 4px;
-      background: var(--q4g-orange);
-      position: absolute;
-      left: 50%;
-      bottom: -20px;
-      transform: translateX(-50%);
-      border-radius: 2px;
+      width: 80px; height: 4px; background: var(--q4g-orange);
+      position: absolute; left: 50%; bottom: -20px;
+      transform: translateX(-50%); border-radius: 2px;
     }
     .standings-table {
-      width: 100%;
-      max-width: 1000px;
-      margin: 3rem auto;
-      border-collapse: collapse;
-      background: #2B2B2B;
-      border-radius: 10px;
-      overflow: hidden;
+      width: 100%; max-width: 1000px; margin: 3rem auto;
+      border-collapse: collapse; background: #2B2B2B;
+      border-radius: 10px; overflow: hidden;
     }
     .standings-table th, .standings-table td {
-      padding: 0.75rem 1rem;
-      text-align: center;
+      padding: 0.75rem 1rem; text-align: center;
       border-bottom: 1px solid #444;
     }
     .standings-table th {
-      background: var(--q4g-orange);
-      color: var(--q4g-black);
+      background: var(--q4g-orange); color: var(--q4g-black);
     }
     .standings-table tr:nth-child(even) {
       background: #1A1A1A;
@@ -724,220 +622,144 @@
       background: #333;
     }
     .standings-table td.win {
-      color: var(--q4g-green);
-      font-weight: 600;
+      color: var(--q4g-green); font-weight: 600;
     }
     .standings-table td.draw {
-      color: var(--q4g-yellow);
-      font-weight: 600;
+      color: var(--q4g-yellow); font-weight: 600;
     }
     .standings-table td.loss {
-      color: var(--q4g-red);
+      color: var(--q4g-red); font-weight: 600;
+    }
+    .admin-col { display: none; }
+
+    .admin-controls {
+      margin-top: 4rem; padding: 2rem; background: #2B2B2B;
+      border-radius: 15px; max-width: 800px; margin-left: auto; margin-right: auto;
+      color: var(--q4g-white); display: none;
+    }
+    .admin-controls.active {
+      display: block;
+    }
+    .admin-controls h3 {
+      margin-bottom: 1.5rem; color: var(--q4g-orange);
+    }
+    .admin-controls form {
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .admin-controls label {
       font-weight: 600;
     }
-    .admin-col {
-      display: none; /* Hidden by default, shown for admin */
+    .admin-controls input, .admin-controls select, .admin-controls textarea {
+      padding: 0.5rem 1rem; border: 1px solid var(--q4g-gray);
+      border-radius: 8px; background: #1A1A1A;
+      color: var(--q4g-white); font-family: var(--q4g-font-body);
     }
-    .admin-actions {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
+    .admin-controls button {
+      padding: 0.75rem 1.5rem; border: none; border-radius: 25px;
+      background: var(--q4g-orange); color: var(--q4g-black);
+      font-weight: 600; cursor: pointer;
+      transition: background var(--transition-speed) ease, transform var(--transition-speed) ease;
     }
-    .admin-actions button {
-      padding: 0.3rem 0.6rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      color: var(--q4g-white);
-      transition: background var(--transition-speed) ease;
-      font-size: 0.8rem;
-    }
-    .admin-actions .edit-btn {
-      background: #ff8f00;
-    }
-    .admin-actions .delete-btn {
-      background: var(--q4g-red);
-    }
-    .admin-actions button:hover {
-      opacity: 0.8;
+    .admin-controls button:hover {
+      background: #e65a00; transform: translateY(-3px);
     }
 
-    /* FOOTER */
     footer {
       background: var(--q4g-black);
-      color: #ccc;
-      padding: 3rem 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: auto;
+      color: #ccc; padding: 3rem 2rem; display: flex;
+      flex-direction: column; align-items: center; margin-top: auto;
       border-top: 2px solid var(--q4g-gray);
     }
     .footer-nav, .social-links {
-      list-style: none;
-      display: flex;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      justify-content: center;
+      list-style: none; display: flex; gap: 1.5rem;
+      margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center;
     }
     .footer-nav a, .social-links a {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #ccc;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      position: relative;
-      transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+      font-size: 0.9rem; font-weight: 500; color: #ccc;
+      display: flex; align-items: center; gap: 0.3rem;
+      position: relative; transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
     }
     .footer-nav a::after, .social-links a::after {
-      content: '';
-      width: 0%;
-      height: 2px;
-      background: var(--q4g-orange);
-      position: absolute;
-      bottom: 0;
-      left: 0;
+      content: ''; width: 0%; height: 2px; background: var(--q4g-orange);
+      position: absolute; bottom: 0; left: 0;
       transition: width var(--transition-speed) ease;
     }
     .footer-nav a:hover::after, .social-links a:hover::after {
       width: 100%;
     }
     .footer-nav a:hover, .social-links a:hover {
-      color: var(--q4g-orange);
-      transform: translateY(-3px);
+      color: var(--q4g-orange); transform: translateY(-3px);
     }
     .rules-button {
-      padding: 0.5rem 1rem;
-      background: transparent;
-      border: 2px solid var(--q4g-orange);
-      border-radius: 25px;
-      color: var(--q4g-orange);
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
+      padding: 0.5rem 1rem; background: transparent;
+      border: 2px solid var(--q4g-orange); border-radius: 25px;
+      color: var(--q4g-orange); font-weight: 600; margin-bottom: 1.5rem;
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      position: relative; overflow: hidden; cursor: pointer;
       transition: transform var(--transition-speed) ease;
     }
     .rules-button::after {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: var(--q4g-orange);
+      content: ''; position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%; background: var(--q4g-orange);
       transform: skewX(-45deg);
-      transition: all var(--transition-speed) ease;
-      z-index: -1;
+      transition: all var(--transition-speed) ease; z-index: -1;
     }
     .rules-button:hover::after {
       left: 0;
     }
     .rules-button:hover {
-      color: var(--q4g-white);
-      transform: translateY(-3px);
+      color: var(--q4g-white); transform: translateY(-3px);
     }
     .footer-support {
-      margin-bottom: 1.5rem;
-      font-size: 0.95rem;
+      margin-bottom: 1.5rem; font-size: 0.95rem;
     }
     .footer-support a {
-      color: #5865F2;
-      text-decoration: underline;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      position: relative;
-      transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
+      color: #5865F2; text-decoration: underline;
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      position: relative; transition: color var(--transition-speed) ease, transform var(--transition-speed) ease;
     }
     .footer-support a::after {
-      content: '';
-      width: 0%;
-      height: 2px;
-      background: #5865F2;
-      position: absolute;
-      bottom: 0; left: 0;
-      transition: width var(--transition-speed) ease;
+      content: ''; width: 0%; height: 2px; background: #5865F2;
+      position: absolute; bottom: 0; left: 0; transition: width var(--transition-speed) ease;
     }
     .footer-support a:hover::after {
       width: 100%;
     }
     .footer-support a:hover {
-      color: #4653c9;
-      transform: translateY(-2px);
+      color: #4653c9; transform: translateY(-2px);
     }
     .footer-support a:hover::after {
       background: #4653c9;
     }
     .footer-copy {
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
-      color: #999;
+      margin-top: 1.5rem; font-size: 0.9rem; color: #999;
     }
 
-    /* RESPONSIVE UPDATES */
     @media (max-width: 1024px) {
-      .nav-links {
-        display: none;
-      }
-      .hamburger {
-        display: flex;
-      }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
     }
     @media (max-width: 768px) {
-      .competitions-hero h1 {
-        font-size: 2rem;
-      }
-      .competitions-hero p {
-        font-size: 1rem;
-      }
+      .competitions-hero h1 { font-size: 2rem; }
+      .competitions-hero p { font-size: 1rem; }
       .competitions-hero .cta-btn {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem; font-size: 0.9rem;
       }
-      .standings-section h2 {
-        font-size: 1.8rem;
-      }
-      .divisions-container {
-        grid-template-columns: 1fr;
-      }
-      .division-card {
-        max-width: 100%;
-      }
-      /* Hide user-info on small screens */
-      .user-info {
-        display: none;
-      }
-      .admin-controls {
-        padding: 1rem;
-      }
-      .standings-table th,
-      .standings-table td {
-        padding: 0.5rem;
-      }
+      .standings-section h2 { font-size: 1.8rem; }
+      .divisions-container { grid-template-columns: 1fr; }
+      .division-card { max-width: 100%; }
+      .user-info { display: none; }
+      .admin-controls { padding: 1rem; }
+      .standings-table th, .standings-table td { padding: 0.5rem; }
     }
 
-    /* KEYFRAMES */
     @keyframes slideInRight {
       from { right: -100%; }
       to   { right: 0; }
     }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
   </style>
 </head>
 <body>
-  <!-- HEADER -->
   <header id="header">
     <div class="brand">
       <div class="brand-logo">
@@ -954,9 +776,8 @@
         <li><a href="#"><i class="fas fa-star"></i> Power Rankings</a></li>
       </ul>
       <div class="auth-buttons">
-        <!-- Example OAuth redirect (Edit with your real URL & client_id) -->
         <a
-          href="https://discord.com/oauth2/authorize?client_id=1324622665323118642&response_type=code&redirect_uri=https%3A%2F%2Falexg0dev.github.io%2Fquest%2F&scope=identify%20email"
+          href="https://discord.com/oauth2/authorize?client_id=YOUR_DISCORD_CLIENT_ID&response_type=code&redirect_uri=https%3A%2F%2FYOUR_FRONTEND_URL%2Fcompetitions.html&scope=identify%20email"
           aria-label="Login with Discord"
           class="login-btn"
           id="loginButton"
@@ -964,28 +785,23 @@
           <i class="fas fa-right-to-bracket"></i> Login
         </a>
       </div>
-      <div class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <div class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" role="button" tabindex="0">
         <div></div>
         <div></div>
         <div></div>
       </div>
     </nav>
-
-    <!-- USER INFO (hidden by default) -->
     <div class="user-info hidden" id="userInfo">
       <button id="userProfileButton" aria-label="User Menu" class="user-profile-button">
         <img src="" alt="User Profile Picture" id="userProfilePic" />
         <span id="userName"></span>
       </button>
-      <!-- Dropdown Menu -->
       <div class="profile-dropdown hidden" id="profileDropdown">
         <a href="#profile"><i class="fas fa-user"></i> Profile</a>
         <a href="#stats"><i class="fas fa-chart-line"></i> Stats</a>
         <a href="#" id="logoutOption"><i class="fas fa-right-from-bracket"></i> Logout</a>
       </div>
     </div>
-
-    <!-- MOBILE MENU -->
     <div class="mobile-menu hidden" id="mobile-menu" aria-hidden="true">
       <ul>
         <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
@@ -993,14 +809,12 @@
         <li><a href="#"><i class="fas fa-lightbulb"></i> Vision</a></li>
         <li><a href="#"><i class="fas fa-comments"></i> Contact & Support</a></li>
         <li><a href="#"><i class="fas fa-star"></i> Power Rankings</a></li>
-        <!-- Conditional Profile/Logout Links -->
         <li class="mobileUserLink hidden"><a href="#profile"><i class="fas fa-user"></i> Profile</a></li>
         <li class="mobileUserLink hidden"><a href="#" id="mobileLogoutOption"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
       </ul>
       <div class="auth-buttons">
-        <!-- Same OAuth URL for mobile -->
         <a
-          href="https://discord.com/oauth2/authorize?client_id=https://discord.com/oauth2/authorize?client_id=1324622665323118642&response_type=code&redirect_uri=https%3A%2F%2Falexg0dev.github.io%2Fquest%2F&scope=identify%20email&response_type=code&redirect_uri=https%3A%2F%2FYOUR_FRONTEND_URL%2Fcompetitions.html&scope=identify%20email"
+          href="https://discord.com/oauth2/authorize?client_id=YOUR_DISCORD_CLIENT_ID&response_type=code&redirect_uri=https%3A%2F%2FYOUR_FRONTEND_URL%2Fcompetitions.html&scope=identify%20email"
           aria-label="Login with Discord"
           class="login-btn"
           id="mobileLoginButton"
@@ -1011,9 +825,7 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
   <main>
-    <!-- COMPETITIONS HERO -->
     <section class="competitions-hero" id="competitionsHero">
       <h1>Competitions & Standings</h1>
       <p>Manage Divisions, Teams, Matches, and Results Here.</p>
@@ -1022,11 +834,9 @@
       </a>
     </section>
 
-    <!-- DIVISION STANDINGS -->
     <section class="division-standings-section" id="divisionStandings" data-aos="fade-up">
       <h2>Division Standings</h2>
       <div class="divisions-container">
-        <!-- Division 1 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="100">
           <img src="qg.png" alt="Division 1 Icon" />
           <h3>Division 1</h3>
@@ -1041,7 +851,6 @@
           </div>
         </div>
 
-        <!-- Division 2 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="200">
           <img src="qg.png" alt="Division 2 Icon" />
           <h3>Division 2</h3>
@@ -1056,7 +865,6 @@
           </div>
         </div>
 
-        <!-- Division 3 -->
         <div class="division-card" data-aos="zoom-in" data-aos-delay="300">
           <img src="qg.png" alt="Division 3 Icon" />
           <h3>Division 3</h3>
@@ -1073,8 +881,6 @@
       </div>
     </section>
 
-    <!-- STANDINGS TABLES -->
-    <!-- Division 1 Standings -->
     <section class="standings-section" id="division1Standings" data-aos="fade-up">
       <h2>Division 1 Standings</h2>
       <table class="standings-table">
@@ -1090,16 +896,14 @@
             <th>GA</th>
             <th>GD</th>
             <th>Pts</th>
-            <th class="admin-col">Actions</th> <!-- Visible only to admin -->
+            <th class="admin-col">Actions</th>
           </tr>
         </thead>
         <tbody id="division1Body">
-          <!-- Filled by client-side JavaScript -->
         </tbody>
       </table>
     </section>
 
-    <!-- Division 2 Standings -->
     <section class="standings-section" id="division2Standings" data-aos="fade-up">
       <h2>Division 2 Standings</h2>
       <table class="standings-table">
@@ -1115,16 +919,14 @@
             <th>GA</th>
             <th>GD</th>
             <th>Pts</th>
-            <th class="admin-col">Actions</th> <!-- Visible only to admin -->
+            <th class="admin-col">Actions</th>
           </tr>
         </thead>
         <tbody id="division2Body">
-          <!-- Filled by client-side JavaScript -->
         </tbody>
       </table>
     </section>
 
-    <!-- Division 3 Standings -->
     <section class="standings-section" id="division3Standings" data-aos="fade-up">
       <h2>Division 3 Standings</h2>
       <table class="standings-table">
@@ -1140,16 +942,14 @@
             <th>GA</th>
             <th>GD</th>
             <th>Pts</th>
-            <th class="admin-col">Actions</th> <!-- Visible only to admin -->
+            <th class="admin-col">Actions</th>
           </tr>
         </thead>
         <tbody id="division3Body">
-          <!-- Filled by client-side JavaScript -->
         </tbody>
       </table>
     </section>
 
-    <!-- ADMIN CONTROLS (Hidden by Default) -->
     <section class="admin-controls hidden" id="adminControls" data-aos="fade-up">
       <h3>Admin Panel</h3>
       <form id="addTeamForm">
@@ -1167,12 +967,13 @@
           <option value="3">Division 3</option>
         </select>
 
-        <button type="submit"><i class="fas fa-plus"></i> Add Team</button>
+        <button type="submit">
+          <i class="fas fa-plus"></i> Add Team
+        </button>
       </form>
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer>
     <ul class="footer-nav">
       <li><a href="#privacyPolicy"><i class="fas fa-shield-alt"></i> How We Protect Your Data</a></li>
@@ -1205,7 +1006,6 @@
     </div>
   </footer>
 
-  <!-- Logout Confirmation Modal -->
   <div class="modal hidden" id="logoutModal">
     <div class="modal-content">
       <h3>Confirm Logout</h3>
@@ -1217,140 +1017,155 @@
     </div>
   </div>
 
-  <!-- Swiper.js JS -->
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-  <!-- AOS JS -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-  <!-- Client-Side JavaScript -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      AOS.init();
+      AOS.init({ duration: 800, once: true, easing: 'ease-in-out' });
 
-      const actionsBackendURL = 'https://quest-production-5c69.up.railway.app/'; // Replace with your actual actions.js backend URL
+      const actionsBackendURL = 'https://YOUR_ACTIONS_BACKEND_URL';
 
-      // Function to fetch and display standings
-      const fetchStandings = async (division, tbodyId) => {
+      const getAuthToken = () => localStorage.getItem('authToken');
+      const setAuthToken = (token) => localStorage.setItem('authToken', token);
+      const removeAuthToken = () => localStorage.removeItem('authToken');
+
+      async function fetchStandings(division, tbodyId) {
         try {
-          const response = await fetch(`${actionsBackendURL}/api/standings?division=${division}`);
+          const response = await fetch(`${actionsBackendURL}/api/standings?division=${division}`, {
+            headers: {
+              'Authorization': `Bearer ${getAuthToken()}`
+            }
+          });
           const data = await response.json();
-
           if (data.success) {
             const tbody = document.getElementById(tbodyId);
-            tbody.innerHTML = ''; // Clear existing rows
-
+            tbody.innerHTML = '';
             data.standings.forEach((team, index) => {
               const tr = document.createElement('tr');
-
               tr.innerHTML = `
                 <td>${index + 1}</td>
-                <td>${team.name}</td>
-                <td>${team.matchesPlayed}</td>
-                <td class="win">${team.wins}</td>
-                <td class="draw">${team.draws}</td>
-                <td class="loss">${team.losses}</td>
-                <td>${team.goalsFor}</td>
-                <td>${team.goalsAgainst}</td>
-                <td>${team.goalDifference}</td>
-                <td>${team.points}</td>
+                <td>${sanitizeHTML(team.name)}</td>
+                <td>${team.matchesPlayed || 0}</td>
+                <td class="win">${team.wins || 0}</td>
+                <td class="draw">${team.draws || 0}</td>
+                <td class="loss">${team.losses || 0}</td>
+                <td>${team.goalsFor || 0}</td>
+                <td>${team.goalsAgainst || 0}</td>
+                <td>${team.goalDifference || 0}</td>
+                <td>${team.points || 0}</td>
                 <td class="admin-col">
                   <div class="admin-actions">
-                    <button class="edit-btn" data-id="${team.id}"><i class="fas fa-edit"></i></button>
-                    <button class="delete-btn" data-id="${team.id}"><i class="fas fa-trash"></i></button>
+                    <button class="edit-btn" data-id="${team.id}" aria-label="Edit Team ${team.name}">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="delete-btn" data-id="${team.id}" aria-label="Delete Team ${team.name}">
+                      <i class="fas fa-trash"></i>
+                    </button>
                   </div>
                 </td>
               `;
-
               tbody.appendChild(tr);
             });
-
-            // Attach event listeners for edit and delete buttons
             attachAdminActions();
           } else {
-            console.error('Failed to fetch standings:', data.message);
+            console.error('Error fetching standings:', data.message);
+            alert('Failed to load standings. Please try again later.');
           }
-        } catch (error) {
-          console.error('Error fetching standings:', error);
+        } catch (err) {
+          console.error('Request error:', err);
+          alert('An error occurred while fetching standings.');
         }
-      };
+      }
 
-      // Function to attach event listeners to admin buttons
-      const attachAdminActions = () => {
-        // Edit buttons
-        document.querySelectorAll('.edit-btn').forEach(button => {
-          button.addEventListener('click', () => {
-            const teamId = button.getAttribute('data-id');
-            // Implement your edit logic here
-            alert(`Edit Team ID: ${teamId} - Feature not implemented yet.`);
-          });
-        });
-
-        // Delete buttons
-        document.querySelectorAll('.delete-btn').forEach(button => {
-          button.addEventListener('click', async () => {
-            const teamId = button.getAttribute('data-id');
-            const confirmDelete = confirm('Are you sure you want to delete this team?');
-
-            if (confirmDelete) {
-              try {
-                const response = await fetch(`${actionsBackendURL}/api/teams/${teamId}`, {
-                  method: 'DELETE',
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                  alert('Team deleted successfully.');
-                  // Refresh standings
-                  loadAllStandings();
-                } else {
-                  alert(`Failed to delete team: ${data.message}`);
-                }
-              } catch (error) {
-                console.error('Error deleting team:', error);
-                alert('An error occurred while deleting the team.');
-              }
-            }
-          });
-        });
-      };
-
-      // Function to load standings for all divisions
-      const loadAllStandings = () => {
+      function loadAllStandings() {
         fetchStandings(1, 'division1Body');
         fetchStandings(2, 'division2Body');
         fetchStandings(3, 'division3Body');
-      };
+      }
 
-      // Load standings on page load
       loadAllStandings();
 
-      // Handle Admin Controls
-      const adminControls = document.getElementById('adminControls');
+      function attachAdminActions() {
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const teamId = btn.getAttribute('data-id');
+            alert(`Edit feature not implemented (Team ID: ${teamId})`);
+          });
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const teamId = btn.getAttribute('data-id');
+            if (!confirm('Are you sure you want to delete this team?')) return;
+            try {
+              const response = await fetch(`${actionsBackendURL}/api/teams/${teamId}`, {
+                method: 'DELETE',
+                headers: {
+                  'Authorization': `Bearer ${getAuthToken()}`
+                }
+              });
+              const data = await response.json();
+              if (data.success) {
+                alert('Team deleted successfully.');
+                loadAllStandings();
+              } else {
+                alert(`Error: ${data.message}`);
+              }
+            } catch (err) {
+              console.error('Delete error:', err);
+              alert('An error occurred while deleting the team.');
+            }
+          });
+        });
+      }
+
+      function sanitizeHTML(str) {
+        const temp = document.createElement('div');
+        temp.textContent = str;
+        return temp.innerHTML;
+      }
+
+      function showAdminControls() {
+        const adminControls = document.getElementById('adminControls');
+        adminControls.classList.add('active');
+        document.querySelectorAll('.admin-col').forEach(col => {
+          col.style.display = 'table-cell';
+        });
+        document.querySelectorAll('.mobileUserLink').forEach(link => {
+          link.classList.remove('hidden');
+        });
+      }
+
+      function hideAdminControls() {
+        const adminControls = document.getElementById('adminControls');
+        adminControls.classList.remove('active');
+        document.querySelectorAll('.admin-col').forEach(col => {
+          col.style.display = 'none';
+        });
+        document.querySelectorAll('.mobileUserLink').forEach(link => {
+          link.classList.add('hidden');
+        });
+      }
+
+      function displayUserInfo(user) {
+        const userInfo = document.getElementById('userInfo');
+        const userProfilePic = document.getElementById('userProfilePic');
+        const userName = document.getElementById('userName');
+
+        userProfilePic.src = user.avatar || 'default-avatar.png';
+        userName.textContent = user.username;
+
+        userInfo.classList.remove('hidden');
+      }
+
+      function hideUserInfo() {
+        const userInfo = document.getElementById('userInfo');
+        userInfo.classList.add('hidden');
+      }
+
       const addTeamForm = document.getElementById('addTeamForm');
 
-      // Function to check if the user is an admin
-      const checkAdmin = () => {
-        // Example: Check for a token in localStorage
-        const token = localStorage.getItem('authToken');
-        if (token) {
-          // Optionally, verify the token with the server
-          // For simplicity, assume token is valid and user is admin
-          adminControls.classList.add('active');
-          document.querySelectorAll('.admin-col').forEach(col => {
-            col.style.display = 'table-cell';
-          });
-        } else {
-          adminControls.classList.remove('active');
-          document.querySelectorAll('.admin-col').forEach(col => {
-            col.style.display = 'none';
-          });
-        }
-      };
-
-      checkAdmin();
-
-      // Handle form submission to add a new team
       addTeamForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -1368,8 +1183,7 @@
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              // Include authentication headers if required
-              'Authorization': `Bearer ${localStorage.getItem('authToken')}` // Example
+              'Authorization': `Bearer ${getAuthToken()}`
             },
             body: JSON.stringify({
               name: teamName,
@@ -1393,16 +1207,22 @@
         }
       });
 
-      // Hamburger Menu Toggle
       const hamburger = document.getElementById('hamburger');
       const mobileMenu = document.getElementById('mobile-menu');
 
       hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
-        mobileMenu.classList.toggle('open');
+        const isActive = hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('open', isActive);
+        hamburger.setAttribute('aria-expanded', isActive);
+        mobileMenu.setAttribute('aria-hidden', !isActive);
       });
 
-      // Handle Logout
+      hamburger.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          hamburger.click();
+        }
+      });
+
       const logoutOption = document.getElementById('logoutOption');
       const mobileLogoutOption = document.getElementById('mobileLogoutOption');
       const logoutModal = document.getElementById('logoutModal');
@@ -1417,49 +1237,51 @@
         logoutModal.classList.add('hidden');
       };
 
-      logoutOption?.addEventListener('click', (e) => {
-        e.preventDefault();
-        showLogoutModal();
-      });
-
-      mobileLogoutOption?.addEventListener('click', (e) => {
-        e.preventDefault();
-        showLogoutModal();
-      });
-
-      confirmLogout?.addEventListener('click', () => {
-        // Clear authentication tokens or perform logout actions
-        localStorage.removeItem('authToken');
-        adminControls.classList.remove('active');
-        document.querySelectorAll('.admin-col').forEach(col => {
-          col.style.display = 'none';
+      if (logoutOption) {
+        logoutOption.addEventListener('click', (e) => {
+          e.preventDefault();
+          showLogoutModal();
         });
+      }
+
+      if (mobileLogoutOption) {
+        mobileLogoutOption.addEventListener('click', (e) => {
+          e.preventDefault();
+          showLogoutModal();
+        });
+      }
+
+      confirmLogout.addEventListener('click', () => {
+        removeAuthToken();
+        localStorage.removeItem('userProfile');
+        hideAdminControls();
+        hideUserInfo();
         hideLogoutModal();
         alert('Logged out successfully.');
       });
 
-      cancelLogout?.addEventListener('click', () => {
+      cancelLogout.addEventListener('click', () => {
         hideLogoutModal();
       });
 
-      // Handle User Profile Button (Toggle Dropdown)
       const userProfileButton = document.getElementById('userProfileButton');
       const profileDropdown = document.getElementById('profileDropdown');
 
-      userProfileButton?.addEventListener('click', () => {
-        profileDropdown.classList.toggle('hidden');
-      });
+      if (userProfileButton) {
+        userProfileButton.addEventListener('click', () => {
+          profileDropdown.classList.toggle('hidden');
+        });
+      }
 
-      // Close dropdown when clicking outside
       document.addEventListener('click', (e) => {
-        if (!userProfileButton.contains(e.target) && !profileDropdown.contains(e.target)) {
+        if (userProfileButton && !userProfileButton.contains(e.target) &&
+            profileDropdown && !profileDropdown.contains(e.target)) {
           profileDropdown.classList.add('hidden');
         }
       });
 
-      // Toggle visibility of user info based on authentication
-      const updateUserInfo = async () => {
-        const token = localStorage.getItem('authToken');
+      async function updateUserInfo() {
+        const token = getAuthToken();
         if (token) {
           try {
             const response = await fetch(`${actionsBackendURL}/api/user/profile`, {
@@ -1468,29 +1290,74 @@
               }
             });
             const data = await response.json();
-            if (data.success) {
-              const userInfo = document.getElementById('userInfo');
-              const userProfilePic = document.getElementById('userProfilePic');
-              const userName = document.getElementById('userName');
-
-              userProfilePic.src = data.user.avatar || 'default-avatar.png';
-              userName.textContent = data.user.username;
-
-              userInfo.classList.remove('hidden');
+            if (data.success && data.user) {
+              displayUserInfo(data.user);
+              if (data.user.role === 'admin') {
+                showAdminControls();
+              } else {
+                hideAdminControls();
+              }
             } else {
-              // Token invalid or user not found
-              localStorage.removeItem('authToken');
-              checkAdmin();
+              removeAuthToken();
+              hideAdminControls();
+              hideUserInfo();
             }
           } catch (error) {
             console.error('Error fetching user profile:', error);
+            removeAuthToken();
+            hideAdminControls();
+            hideUserInfo();
           }
         } else {
-          checkAdmin();
+          hideAdminControls();
+          hideUserInfo();
         }
-      };
+      }
 
       updateUserInfo();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (code) {
+        fetch(`${actionsBackendURL}/oauth/callback`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code }),
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success && data.user && data.token) {
+              setAuthToken(data.token);
+              localStorage.setItem('userProfile', JSON.stringify(data.user));
+              document.querySelectorAll('.auth-buttons').forEach(el => el.classList.add('hidden'));
+              displayUserInfo(data.user);
+              if (data.user.role === 'admin') {
+                showAdminControls();
+              } else {
+                hideAdminControls();
+              }
+              const newURL = window.location.origin + window.location.pathname;
+              window.history.replaceState({}, document.title, newURL);
+            } else {
+              alert('Login failed. Please try again.');
+            }
+          })
+          .catch(err => {
+            console.error('OAuth callback error:', err);
+            alert('An error occurred during login.');
+          });
+      } else {
+        const storedUser = localStorage.getItem('userProfile');
+        if (storedUser) {
+          const user = JSON.parse(storedUser);
+          displayUserInfo(user);
+          if (user.role === 'admin') {
+            showAdminControls();
+          } else {
+            hideAdminControls();
+          }
+        }
+      }
     });
   </script>
 </body>
