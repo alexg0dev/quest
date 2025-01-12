@@ -45,6 +45,10 @@ const saveProfile = async (profile) => {
     return profiles.find(p => p.id === profile.id);
   }
 
+  // Assign role based on Discord ID
+  const adminIds = ['ADMIN_DISCORD_ID_1', 'ADMIN_DISCORD_ID_2']; // Replace with actual admin Discord IDs
+  profile.role = adminIds.includes(profile.id) ? 'admin' : 'user';
+
   // Append new profile
   profiles.push(profile);
   console.log('New profile to add:', profile);
