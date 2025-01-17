@@ -13,7 +13,7 @@ const PORT = 8080;
 
 // Hard-coded configuration variables
 const CLIENT_ID = '1324622665323118642';
-const CLIENT_SECRET = 'rkS6P4PE3dd6kw5YwHZ7s0mI6TttelTZ'; // Replace with your actual Discord Client Secret
+const CLIENT_SECRET = 'rkS6P4PE3dd6kw5YwHZ7s0mI6TttelTZ'; // Your actual Discord Client Secret
 const REDIRECT_URI = 'https://alexg0dev.github.io/quest/';
 
 // Path to profiles.json
