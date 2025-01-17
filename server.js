@@ -17,9 +17,15 @@ const REDIRECT_URI = 'https://alexg0dev.github.io/quest/';
 // ======== MIDDLEWARE ========
 app.use(express.json());
 
+// Configure CORS to allow requests from your frontend
+app.use(cors({
+  origin: 'https://alexg0dev.github.io', // Update if your frontend is hosted elsewhere
+  credentials: true
+}));
+
 // Configure session middleware
 app.use(session({
-  secret: 'YOUR_SESSION_SECRET', // Replace with a strong secret
+  secret: process.env.SESSION_SECRET, // Use a strong, unique secret
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -27,12 +33,6 @@ app.use(session({
     httpOnly: true,
     sameSite: 'lax',
   }
-}));
-
-// Configure CORS to allow requests from your frontend
-app.use(cors({
-  origin: 'https://alexg0dev.github.io',
-  credentials: true
 }));
 
 // ======== ROUTES ========
