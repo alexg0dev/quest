@@ -4,18 +4,19 @@
   "description": "Backend for Quest for Glory",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently \"node server.js\" \"node actions.js\"",
-    "start:server": "node server.js",
-    "start:actions": "node actions.js"
+    "start": "concurrently \"cross-env SERVER_PORT=8080 node server.js\" \"cross-env ACTIONS_PORT=3001 node actions.js\"",
+    "start:server": "cross-env SERVER_PORT=8080 node server.js",
+    "start:actions": "cross-env ACTIONS_PORT=3001 node actions.js"
   },
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
-    "body-parser": "^1.20.2",
-    "fs-extra": "^10.1.0",
-    "axios": "^1.4.0"
+    "axios": "^1.4.0",
+    "express-session": "^1.17.3",
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3"
   }
 }
