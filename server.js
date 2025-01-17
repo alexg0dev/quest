@@ -7,13 +7,13 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.SERVER_PORT || 8080;
+const PORT = 8080;
 
 // ======== CONFIGURATION ========
 
 // Hard-coded configuration variables
 const CLIENT_ID = '1324622665323118642';
-const CLIENT_SECRET = 'YOUR_DISCORD_CLIENT_SECRET'; // Replace with your actual Discord Client Secret
+const CLIENT_SECRET = 'rkS6P4PE3dd6kw5YwHZ7s0mI6TttelTZ'; // Replace with your actual Discord Client Secret
 const REDIRECT_URI = 'https://alexg0dev.github.io/quest/';
 
 // Path to profiles.json
