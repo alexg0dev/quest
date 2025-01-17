@@ -1,104 +1,73 @@
 // server.js
 const express = require('express');
-const bodyParser = require('body-parser');
 const axios = require('axios');
-const fs = require('fs-extra');
-const path = require('path');
+const session = require('express-session');
 const cors = require('cors');
 
 const app = express();
-const PORT =  3000; // Use SERVER_PORT env variable
+const PORT = process.env.PORT || 3000;
 
-/**
- * Middleware
- */
-app.use(cors({
-  origin: 'https://alexg0dev.github.io',
-  methods: ['POST'],
-  allowedHeaders: ['Content-Type']
+// ======== CONFIGURATION ========
+
+// Replace these with your actual Discord application's credentials
+const CLIENT_ID = '1324622665323118642';
+const CLIENT_SECRET = 'rkS6P4PE3dd6kw5YwHZ7s0mI6TttelTZ'; // Keep this secret!
+const REDIRECT_URI = 'https://alexg0dev.github.io/quest/';
+
+// ======== MIDDLEWARE ========
+app.use(express.json());
+
+// Configure session middleware
+app.use(session({
+  secret: 'YOUR_SESSION_SECRET', // Replace with a strong secret
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: true, // Set to true if using HTTPS
+    httpOnly: true,
+    sameSite: 'lax',
+  }
 }));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Configure CORS to allow requests from your frontend
+app.use(cors({
+  origin: 'https://alexg0dev.github.io',
+  credentials: true
+}));
 
-/**
- * Helper function to save user profiles (profiles.json)
- */
-const saveProfile = async (profile) => {
-  const filePath = path.join(__dirname, 'profiles.json');
-  let profiles = [];
+// ======== ROUTES ========
 
-  try {
-    await fs.ensureFile(filePath);
-    const data = await fs.readFile(filePath, 'utf8');
-    profiles = data ? JSON.parse(data) : [];
-    console.log('Current profiles loaded:', profiles);
-  } catch (err) {
-    console.error('Error reading profiles.json:', err);
-    profiles = [];
-  }
+// Health Check
+app.get('/', (req, res) => {
+  res.send('Quest for Glory Backend is running.');
+});
 
-  // Check if user already exists
-  const userExists = profiles.some(p => p.id === profile.id);
-  if (userExists) {
-    console.log(`User with ID ${profile.id} already exists in profiles.json.`);
-    return profiles.find(p => p.id === profile.id);
-  }
-
-  // Assign role based on Discord ID
-  const adminIds = ['ADMIN_DISCORD_ID_1', 'ADMIN_DISCORD_ID_2']; // Replace with actual admin Discord IDs
-  profile.role = adminIds.includes(profile.id) ? 'admin' : 'user';
-
-  // Append new profile
-  profiles.push(profile);
-  console.log('New profile to add:', profile);
-
-  // Write updated profiles back to JSON
-  try {
-    await fs.writeFile(filePath, JSON.stringify(profiles, null, 2));
-    console.log(`Added to profiles.json: ${JSON.stringify(profile)}`);
-  } catch (err) {
-    console.error('Error writing to profiles.json:', err);
-  }
-
-  return profile;
-};
-
-/**
- * OAuth2 Callback
- */
-app.post('/oauth/callback', async (req, res) => {
+// Callback Route - Exchange code for tokens and fetch user info
+app.post('/callback', async (req, res) => {
   const { code } = req.body;
-  console.log('Received OAuth2 code:', code);
 
   if (!code) {
-    console.error('No code provided in the request body.');
-    return res.status(400).json({ success: false, message: 'No code provided.' });
+    return res.status(400).json({ error: 'No code provided.' });
   }
 
   try {
-    // Exchange code for token
-    console.log('Exchanging code for access token...');
-    const tokenResponse = await axios.post(
-      'https://discord.com/api/oauth2/token',
-      new URLSearchParams({
-        client_id: '1324622665323118642',
-        client_secret: 'Rukg_rQAhewFoZbwwQNkf18nLJUiBPub',
-        grant_type: 'authorization_code',
-        code,
-        redirect_uri: 'https://alexg0dev.github.io/quest/', // Must match your Discord app settings
-        scope: 'identify email'
-      }),
-      {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    // Exchange code for access token
+    const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', new URLSearchParams({
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: REDIRECT_URI,
+      scope: 'identify email'
+    }), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
-    );
+    });
 
-    console.log('Access token obtained:', tokenResponse.data.access_token);
     const accessToken = tokenResponse.data.access_token;
 
-    // Fetch User Info
-    console.log('Fetching user information from Discord...');
+    // Fetch user information
     const userResponse = await axios.get('https://discord.com/api/users/@me', {
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -106,38 +75,47 @@ app.post('/oauth/callback', async (req, res) => {
     });
 
     const user = userResponse.data;
-    console.log('User data fetched:', user);
 
-    // Prepare profile
-    const profile = {
+    // Save user info in session
+    req.session.user = {
       id: user.id,
       username: user.username,
       discriminator: user.discriminator,
-      avatar: user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512`
-        : `https://cdn.discordapp.com/embed/avatars/${user.id % 5}.png?size=512`,
-      email: user.email || 'No Email Provided'
+      avatar: user.avatar,
+      email: user.email,
+      verified: user.verified
     };
 
-    // Save profile to JSON
-    const savedUser = await saveProfile(profile);
-
-    // Respond with success
-    res.json({ success: true, user: savedUser });
+    return res.status(200).json({ message: 'Authentication successful.' });
   } catch (error) {
-    if (error.response) {
-      console.error('Error during OAuth callback (response):', error.response.data);
-      return res.status(500).json({ success: false, message: error.response.data });
-    } else {
-      console.error('Error during OAuth callback (message):', error.message);
-      return res
-        .status(500)
-        .json({ success: false, message: 'An error occurred during the OAuth process.' });
-    }
+    console.error('Error during OAuth callback:', error.response ? error.response.data : error.message);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-// Start the server
+// User Info Route - Returns authenticated user's info
+app.get('/user', (req, res) => {
+  if (req.session.user) {
+    return res.json({ user: req.session.user });
+  } else {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+});
+
+// Logout Route - Destroys user session
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.status(500).send('Could not log out.');
+    } else {
+      res.clearCookie('connect.sid'); // Name depends on session middleware
+      return res.redirect('https://alexg0dev.github.io/quest/');
+    }
+  });
+});
+
+// ======== START SERVER ========
 app.listen(PORT, () => {
-  console.log(`server.js running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
