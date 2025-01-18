@@ -32,19 +32,23 @@ app.use(cors({
 
 // Health Check
 app.get('/', (req, res) => {
+  console.log('Health check accessed.');
   res.send('Quest for Glory Backend is running.');
 });
 
 // Callback Route - Exchange code for tokens and fetch user info
 app.post('/callback', async (req, res) => {
   const { code } = req.body;
+  console.log('Received /callback with code:', code);
 
   if (!code) {
+    console.log('No code provided in /callback.');
     return res.status(400).json({ error: 'No code provided.' });
   }
 
   try {
     // Exchange code for access token
+    console.log('Exchanging code for access token...');
     const tokenResponse = await axios.post('https://discord.com/api/oauth2/token', new URLSearchParams({
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
@@ -58,9 +62,11 @@ app.post('/callback', async (req, res) => {
       }
     });
 
+    console.log('Access token received:', tokenResponse.data.access_token);
     const accessToken = tokenResponse.data.access_token;
 
     // Fetch user information
+    console.log('Fetching user information...');
     const userResponse = await axios.get('https://discord.com/api/users/@me', {
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -68,18 +74,24 @@ app.post('/callback', async (req, res) => {
     });
 
     const user = userResponse.data;
+    console.log('User information fetched:', user);
 
     // Read existing profiles
+    console.log('Reading existing profiles...');
     let profiles = [];
     if (fs.existsSync(profilesPath)) {
       const data = fs.readFileSync(profilesPath, 'utf8');
       profiles = JSON.parse(data);
+      console.log('Existing profiles loaded.');
+    } else {
+      console.log('profiles.json does not exist. Creating a new one.');
     }
 
     // Check if user already exists
     const existingUserIndex = profiles.findIndex(u => u.id === user.id);
     if (existingUserIndex !== -1) {
       // Update existing user
+      console.log(`Updating existing user with ID: ${user.id}`);
       profiles[existingUserIndex] = {
         id: user.id,
         username: user.username,
@@ -90,6 +102,7 @@ app.post('/callback', async (req, res) => {
       };
     } else {
       // Add new user
+      console.log(`Adding new user with ID: ${user.id}`);
       profiles.push({
         id: user.id,
         username: user.username,
@@ -101,7 +114,9 @@ app.post('/callback', async (req, res) => {
     }
 
     // Write back to profiles.json
+    console.log('Writing back to profiles.json...');
     fs.writeFileSync(profilesPath, JSON.stringify(profiles, null, 2));
+    console.log('profiles.json updated.');
 
     return res.status(200).json({ message: 'Authentication successful.', user: user });
   } catch (error) {
@@ -114,30 +129,38 @@ app.post('/callback', async (req, res) => {
 // Since there's no session or token, require user ID as a URL parameter
 app.get('/user/:id', (req, res) => {
   const userId = req.params.id;
+  console.log(`Received /user/${userId} request.`);
 
   if (!userId) {
+    console.log('No user ID provided in /user/:id.');
     return res.status(400).json({ error: 'No user ID provided.' });
   }
 
   // Read profiles
+  console.log('Reading profiles.json...');
   if (!fs.existsSync(profilesPath)) {
+    console.log('profiles.json does not exist.');
     return res.status(404).json({ error: 'No profiles found.' });
   }
 
   const data = fs.readFileSync(profilesPath, 'utf8');
   const profiles = JSON.parse(data);
+  console.log('profiles.json loaded.');
 
   const user = profiles.find(u => u.id === userId);
 
   if (!user) {
+    console.log(`User with ID ${userId} not found.`);
     return res.status(404).json({ error: 'User not found.' });
   }
 
+  console.log(`User with ID ${userId} found. Sending response.`);
   return res.json({ user });
 });
 
 // Logout Route - Since there's no session or token, inform the client to handle logout
 app.post('/logout', (req, res) => {
+  console.log('Received /logout request.');
   // Inform the client to handle logout (e.g., delete token on the client side)
   return res.status(200).json({ message: 'Logout successful. Please handle logout on the client side.' });
 });
@@ -145,4 +168,16 @@ app.post('/logout', (req, res) => {
 // ======== START SERVER ========
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+});
+
+// ======== ERROR HANDLING ========
+// Catch unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Catch uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception thrown:', err);
+  process.exit(1); // Exit to let the container restart the server
 });
